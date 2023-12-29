@@ -1,0 +1,24 @@
+{
+  "name": "mychat",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cookie": "^0.8.0",
+    "@elysiajs/html": "^0.7.3",
+    "@elysiajs/static": "^0.8.1",
+    "crypto": "^1.0.1",
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.0.0",
+    "bun-types": "latest"
+  },
+  "module": "src/index.js",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,365 @@
+import { Elysia } from 'elysia';
+import type { WS } from '@types/bun';
+import { html } from '@elysiajs/html'
+import { staticPlugin } from '@elysiajs/static'
+import { Database } from 'bun:sqlite';
+import { adjustHours } from "./utils";
+const crypto = require('crypto');
+//bun add @elysiajs/cookie
+//console.log('md5:    ' + crypto.createHash('md5').update('aaa').digest('hex'));
+
+// チャット名
+const chatName = 'myChat';
+// バージョン
+const version = '0.1.015';
+
+type MsgType = 'msg' | 'info' | 'bc'; 
+
+interface Head {
+    type: MsgType;
+}
+interface Body {
+    type: any;
+}
+interface MsgData {
+    head: Head;
+    body: Body;
+}
+
+//===========================================
+// データベースの作成
+
+// データベースファイルの名前を指定
+const dbFileName = './db/'+chatName+'.sqlite';
+// テーブルの名前を指定
+const tableName = 'chat_logs';
+// 新しいデータベースインスタンスを作成し、ファイルが存在しない場合はデータベースファイルを作成
+const db = new Database(dbFileName, { create: true });
+// 同時書き込みが行われる状況でパフォーマンスを大幅に向上させる先行書き込みログ モード(WAL) 
+db.exec('PRAGMA journal_mode = WAL;');
+// テーブルが存在しない場合はテーブルを作成
+const sql_table_create =
+    'CREATE TABLE IF NOT EXISTS ' 
+    + tableName 
+    + ' (id INTEGER PRIMARY KEY, name VARCHAR(255), msg VARCHAR(255), uid VARCHAR(32), created_at TIMESTAMP);'
+doQuery(db, sql_table_create);
+
+// 出力するメッセ―ジ数
+const limit = 20;
+
+// クライアントを入れとく配列 ブロードキャスト用
+let clients: WebSocket[] = [];
+
+//===========================================
+// サーバーを立てる HTTPとWebSocket
+// 
+const app = new Elysia()
+    .use(html())
+    .use(staticPlugin()) //ここでstaticプラグインを適用する
+    .get('/', ({ cookie: { name, uid } }) => { 
+       
+        // cookie から名前とuidを取得
+        if(!name.value){
+            // name をセットする
+            name.value=encodeURIComponent('通りすがりさん1')
+        } else {
+            //name.value=decodeURIComponent(name.value)
+        }
+        if(!uid.value){
+            // uid をセットする
+            uid.value= mkmd5(Math.random().toString())
+        }
+        //name.value=decodeURIComponent(name.value)
+    return  `
+    <html lang='ja'>12345
+        
+        <head>
+            <meta charset="utf-8">
+            <meta name=”viewport” content=”width=device-width,initial-scale=1″>
+            <title>${chatName} updating</title>
+            <script>${adjustHours} </script>
+            <link rel="stylesheet" href="/public/css/base.css">
+            <link rel="stylesheet" href="/public/css/input-box.css">
+            <link rel="stylesheet" href="/public/css/msg-box.css">
+
+        </head>
+        <body>
+ 
+            <a href="https://qiita.com/toshirot/items/c5654156c8799ac28d83" target=qiita>
+            →このチャットの作り方</a><br><br>
+            <form id="contact">
+                <div class="input_box">
+                <div class="head">
+                    <h2>${chatName} v${version}</h2>
+                </div>
+                名前：<br />
+                <input type="text" id="input_name"  value="${name.value}" uid="${uid.value}" placeholder="Name" /><br />
+                メッセージ：<br />
+                <textarea type="text" id="input_msg" placeholder="メッセージを入力してください"></textarea><br />
+                <div class="message">送信</div>
+                <button id="btn_send" type="submit">
+                   送信
+                </button>
+                </div>
+            </form>
+
+            <ul safe id=msgs></ul>
+
+            <div style=font-size:12px;margin-left:30px;clear:both;>
+                <h3>Update</h3>
+                <ul>
+                    <li>2023/12/28 v0.1.015: 
+                        <ol>
+                            <li>static プラグインを適用した</li>
+                            <li>cssを/public/css配下へ分割した</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/25 v0.1.014/ v0.1.013/ v0.1.012: 
+                        <ol>
+                            <li>テーブルのname、msgカラムへの文字数制限</li>
+                            <li>入力ボックスにもCSSを適用</li>
+                            <li>名前修正時のcookie登録</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/25 v0.1.011: 
+                        <ol>
+                            <li>会話を左右に分ける</li>
+                            <li>uidをcookieに追加して自分を右側にする</li>
+                            <li>会話をCSSで色分けする</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/24 v0.1.005: 
+                        <ol>
+                            <li>名前欄をcookie保存する</li>
+                            <li>送信したらメッセージ欄をクリアする</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/23 v0.1.004: 
+                        <ol>
+                            <li>メッセージ欄の改行送信機能を追加</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/23 v0.1.003: 
+                        <ol>
+                            <li>rc/utiles.ts にタイムゾーンの変更関数 adjustHours追加</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/22 v0.1.002: 
+                        <ol>
+                            <li>typescript 的な型指定や interface定義追加</li>
+                        </ol>
+                    </li>
+                    <li>2023/12/21 v0.1.001: 
+                        <ol>
+                            <li>interface MsgData を追加</li>
+                            <li>typescript 的な型指定を追加</li>
+                            <li>chatName と viersion番号を追加</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+
+            <script>
+                // 接続
+                const socket = new WebSocket('ws://74.226.208.203:9012/ws');
+                // 接続時イベント
+                socket.onopen = function (event) {
+                    console.log('cookie at onopen: ', document.cookie)
+                    socket.send(JSON.stringify({
+                        head:{type: 'info'},
+                        body:{
+                            name: 'system',
+                            msg: '誰かがサーバーへ接続しました。',
+                            uid: 'system'
+                        }
+                    }))
+                };
+                // 着信時イベント
+                socket.onmessage = function (event) {
+
+                    // event.data is 
+                    //  e.g. '{"head":{"type":"msg"},"body":[[52,"aa","aa","2023-12-20 14:39:04"]]}'
+                    if(!event.data)return // 無ければ無視する
+                    let data=JSON.parse(event.data) // object化する
+                    if(!data.body)return // 無ければ無視する
+
+                    // 下から上に向かって追記するので SELECT ASC で昇順取得したリストをafterbeginで追記する
+                    data.body.reverse()
+                    let msg_class='msgbox-left'
+                    let msgbox=''
+                    for(let i=0;i<${limit};i++){
+                        try{
+                            if(!data.body[i][3])continue
+                            // メッセージを出力する
+                            if(!!data.body[i]){
+                                if(data.body[i][3]===document.cookie.match(/uid=(.{0,32})/)[1]){
+                                    // 自分のメッセージはright側に表示する
+                                    msg_class='msgbox-right'
+                                } else {
+                                    msg_class='msgbox-left'
+                                    if(data.head.type==='info'){
+                                        msg_class='msgbox-info'
+                                    }
+                                }
+                                // msgbox を作る
+                                msgbox='<div class="msgbox '+msg_class+'" style="">\
+                                    <div class="namebox">\
+                                    '+data.body[i][1]+' &gt; ('+adjustHours(data.body[i][4], +9)+') \
+                                    </div>\
+                                    <div class="msg" uid="'+data.body[i][3]+'" \
+                                    style="display:block;"> \
+                                    '+data.body[i][2]+'\
+                                    </div>\
+                                    <div style="clear:both;inline-block;">\
+                                    </div>\
+                                </div>'
+                                msgs.insertAdjacentHTML('afterbegin', msgbox)
+                            } 
+                        } catch(e){}
+                    }
+                };
+                // DOM構築時イベント
+                document.addEventListener('DOMContentLoaded', function () {
+                    // 名前をcookieから取得し表示する
+                    input_name='name='+decodeURIComponent(
+                        document.cookie.match(/(?:^|;)\s*name=([^;]+)/)[1]
+                    )+';';
+                });
+                // 名前入力時イベント
+                input_name.addEventListener('keyup', function () {
+                    // 名前をcookieに保存する
+                    document.cookie='name='+encodeURIComponent(input_name.value)+';';
+                });
+                // 送信ボタンクリック時イベント
+                btn_send.addEventListener('click', function () {
+                    // 名前とメッセージがあれば送信する
+                    if(!!input_name && !!input_msg.value) {
+                        // 名前をcookieに保存する
+                        document.cookie='name='+encodeURIComponent(input_name.value)+';';
+                        document.cookie='uid=${uid.value};';
+                        // 送信する
+                        socket.send(JSON.stringify({
+                            head:{type: 'msg'},
+                            body:{
+                                name: input_name.value,
+                                msg: input_msg.value,
+                                uid: '${uid.value}'
+                            }
+                        }));
+                        // 送信したらメッセージ欄を空にする
+                        input_msg.value='';
+                    }
+                });
+            </script>
+        </body>
+    </html>
+        `})
+
+    // WebSocket サーバー
+    .ws('/ws', {
+        open(ws: WS): void {
+
+            // クライアント配列を作る (ブロードキャスト等で利用する)。
+            clients.push(ws)
+            // DBからメッセージを 初期 limit件 降順で取り出してクライアントへ送信する
+            let sql_select = 'SELECT * FROM ' + tableName + ' ORDER BY ID DESC LIMIT '+ limit +';'
+            let res: any= doQuery(db, sql_select);
+            // データ配列を接続してきたクライアントへ返す
+            const data: MsgData = {
+                head: {
+                  type: "msg",
+                },
+                body: res,
+            };
+            // メッセージを送信する
+            ws.send(JSON.stringify(data));
+            
+        },
+        // メッセージが届いたら返すだけの簡単なエコーサーバー
+        message(ws: WS, msgoj: MsgData): void {
+            // メッセージの構文エラーははじく
+            if (!msgoj || !msgoj.head || !msgoj.body) return;
+
+            // Elysia の XSS やバリデーションの確認をまだしていないので、
+            // 一応、msgoj を文字列化してスクリプトタグを除去し、オブジェクトへ戻す
+            if(typeof msgoj=='object'){
+                let msgstr=JSON.stringify(msgoj)
+                msgstr=(''+msgstr).replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, '');
+                msgoj=JSON.parse(msgstr)
+            } else return; // オブジェクト以外は無視する
+  
+            // タイプにより処理を分ける
+            // type:msg はDBへ登録する
+            if(msgoj.head.type==='msg'){
+                console.log('msg',msgoj.body)
+                msgoj.body.name = msgoj.body.name.slice(0, 20);
+                msgoj.body.msg = msgoj.body.msg.slice(0, 300);
+                let sql_ins = 
+                        'INSERT OR IGNORE INTO ' 
+                        + tableName 
+                        + ' VALUES (null, "'+msgoj.body.name+'", "'+msgoj.body.msg+'", "'+msgoj.body.uid+'", CURRENT_TIMESTAMP);'
+                // insert する
+                doQuery(db, sql_ins)
+                // 最後の 1件だけ select する
+                let sql_1 = 'SELECT * FROM ' + tableName + ' ORDER BY ID DESC LIMIT 1;'
+                let res = doQuery(db, sql_1)//こんな配列で返ってくる。 [[0件目], [1件目], [2件目], [3件目]] 
+                // sql_1 結果セットのメッセージ配列をブロードキャストする
+                broadCast(ws, msgoj.head.type, res)
+            } else if(msgoj.head.type==='info'){
+                // infoは DB へ保存しない。
+                // 届いたinfoメッセージをブロードキャストする
+                let time=new Date()
+                broadCast(ws, msgoj.head.type, [['', '--※info', msgoj.body.msg, msgoj.body.uid, 
+                  // UTCから日本時間への変換をクライアント側でしてるので、
+                  // クライアントから届いた日本時間をマイナス9時間して 
+                  // SQLite出力同様のUTCに揃える
+                  adjustHours(new Date(), -9)
+                ]]) 
+            } else {}
+        }
+    })
+    .listen(9012, (token: any) => {
+        if (token) {
+            console.log('Listening to port 9012');
+        } else {
+            console.error('Failed to listen to port 9012');
+        }
+    });
+
+//===========================================
+// uid を作成する関数
+//  @param {String} sql - 実行するSQLクエリ
+//  @returns {String} - 結果の文字列
+function mkmd5(str: string): string {
+    return crypto.createHash('md5').update(str).digest('hex')
+}
+
+//===========================================
+// データベースクエリを実行する関数
+//  @param {String} sql - 実行するSQLクエリ
+//  @returns {Array} - 結果の配列
+type QueryResultType = Array<any>; 
+function doQuery(db: Database, sql: string): QueryResultType {
+    return db.query(sql).values();
+}
+
+//===========================================
+// 全クライアントへブロードキャストする関数
+//  @param {Object} ws - WebSocket インスタンス
+//  @param {String} msg - 送信するメッセージ
+//  @returns {void} - なし
+
+// 全クライアントへブロードキャストする
+function broadCast(ws: WS, type: any, msg: any): void {
+    let msgtype=(type==='info')?type:'bc'
+    clients.forEach(function (socket, i) {
+        const data: MsgData = {
+            "head": {
+              "type": msgtype
+            },
+            "body": msg,
+        };
+        // console.log(data)
+        socket.send(JSON.stringify(data) );
+    })
+}
