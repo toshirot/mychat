@@ -5,13 +5,23 @@ import { staticPlugin } from '@elysiajs/static'
 import { Database } from 'bun:sqlite';
 import { adjustHours } from "./utils";
 const crypto = require('crypto');
-//bun add @elysiajs/cookie
-//console.log('md5:    ' + crypto.createHash('md5').update('aaa').digest('hex'));
+
+//===========================================
+// 定数
 
 // チャット名
-const chatName = 'myChat';
+const CHAT_NAME = 'myChat';
 // バージョン
-const version = '0.1.016';
+const VERSION = '0.1.016';
+// 出力するメッセ―ジ数
+const LIMIT = 20;
+// ホスト HTTP と WebSocket 共通
+const HOST = '74.226.208.203';
+// ポート HTTP と WebSocket 共通
+const PORT = 9012;
+
+//===========================================
+// interface
 
 type MsgType = 'msg' | 'info' | 'bc'; 
 
@@ -30,18 +40,18 @@ interface MsgData {
 // データベースの作成
 
 // データベースファイルの名前を指定
-const dbFileName = './db/'+chatName+'.sqlite';
+const DB_FILE_NAME = './db/'+CHAT_NAME+'.sqlite';
 // テーブルの名前を指定
-const tableName = 'chat_logs';
+const TABLE_NAME = 'chat_logs';
 // 新しいデータベースインスタンスを作成し、ファイルが存在しない場合はデータベースファイルを作成
-const db = new Database(dbFileName, { create: true });
+const db = new Database(DB_FILE_NAME, { create: true });
 // 同時書き込みが行われる状況でパフォーマンスを大幅に向上させる先行書き込みログ モード(WAL) 
 db.exec('PRAGMA journal_mode = WAL;');
 
 // テーブルが存在しない場合はテーブルを作成
 const sql_table_create =
     `CREATE TABLE IF NOT EXISTS 
-        ${tableName}
+        ${TABLE_NAME}
         (
             id INTEGER PRIMARY KEY, 
             name VARCHAR(255), 
@@ -52,9 +62,6 @@ const sql_table_create =
         
 // SQLを実行する　
 doQuery(db, sql_table_create);
-
-// 出力するメッセ―ジ数
-const limit = 20;
 
 //===========================================
 // サーバーを立てる HTTPとWebSocket
@@ -86,7 +93,7 @@ const app = new Elysia()
         <head>
             <meta charset="utf-8">
             <meta name=”viewport” content=”width=device-width,initial-scale=1″>
-            <title>${chatName} updating</title>
+            <title>${CHAT_NAME} updating</title>
             <script>${adjustHours} </script>
             <link rel="stylesheet" href="/public/css/base.css">
             <link rel="stylesheet" href="/public/css/input-box.css">
@@ -100,7 +107,7 @@ const app = new Elysia()
             <form id="contact">
                 <div class="input_box">
                 <div class="head">
-                    <h2>${chatName} v${version}</h2>
+                    <h2>${CHAT_NAME} v${VERSION}</h2>
                 </div>
                 名前：<br />
                 <input type="text" id="input_name"  value="${name.value}" uid="${uid.value}" placeholder="Name" /><br />
@@ -168,7 +175,7 @@ const app = new Elysia()
                         <ol>
                             <li>interface MsgData を追加</li>
                             <li>typescript 的な型指定を追加</li>
-                            <li>chatName と viersion番号を追加</li>
+                            <li>CHAT_NAME と viersion番号を追加</li>
                         </ol>
                     </li>
                 </ul>
@@ -176,7 +183,7 @@ const app = new Elysia()
 
             <script>
                 // 接続
-                const socket = new WebSocket('ws://74.226.208.203:9012/ws');
+                const socket = new WebSocket('ws://${HOST}:${PORT}/ws');
                 // 接続時イベント
                 socket.onopen = function (event) {
                     console.log('cookie at onopen: ', document.cookie)
@@ -202,7 +209,7 @@ const app = new Elysia()
                     data.body.reverse()
                     let msg_class='msgbox-left'
                     let msgbox=''
-                    for(let i=0;i<${limit};i++){
+                    for(let i=0;i<${LIMIT};i++){
                         try{
                             if(!data.body[i][3])continue
                             data.body[i][2]=data.body[i][2].replace(/\\n/g, '<br>')
@@ -277,8 +284,8 @@ const app = new Elysia()
 
             // クライアント配列を作る (ブロードキャスト等で利用する)。
             clients.push(ws)
-            // DBからメッセージを 初期 limit件 降順で取り出してクライアントへ送信する
-            let sql_select = 'SELECT * FROM ' + tableName + ' ORDER BY ID DESC LIMIT '+ limit +';'
+            // DBからメッセージを 初期 LIMIT件 降順で取り出してクライアントへ送信する
+            let sql_select = 'SELECT * FROM ' + TABLE_NAME + ' ORDER BY ID DESC LIMIT '+ LIMIT +';'
             let res: any= doQuery(db, sql_select);
             // データ配列を接続してきたクライアントへ返す
             const data: MsgData = {
@@ -312,12 +319,12 @@ const app = new Elysia()
                 msgoj.body.msg = msgoj.body.msg.slice(0, 300);
                 let sql_ins = 
                         'INSERT OR IGNORE INTO ' 
-                        + tableName 
+                        + TABLE_NAME 
                         + ' VALUES (null, "'+msgoj.body.name+'", "'+msgoj.body.msg+'", "'+msgoj.body.uid+'", CURRENT_TIMESTAMP);'
                 // insert する
                 doQuery(db, sql_ins)
                 // 最後の 1件だけ select する
-                let sql_1 = 'SELECT * FROM ' + tableName + ' ORDER BY ID DESC LIMIT 1;'
+                let sql_1 = 'SELECT * FROM ' + TABLE_NAME + ' ORDER BY ID DESC LIMIT 1;'
                 let res = doQuery(db, sql_1)//こんな配列で返ってくる。 [[0件目], [1件目], [2件目], [3件目]] 
                 // sql_1 結果セットのメッセージ配列をブロードキャストする
                 broadCast(ws, msgoj.head.type, res)
@@ -334,11 +341,11 @@ const app = new Elysia()
             } else {}
         }
     })
-    .listen(9012, (token: any) => {
+    .listen(PORT, (token: any) => {
         if (token) {
-            console.log('Listening to port 9012');
+            console.log(`Listening to port ${PORT}`);
         } else {
-            console.error('Failed to listen to port 9012');
+            console.error(`Failed to listen to port ${PORT}`);
         }
     });
 
