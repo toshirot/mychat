@@ -29,11 +29,11 @@ And if you want to change the port, change "const PORT = 9012;".
 Simple Documentation
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
-## default pakage.json at v0.1.016
+## default pakage.json at v0.1.017
 ```
 {
   "name": "mychat",
-  "version": "0.1.016",
+  "version": "0.1.017",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --hot src/index-9012.ts"
