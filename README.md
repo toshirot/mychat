@@ -29,7 +29,7 @@ To change the host name, change "const HOST = 'example.com';" in the index-9012.
 And if you want to change the port, change "const PORT = 9012;".
 
 ## @see Qiita
-Simple Documentation
+Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 ## default pakage.json at v0.1.017
