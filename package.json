@@ -1,9 +1,9 @@
 {
   "name": "mychat",
-  "version": "1.0.50",
+  "version": "0.1.016",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index-9012.ts"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",

@@ -11,7 +11,7 @@ const crypto = require('crypto');
 // チャット名
 const chatName = 'myChat';
 // バージョン
-const version = '0.1.015';
+const version = '0.1.016';
 
 type MsgType = 'msg' | 'info' | 'bc'; 
 
@@ -37,22 +37,32 @@ const tableName = 'chat_logs';
 const db = new Database(dbFileName, { create: true });
 // 同時書き込みが行われる状況でパフォーマンスを大幅に向上させる先行書き込みログ モード(WAL) 
 db.exec('PRAGMA journal_mode = WAL;');
+
 // テーブルが存在しない場合はテーブルを作成
 const sql_table_create =
-    'CREATE TABLE IF NOT EXISTS ' 
-    + tableName 
-    + ' (id INTEGER PRIMARY KEY, name VARCHAR(255), msg VARCHAR(255), uid VARCHAR(32), created_at TIMESTAMP);'
+    `CREATE TABLE IF NOT EXISTS 
+        ${tableName}
+        (
+            id INTEGER PRIMARY KEY, 
+            name VARCHAR(255), 
+            msg VARCHAR(255), 
+            uid VARCHAR(32), 
+            created_at TIMESTAMP
+        );`
+        
+// SQLを実行する　
 doQuery(db, sql_table_create);
 
 // 出力するメッセ―ジ数
 const limit = 20;
 
-// クライアントを入れとく配列 ブロードキャスト用
-let clients: WebSocket[] = [];
-
 //===========================================
 // サーバーを立てる HTTPとWebSocket
 // 
+
+// クライアントを入れとく配列 ブロードキャスト用
+let clients: WebSocket[] = [];
+
 const app = new Elysia()
     .use(html())
     .use(staticPlugin()) //ここでstaticプラグインを適用する
@@ -108,6 +118,11 @@ const app = new Elysia()
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
+                    <li>2023/12/30 v0.1.016: 
+                        <ol>
+                            <li>メッセージの改行を有効にした</li>
+                        </ol>
+                    </li>
                     <li>2023/12/28 v0.1.015: 
                         <ol>
                             <li>static プラグインを適用した</li>
@@ -190,6 +205,7 @@ const app = new Elysia()
                     for(let i=0;i<${limit};i++){
                         try{
                             if(!data.body[i][3])continue
+                            data.body[i][2]=data.body[i][2].replace(/\\n/g, '<br>')
                             // メッセージを出力する
                             if(!!data.body[i]){
                                 if(data.body[i][3]===document.cookie.match(/uid=(.{0,32})/)[1]){
