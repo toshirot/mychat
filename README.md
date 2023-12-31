@@ -17,7 +17,11 @@ bun init
 ## 実行 at port 9012
 ```
 bun dev
+
+e.g. "dev": "bun run --hot src/index-9012.ts"
 ```
+If you want to change the port, change "const PORT = 9012;" in index-9012.ts
+
 
 ## default pakage.json
 ```
