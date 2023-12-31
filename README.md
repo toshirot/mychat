@@ -10,11 +10,11 @@ git clone https://github.com/toshirot/mychat.git
 or 
 git clone git@github.com:toshirot/mychat.git
 ```
-## Bun初期化
+## Bun initialization
 ```
 bun init
 ```
-## 実行 at port 9012
+## Execution at port 9012
 ```
 bun dev
 
