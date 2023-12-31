@@ -7,7 +7,9 @@ curl https://bun.sh/install | bash
 ## clone mychat
 ```
 git clone https://github.com/toshirot/mychat.git
+```
 or 
+```
 git clone git@github.com:toshirot/mychat.git
 ```
 ## Bun initialization
@@ -23,6 +25,9 @@ e.g. "dev": "bun run --hot src/index-9012.ts"
 To change the host name, change "const HOST = 'example.com';" in the index-9012.ts file to localhost, domain name or IP address (xxx.xxx.xxx.xxx.xxx).
 And if you want to change the port, change "const PORT = 9012;".
 
+## @see Qiita
+Simple Documentation
+https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 ## default pakage.json at v0.1.016
 ```
