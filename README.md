@@ -20,7 +20,8 @@ bun dev
 
 e.g. "dev": "bun run --hot src/index-9012.ts"
 ```
-If you want to change the port, change "const PORT = 9012;" in index-9012.ts
+To change the host name, change "const HOST = 'example.com';" in the index-9012.ts file to localhost, domain name or IP address (xxx.xxx.xxx.xxx.xxx).
+And if you want to change the port, change "const PORT = 9012;".
 
 
 ## default pakage.json
