@@ -1,5 +1,8 @@
 # mychat with Elysia/Bun
 
+![image](https://github.com/toshirot/mychat/assets/154680/bad677a9-2783-4617-964e-63d48ada5a25)
+
+
 ## Bun install
 ```
 curl https://bun.sh/install | bash
