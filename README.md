@@ -4,7 +4,7 @@
 ```
 curl https://bun.sh/install | bash
 ```
-## crone mychat
+## clone mychat
 ```
 git clone https://github.com/toshirot/mychat.git
 or 
@@ -24,7 +24,7 @@ To change the host name, change "const HOST = 'example.com';" in the index-9012.
 And if you want to change the port, change "const PORT = 9012;".
 
 
-## default pakage.json
+## default pakage.json at v0.1.016
 ```
 {
   "name": "mychat",
