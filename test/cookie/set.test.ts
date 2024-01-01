@@ -18,35 +18,35 @@ const parseSetCookies = (headers: Headers, setCookie: string[]) => {
 	return headers
 }
 describe('Parse Set Cookie', () => {
-	it('should handle empty arrays', () => {
+	it('空の配列を処理する必要がある', () => {
 		const headers = new Headers([])
 		const setCookie: string[] = []
 		const result = parseSetCookies(headers, setCookie)
 		expect(result).toEqual(headers)
 	})
 
-	it('should handle a setCookie array with one element containing a single key-value pair', () => {
+	it('1つの要素に1つのキーと値のペアが含まれるsetCookie配列を処理する必要があります', () => {
 		const headers = new Headers([])
 		const setCookie = ['key=value']
 		const result = parseSetCookies(headers, setCookie)
 		expect(result.get('Set-Cookie')).toEqual('key=value')
 	})
 
-	it('should handle a setCookie array with multiple elements, each containing a single key-value pair', () => {
+	it('複数の要素を持つ setCookie 配列を処理する必要があります', () => {
 		const headers = new Headers([])
 		const setCookie = ['key1=value1', 'key2=value2']
 		const result = parseSetCookies(headers, setCookie)
 		expect(result.get('Set-Cookie')).toEqual('key1=value1, key2=value2')
 	})
 
-	it('should handle a setCookie array with one element containing multiple key-value pairs', () => {
+	it('複数のキーと値のペアを含む1つの要素を持つ setCookie 配列を処理する必要があります', () => {
 		const headers = new Headers([])
 		const setCookie = ['key1=value1; key2=value2']
 		const result = parseSetCookies(headers, setCookie)
 		expect(result.get('Set-Cookie')).toEqual('key1=value1; key2=value2')
 	})
 
-	it('should handle a setCookie array with multiple elements, each containing multiple key-value pairs', () => {
+	it('複数の要素を持つ setCookie 配列を処理する必要があり、それぞれが複数のキーと値のペアを含む ', () => {
 		const headers = new Headers([])
 		const setCookie = [
 			'key1=value1; key2=value2',
@@ -58,7 +58,7 @@ describe('Parse Set Cookie', () => {
 		)
 	})
 
-	it('should handle null values', () => {
+	it('null 値を処理する必要があります', () => {
 		const headers = null
 		const setCookie = null
 		// @ts-ignore
