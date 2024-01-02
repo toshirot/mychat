@@ -28,6 +28,10 @@ e.g. "dev": "bun run --hot src/index-9012.ts"
 To change the host name, change "const HOST = 'example.com';" in the index-9012.ts file to localhost, domain name or IP address (xxx.xxx.xxx.xxx.xxx).
 And if you want to change the port, change "const PORT = 9012;".
 
+## Demo
+
+http://74.226.208.203:9011/
+
 ## @see Qiita
 Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
