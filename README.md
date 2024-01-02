@@ -38,7 +38,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   "name": "mychat",
   "version": "0.1.017",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "bun test",
     "dev": "bun run --hot src/index-9012.ts"
   },
   "dependencies": {

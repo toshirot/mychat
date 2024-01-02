@@ -12,7 +12,7 @@ const crypto = require('crypto');
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.016';
+const VERSION = '0.1.017';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ホスト HTTP と WebSocket 共通
