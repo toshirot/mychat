@@ -125,6 +125,13 @@ const app = new Elysia()
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
+
+                    <li>2023/12/31 v0.1.017:
+                        <ol>
+                            <li>定数名の修正など</li>
+                            <li>githubへ公開しました https://github.com/toshirot/mychat</li>
+                        </ol>
+                    </li>
                     <li>2023/12/30 v0.1.016: 
                         <ol>
                             <li>メッセージの改行を有効にした</li>
