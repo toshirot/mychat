@@ -103,7 +103,8 @@ const app = new Elysia()
         <body>
  
             <a href="https://qiita.com/toshirot/items/c5654156c8799ac28d83" target=qiita>
-            →このチャットの作り方</a><br><br>
+            →このチャットの作り方</a><br>
+            →Github/mychat <a href="https://github.com/toshirot/mychat">https://github.com/toshirot/mychat</a><br>
             <form id="contact">
                 <div class="input_box">
                 <div class="head">
