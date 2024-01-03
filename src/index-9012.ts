@@ -88,7 +88,7 @@ const app = new Elysia()
         }
         //name.value=decodeURIComponent(name.value)
     return  `
-    <html lang='ja'>12345
+    <html lang='ja'>
         
         <head>
             <meta charset="utf-8">
