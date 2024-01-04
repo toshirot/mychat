@@ -1,6 +1,6 @@
 {
   "name": "mychat",
-  "version": "0.1.017",
+  "version": "0.1.018",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.ts"

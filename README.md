@@ -33,14 +33,14 @@ And if you want to change the port, change "const PORT = 9012;".
 http://74.226.208.203:9011/
 
 ## @see Qiita
-Simple Documentation for v0.1.017
+Simple Documentation for v0.1.018
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 ## default pakage.json at v0.1.017
 ```
 {
   "name": "mychat",
-  "version": "0.1.017",
+  "version": "0.1.018",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.ts"
