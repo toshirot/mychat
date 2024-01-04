@@ -279,7 +279,6 @@ ${setCookie}
                 document.addEventListener('DOMContentLoaded', function () {
                     if(!!document.cookie){
                         // 名前をcookieから取得し表示する
-                        input_name.value = '';
                         const cookieMatch = document.cookie.match(/(?:^|;)\s*name=([^;]+)/);
                         if (cookieMatch) {
                             input_name.value = '' + decodeURIComponent(cookieMatch[1]) + ';';
