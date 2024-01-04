@@ -16,7 +16,21 @@ export function adjustHours(date: Date, adjustHour: number): string {
     })
 }
 
-
+//===========================================
+// cookieを読み出す関数
+//  @param {String} key - キー文字列
+//  @returns {String} - cookieの値文字列
+export function getCookie(key: string){
+    let regex=new RegExp('/(?:^|;)\s*'+key+'=([^;]+)/')
+    return decodeURIComponent(document.cookie.match(regex)||'');
+}
+//===========================================
+// cookieをセットする関数
+//  @param {String} key - キー文字列
+//  @returns {String} - セットした cookie の key value 文字列
+export function setCookie(key, value){
+    return document.cookie=key+'='+encodeURIComponent(value)+';'
+}
 
 
 

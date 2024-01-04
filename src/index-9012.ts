@@ -3,7 +3,7 @@ import type { WS } from '@types/bun';
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
 import { Database } from 'bun:sqlite';
-import { adjustHours } from "./utils";
+import { adjustHours, getCookie, setCookie } from "./utils";
 const crypto = require('crypto');
 
 //===========================================
@@ -12,7 +12,7 @@ const crypto = require('crypto');
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.017';
+const VERSION = '0.1.018';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ホスト HTTP と WebSocket 共通
@@ -74,13 +74,18 @@ const app = new Elysia()
     .use(html())
     .use(staticPlugin()) //ここでstaticプラグインを適用する
     .get('/', ({ cookie: { name, uid } }) => { 
-       
+        const DEFAULT_NAME = '通りすがりさん';
+        
+        // Elysia cookieは、デフォルトでは、Reactive Cookie はオブジェクトのタイプを
+        // 自動的にエンコード/デコードできるため、エンコード/デコードを気にせずに 
+        // Cookie をオブジェクトとして扱うことができます。
+        // https://elysiajs.com/patterns/cookie.html#cookie
+
         // cookie から名前とuidを取得
         if(!name.value){
             // name をセットする
-            name.value=encodeURIComponent('通りすがりさん1')
+            name.value=DEFAULT_NAME
         } else {
-            //name.value=decodeURIComponent(name.value)
         }
         if(!uid.value){
             // uid をセットする
@@ -94,7 +99,11 @@ const app = new Elysia()
             <meta charset="utf-8">
             <meta name=”viewport” content=”width=device-width,initial-scale=1″>
             <title>${CHAT_NAME} updating</title>
-            <script>${adjustHours} </script>
+            <script>
+${adjustHours}
+${getCookie}
+${setCookie}
+            </script>
             <link rel="stylesheet" href="/public/css/base.css">
             <link rel="stylesheet" href="/public/css/input-box.css">
             <link rel="stylesheet" href="/public/css/msg-box.css">
@@ -111,9 +120,9 @@ const app = new Elysia()
                     <h2>${CHAT_NAME} v${VERSION}</h2>
                 </div>
                 名前：<br />
-                <input type="text" id="input_name"  value="${name.value}" uid="${uid.value}" placeholder="Name" /><br />
+                <input type="text" id="input_name" uid="${uid.value}" placeholder="名前を入れてください" /><br />
                 メッセージ：<br />
-                <textarea type="text" id="input_msg" placeholder="メッセージを入力してください"></textarea><br />
+                <textarea id="input_msg" placeholder="メッセージを入力してください"></textarea><br />
                 <div class="message">送信</div>
                 <button id="btn_send" type="submit">
                    送信
@@ -126,7 +135,11 @@ const app = new Elysia()
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
-
+                    <li>2024/01/04 v0.1.018:
+                        <ol>
+                            <li>cookie処理の修正など</li>
+                        </ol>
+                    </li>
                     <li>2023/12/31 v0.1.017:
                         <ol>
                             <li>定数名の修正など</li>
@@ -219,19 +232,32 @@ const app = new Elysia()
                     let msgbox=''
                     for(let i=0;i<${LIMIT};i++){
                         try{
-                            if(!data.body[i][3])continue
+                            if (!data.body || !data.body[i] || !data.body[i][3]) continue;
                             data.body[i][2]=data.body[i][2].replace(/\\n/g, '<br>')
                             // メッセージを出力する
                             if(!!data.body[i]){
-                                if(data.body[i][3]===document.cookie.match(/uid=(.{0,32})/)[1]){
-                                    // 自分のメッセージはright側に表示する
-                                    msg_class='msgbox-right'
-                                } else {
+                                // デフォルトのメッセージ表示位置はleft側
+                                msg_class='msgbox-left'
+                                if(data.head.type==='info'){
+                                    msg_class='msgbox-info'
+                                }
+                                if(!document.cookie){
+                                    // クッキーが無い場合は、メッセージをleft側に表示する
                                     msg_class='msgbox-left'
-                                    if(data.head.type==='info'){
-                                        msg_class='msgbox-info'
+                                } else {
+                                    let uid_cookie=document.cookie.match(/uid=(.{0,32})/)
+                                    // uidクッキーがある場合は、自分のメッセージをright側に表示する
+                                    if(uid_cookie){
+                                        if(data.body[i][3]===document.cookie.match(/uid=(.{0,32})/)[1]){
+                                            // 自分のメッセージはright側に表示する
+                                            msg_class='msgbox-right'
+                                        }
+                                    } else {
+                                        // uid cookieをセットする
+                                        document.cookie='uid=${uid.value};';
                                     }
                                 }
+
                                 // msgbox を作る
                                 msgbox='<div class="msgbox '+msg_class+'" style="">\
                                     <div class="namebox">\
@@ -251,23 +277,36 @@ const app = new Elysia()
                 };
                 // DOM構築時イベント
                 document.addEventListener('DOMContentLoaded', function () {
-                    // 名前をcookieから取得し表示する
-                    input_name='name='+decodeURIComponent(
-                        document.cookie.match(/(?:^|;)\s*name=([^;]+)/)[1]
-                    )+';';
+                    if(!!document.cookie){
+                        // 名前をcookieから取得し表示する
+                        input_name.value = '';
+                        const cookieMatch = document.cookie.match(/(?:^|;)\s*name=([^;]+)/);
+                        if (cookieMatch) {
+                            input_name.value = '' + decodeURIComponent(cookieMatch[1]) + ';';
+                        } 
+                    } else {
+                        // クッキーに名前が見つからない場合のデフォルト処理を追加
+                        input_name.value = '${DEFAULT_NAME};';
+                        // 名前をcookieに保存する
+                        setCookie('name', '${DEFAULT_NAME}');
+                        // uid cookieを保存する
+                        setCookie('uid', '${uid.value}');
+                    }
                 });
                 // 名前入力時イベント
                 input_name.addEventListener('keyup', function () {
                     // 名前をcookieに保存する
-                    document.cookie='name='+encodeURIComponent(input_name.value)+';';
+                    setCookie('name', input_name.value||input_name);
                 });
                 // 送信ボタンクリック時イベント
-                btn_send.addEventListener('click', function () {
+                btn_send.addEventListener('click', function (e) {
+                    e.preventDefault();
                     // 名前とメッセージがあれば送信する
-                    if(!!input_name && !!input_msg.value) {
+                    if(!!input_name.value && !!input_msg.value) {
                         // 名前をcookieに保存する
-                        document.cookie='name='+encodeURIComponent(input_name.value)+';';
-                        document.cookie='uid=${uid.value};';
+                        setCookie('name', input_name.value||input_name);
+                        // uid cookieを保存する
+                        setCookie('uid', '${uid.value}');
                         // 送信する
                         socket.send(JSON.stringify({
                             head:{type: 'msg'},
@@ -356,6 +395,7 @@ const app = new Elysia()
             console.error(`Failed to listen to port ${PORT}`);
         }
     });
+
 
 //===========================================
 // uid を作成する関数
