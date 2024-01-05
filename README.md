@@ -3,15 +3,15 @@
 [![image](https://github.com/toshirot/mychat/assets/154680/bad677a9-2783-4617-964e-63d48ada5a25)](http://74.226.208.203:9012/)
 
 
-## Bun install
 
+## advance preparations 事前準備
 Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
 ```
 sudo apt install unzip 
 ```
-
+## Bun install
 ```
-curl https://bun.sh/install | bash
+curl -fsSL https://bun.sh/install | bash
 ```
 ## clone mychat
 ```
