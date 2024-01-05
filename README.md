@@ -53,9 +53,12 @@ e.g. "dev": "bun run --hot src/index-9012.ts"
 ```
 To change the host name, change "const HOST = 'example.com';" in the index-9012.ts file to localhost, domain name or IP address (xxx.xxx.xxx.xxx.xxx).
 And if you want to change the port, change "const PORT = 9012;".
+
 ホスト名を変更するには、index-9012.ts ファイル内の「const HOST = 'example.com';」を変更します。
 （ローカルホスト、ドメイン名、または IP アドレス (xxx.xxx.xxx.xxx.xxx)）
 また、ポートを変更したい場合は「const PORT = 9012;」を変更してください。
+
+Here, the default is "PORT = 9012" so that port must be open.
 
 ここでは、デフォルトで「PORT = 9012」としているのでそのポートを開いておく必要があります。
 
