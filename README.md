@@ -2,27 +2,39 @@
 
 [![image](https://github.com/toshirot/mychat/assets/154680/bad677a9-2783-4617-964e-63d48ada5a25)](http://74.226.208.203:9012/)
 
-
+# macOS と Linux
 
 ## advance preparations 事前準備
-Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
+for Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
 ```
 sudo apt install unzip 
 ```
 ## Bun install
 ```
 curl -fsSL https://bun.sh/install | bash
+or
+curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.0"
+
 ```
 ## clone mychat
 ```
 git clone https://github.com/toshirot/mychat.git
 source /home/tato/.bashrc
-```
-or 
-```
+or
 git clone git@github.com:toshirot/mychat.git
 source /home/tato/.bashrc
 ```
+
+# Windows
+
+```
+# 警告: 実験的な Windows ビルドでは安定性は保証されません。
+#see  https://bun.sh/docs/installation#windows
+
+powershell -c "iwr bun.sh/install.ps1|iex"
+```
+
+# 以下は 各OS 共通
 
 ## Bun initialization
 ```
