@@ -301,10 +301,7 @@ ${setCookie}
                 document.addEventListener('DOMContentLoaded', function () {
                     if(!!document.cookie){
                         // 名前をcookieから取得し表示する
-                        const cookieMatch = document.cookie.match(/(?:^|;)\s*name=([^;]+)/);
-                        if (cookieMatch) {
-                            input_name.value = '' + decodeURIComponent(cookieMatch[1]) + ';';
-                        } 
+                        input_name.value = getCookie('name') 
                     } else {
                         // クッキーに名前が見つからない場合のデフォルト処理を追加
                         input_name.value = '${DEFAULT_NAME}';
