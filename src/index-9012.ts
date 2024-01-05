@@ -137,6 +137,8 @@ ${setCookie}
                         <ol>
                             <li>DOM関連 test追加</li>
                             <li>決め打ちしてたHOSTを除去</li>
+                            <li>SCRIPT要素とHTMLコメント除去関数追加</li>
+                            <li>testでハードコードしたた認証情報をenvへ移動した</li>
                         </ol>
                     </li>
                     <li>2024/01/04 v0.1.018:
