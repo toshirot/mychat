@@ -15,7 +15,11 @@ or
 ```
 git clone git@github.com:toshirot/mychat.git
 ```
+
 ## Bun initialization
+```
+cd mychat
+```
 ```
 bun init
 ```
