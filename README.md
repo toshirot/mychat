@@ -20,10 +20,11 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.0"
 # Windows 用の Bun インストール
 
 ## Bun install
-```
-# 警告: 実験的な Windows ビルドでは安定性は保証されません。
-#see  https://bun.sh/docs/installation#windows
 
+警告: 実験的な Windows ビルドでは安定性は保証されません。
+@see  https://bun.sh/docs/installation#windows
+
+```
 powershell -c "iwr bun.sh/install.ps1|iex"
 ```
 
