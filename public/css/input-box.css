@@ -1,20 +1,25 @@
 /* 入力用ボックス */
+
+
 .input_box {
     max-width:80%;
     margin:0 auto;
     text-align:center;
-    border-radius:5px;
+    border-radius:15px;
     background-color:#fff;
     box-shadow: 5px 10px 15px #b6b6b6;
 }
 .head {
-    background-color:#b6b6b6;
-    color:#000;
-    background: linear-gradient(to right, #ededed, #E1FFCA);
+    height: 120px;
+    background-color:#E9C7CC;
+    color: #fff;
+    border-top-right-radius:15px;
+    border-top-left-radius:15px;
+    /*background: linear-gradient(to right, #E9C7CC, #E1FFCA);*/
 }
 h2 {
     text-align:center;
-    padding:18px 0 18px 0;
+    padding: 30px 0 18px 0;
     font-size: 1.4em;
 }
 input {
@@ -38,7 +43,7 @@ input, textarea {
     width: 80%;
     max-width: 600px;
     background-clip: padding-box;
-    background: #fff8ca;
+    background: #ddd;
     color:#000;
 }
 button {

@@ -1,5 +1,9 @@
 body {
     margin-left:10px;
     margin-right:10px;
-    background-color:#d8d8d8;
+    background-color:#CABED1;
+    font-family: Meiryo, arial,sans-serif;
+}
+#contact{
+    color: #C18891;
 }
