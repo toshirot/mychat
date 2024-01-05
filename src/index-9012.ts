@@ -285,7 +285,7 @@ ${setCookie}
                         } 
                     } else {
                         // クッキーに名前が見つからない場合のデフォルト処理を追加
-                        input_name.value = '${DEFAULT_NAME};';
+                        input_name.value = '${DEFAULT_NAME}';
                         // 名前をcookieに保存する
                         setCookie('name', '${DEFAULT_NAME}');
                         // uid cookieを保存する
