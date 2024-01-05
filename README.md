@@ -1,6 +1,7 @@
 # mychat with Elysia/Bun
 
-![image](https://github.com/toshirot/mychat/assets/154680/0baef6cb-43c3-45e4-afcf-34560c3d64cb)
+![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83)
+
 
 
 # macOS と Linux 用の Bun インストール
