@@ -12,7 +12,7 @@ const crypto = require('crypto');
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.019';
+const VERSION = '0.1.020';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -108,18 +108,29 @@ ${setCookie}
 
         </head>
         <body>
- 
-            <a href="https://qiita.com/toshirot/items/c5654156c8799ac28d83" target=qiita>
-            →このチャットの作り方</a><br>
-            →Github/mychat <a href="https://github.com/toshirot/mychat">https://github.com/toshirot/mychat</a><br>
+
+            <div id=nav>
+                <a href="https://qiita.com/toshirot/items/c5654156c8799ac28d83" target=qiita>
+                →このチャットの作り方</a><br>
+                →Github/mychat <a href="https://github.com/toshirot/mychat">https://github.com/toshirot/mychat</a>
+            </div>
+
+
             <form id="contact">
                 <div class="input_box">
+
+                
                 <div class="head">
+                    <img id=config src="/public/img/config-icon.png" alt="config" width="30" height="30">
                     <h2>${CHAT_NAME} v${VERSION}</h2>
                 </div>
-                名前：<br />
+                <div class="name_title">
+                名前
+                </div>
                 <input type="text" id="input_name" uid="${uid.value}" placeholder="名前を入れてください" /><br />
-                メッセージ：<br />
+                <div class="msg_title">
+                メッセージ
+                </div>
                 <textarea id="input_msg" placeholder="メッセージを入力してください"></textarea><br />
                 <div class="message">送信</div>
                 <button id="btn_send" type="submit">
@@ -133,6 +144,11 @@ ${setCookie}
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
+                    <li>2024/01/05 v0.1.020:
+                        <ol>
+                            <li>CSS修正等</li>
+                        </ol>
+                    </li>
                     <li>2024/01/05 v0.1.019:
                         <ol>
                             <li>DOM関連 test追加</li>
@@ -405,7 +421,7 @@ ${setCookie}
 // 文字列からSCRIPTタグと HTMLコメントを除去する関数
 //  @param {String} input - HTML文字列
 //  @returns {String} - 結果の文字列
-function delHtmlCommentsAndScript(input: string) : string {{  
+function delHtmlCommentsAndScript(input: string) : string {
     let previous;  
     do {  
         previous = input;

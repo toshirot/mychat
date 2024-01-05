@@ -72,11 +72,11 @@ http://74.226.208.203:9011/
 Simple Documentation for v0.1.018
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
-## default pakage.json at v0.1.019
+## default pakage.json at v0.1.020
 ```
 {
   "name": "mychat",
-  "version": "0.1.019",
+  "version": "0.1.020",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.ts"

@@ -4,6 +4,10 @@ body {
     background-color:#CABED1;
     font-family: Meiryo, arial,sans-serif;
 }
+#nav, #nav a:link, #nav a:visited{
+    color: #fff;
+    font-size: small
+}
 #contact{
     color: #C18891;
 }
