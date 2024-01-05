@@ -40,7 +40,7 @@ http://74.226.208.203:9011/
 Simple Documentation for v0.1.018
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
-## default pakage.json at v0.1.017
+## default pakage.json at v0.1.018
 ```
 {
   "name": "mychat",
@@ -54,9 +54,11 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
     "crypto": "^1.0.1",
-    "elysia": "latest"
+    "crypto-js": "^4.2.0",
+    "elysia": "0.7.30"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^12.10.3",
     "@types/bun": "^1.0.0",
     "bun-types": "latest"
   },
