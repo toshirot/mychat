@@ -357,7 +357,7 @@ ${setCookie}
             // 一応、msgoj を文字列化してスクリプトタグを除去し、オブジェクトへ戻す
             if(typeof msgoj=='object'){
                 let msgstr=JSON.stringify(msgoj)
-                msgstr=(''+msgstr).replace(/<script\b[^>]*>([\s\S]*?)<\/script\b[^>]*>/gi, '');
+                msgstr=delHtmlCommentsAndScript(''+msgstr)
                 msgoj=JSON.parse(msgstr)
             } else return; // オブジェクト以外は無視する
   
@@ -399,6 +399,21 @@ ${setCookie}
         }
     });
 
+//===========================================
+// 文字列からSCRIPTタグと HTMLコメントを除去する関数
+//  @param {String} input - HTML文字列
+//  @returns {String} - 結果の文字列
+function delHtmlCommentsAndScript(input: string) : string {{  
+    let previous;  
+    do {  
+        previous = input;
+        // HTMLコメントを削除する
+        input = input.replace(/<!--|--!?>/g, ""); 
+        // scriptタグを削除する
+        input = input.replace(/<script\b[^>]*>([\s\S]*?)<\/script\b[^>]*>/gi, "");  
+    } while (input !== previous);  
+    return input;  
+} 
 
 //===========================================
 // uid を作成する関数
