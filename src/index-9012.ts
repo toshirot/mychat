@@ -12,11 +12,9 @@ const crypto = require('crypto');
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.018';
+const VERSION = '0.1.019';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
-// ホスト HTTP と WebSocket 共通
-const HOST = '74.226.208.203';
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
 
@@ -135,6 +133,12 @@ ${setCookie}
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
+                    <li>2024/01/05 v0.1.019:
+                        <ol>
+                            <li>DOM関連 test追加</li>
+                            <li>決め打ちしてたHOSTを除去</li>
+                        </ol>
+                    </li>
                     <li>2024/01/04 v0.1.018:
                         <ol>
                             <li>cookie処理の修正など</li>
@@ -204,7 +208,7 @@ ${setCookie}
 
             <script>
                 // 接続
-                const socket = new WebSocket('ws://${HOST}:${PORT}/ws');
+                const socket = new WebSocket('ws://'+location.host+'/ws');
                 // 接続時イベント
                 socket.onopen = function (event) {
                     console.log('cookie at onopen: ', document.cookie)
