@@ -58,9 +58,9 @@ And if you want to change the port, change "const PORT = 9012;".
 （ローカルホスト、ドメイン名、または IP アドレス (xxx.xxx.xxx.xxx.xxx)）
 また、ポートを変更したい場合は「const PORT = 9012;」を変更してください。
 
-Here, the default is "PORT = 9012" so that port must be open.
+Here, the default is "PORT = 9012", so if you want to use it as is, you will need to open that port.
 
-ここでは、デフォルトで「PORT = 9012」としているのでそのポートを開いておく必要があります。
+ここでは、デフォルトで「PORT = 9012」としているので、もしそのまま使うならそのポートを開いておく必要があります。
 
 ## test
 
