@@ -2,7 +2,7 @@
 
 [![image](https://github.com/toshirot/mychat/assets/154680/bad677a9-2783-4617-964e-63d48ada5a25)](http://74.226.208.203:9012/)
 
-# macOS と Linux
+# macOS と Linux 用
 
 ## advance preparations 事前準備
 for Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
@@ -17,7 +17,7 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.0"
 
 ```
 
-# Windows
+# Windows 用
 
 ```
 # 警告: 実験的な Windows ビルドでは安定性は保証されません。
@@ -52,6 +52,12 @@ e.g. "dev": "bun run --hot src/index-9012.ts"
 ```
 To change the host name, change "const HOST = 'example.com';" in the index-9012.ts file to localhost, domain name or IP address (xxx.xxx.xxx.xxx.xxx).
 And if you want to change the port, change "const PORT = 9012;".
+
+## test
+
+```
+bun test
+```
 
 ## Demo
 
