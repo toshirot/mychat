@@ -2,7 +2,7 @@
 
 [![image](https://github.com/toshirot/mychat/assets/154680/bad677a9-2783-4617-964e-63d48ada5a25)](http://74.226.208.203:9012/)
 
-# macOS と Linux 用
+# macOS と Linux 用の Bun インストール
 
 ## advance preparations 事前準備
 for Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
@@ -17,8 +17,9 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.0"
 
 ```
 
-# Windows 用
+# Windows 用の Bun インストール
 
+## Bun install
 ```
 # 警告: 実験的な Windows ビルドでは安定性は保証されません。
 #see  https://bun.sh/docs/installation#windows
