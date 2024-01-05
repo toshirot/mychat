@@ -16,14 +16,6 @@ or
 curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.0"
 
 ```
-## clone mychat
-```
-git clone https://github.com/toshirot/mychat.git
-source /home/tato/.bashrc
-or
-git clone git@github.com:toshirot/mychat.git
-source /home/tato/.bashrc
-```
 
 # Windows
 
@@ -35,6 +27,15 @@ powershell -c "iwr bun.sh/install.ps1|iex"
 ```
 
 # 以下は 各OS 共通
+
+## clone mychat
+```
+git clone https://github.com/toshirot/mychat.git
+source /home/tato/.bashrc
+or
+git clone git@github.com:toshirot/mychat.git
+source /home/tato/.bashrc
+```
 
 ## Bun initialization
 ```
