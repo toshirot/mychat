@@ -10,9 +10,11 @@
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
     "crypto": "^1.0.1",
-    "elysia": "latest"
+    "crypto-js": "^4.2.0",
+    "elysia": "0.7.30"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^12.10.3",
     "@types/bun": "^1.0.0",
     "bun-types": "latest"
   },
