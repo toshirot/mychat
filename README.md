@@ -4,16 +4,24 @@
 
 
 ## Bun install
+
+Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
+```
+sudo apt install unzip 
+```
+
 ```
 curl https://bun.sh/install | bash
 ```
 ## clone mychat
 ```
 git clone https://github.com/toshirot/mychat.git
+source /home/tato/.bashrc
 ```
 or 
 ```
 git clone git@github.com:toshirot/mychat.git
+source /home/tato/.bashrc
 ```
 
 ## Bun initialization
