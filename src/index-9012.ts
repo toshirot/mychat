@@ -357,7 +357,7 @@ ${setCookie}
             // 一応、msgoj を文字列化してスクリプトタグを除去し、オブジェクトへ戻す
             if(typeof msgoj=='object'){
                 let msgstr=JSON.stringify(msgoj)
-                msgstr=(''+msgstr).replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, '');
+                msgstr=(''+msgstr).replace(/<script\b[^>]*>([\s\S]*?)<\/script\b[^>]*>/gi, '');
                 msgoj=JSON.parse(msgstr)
             } else return; // オブジェクト以外は無視する
   
