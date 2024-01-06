@@ -5,6 +5,7 @@ import { staticPlugin } from '@elysiajs/static'
 import { Database } from 'bun:sqlite';
 import { adjustHours, getCookie, setCookie } from "./utils";
 const crypto = require('crypto');
+import sanitize from 'sanitize-filename';
 
 //===========================================
 // 定数
@@ -12,7 +13,7 @@ const crypto = require('crypto');
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.020';
+const VERSION = '0.1.021';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -144,6 +145,11 @@ ${setCookie}
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
+                    <li>2024/01/05 v0.1.021:
+                        <ol>
+                            <li>サニタイズ修正</li>
+                        </ol>
+                    </li>
                     <li>2024/01/05 v0.1.020:
                         <ol>
                             <li>CSS修正等</li>
@@ -372,7 +378,7 @@ ${setCookie}
             // 一応、msgoj を文字列化してスクリプトタグを除去し、オブジェクトへ戻す
             if(typeof msgoj=='object'){
                 let msgstr=JSON.stringify(msgoj)
-                msgstr=delHtmlCommentsAndScript(''+msgstr)
+                msgstr=sanitize(''+msgstr)
                 msgoj=JSON.parse(msgstr)
             } else return; // オブジェクト以外は無視する
   
@@ -413,22 +419,6 @@ ${setCookie}
             console.error(`Failed to listen to port ${PORT}`);
         }
     });
-
-//===========================================
-// 文字列からSCRIPTタグと HTMLコメントを除去する関数
-//  @param {String} input - HTML文字列
-//  @returns {String} - 結果の文字列
-function delHtmlCommentsAndScript(input: string) : string {
-    let previous;  
-    do {  
-        previous = input;
-        // HTMLコメントを削除する
-        input = input.replace(/<!--|--!?>/g, ""); 
-        // scriptタグを削除する
-        input = input.replace(/<script\b[^>]*>([\s\S]*?)<\/script\b[^>]*>/gi, "");  
-    } while (input !== previous);  
-    return input;  
-} 
 
 //===========================================
 // uid を作成する関数
