@@ -1,6 +1,8 @@
 # mychat with Elysia/Bun
 
-[![image](https://github.com/toshirot/mychat/assets/154680/bad677a9-2783-4617-964e-63d48ada5a25)](http://74.226.208.203:9012/)
+![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83)
+
+
 
 # macOS と Linux 用の Bun インストール
 
@@ -60,6 +62,8 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 
 ## test
 
+※/test/crypto/encrypt-decrypt.test.ts　で「process.env.PASS_PHRASE」を使ってるので
+事前にenv.PASS_PHRASEに何かパスフレーズな文字列を入れておいてください。
 ```
 bun test
 ```
