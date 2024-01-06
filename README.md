@@ -3,6 +3,9 @@
 ![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83)
 
 
+## Demo 動作サンプル
+
+http://74.226.208.203:9011/
 
 # macOS と Linux 用の Bun インストール
 
@@ -67,10 +70,6 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 ```
 bun test
 ```
-
-## Demo
-
-http://74.226.208.203:9011/
 
 ## @see Qiita
 Simple Documentation for v0.1.018
