@@ -77,7 +77,8 @@ bun test
 ```
 
 ## @see Qiita
-Simple Documentation for v0.1.018
+Simple Documentation for v0.1.017
+ただし、Qiitaでは、v0.1.017までの解説をしています。
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 ## default pakage.json at v0.1.021
