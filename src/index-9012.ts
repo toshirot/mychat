@@ -145,6 +145,11 @@ ${setCookie}
             <div style=font-size:12px;margin-left:30px;clear:both;>
                 <h3>Update</h3>
                 <ul>
+                    <li>2024/01/06 v0.1.022:
+                        <ol>
+                            <li>サニタイズテストを追加</li>
+                        </ol>
+                    </li>
                     <li>2024/01/05 v0.1.021:
                         <ol>
                             <li>サニタイズ修正</li>
