@@ -1,8 +1,14 @@
+
+html {
+    font-family: "Meiryo UI", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Arial", "Helvetica Neue",  sans-serif;
+    font-size: 62.5%;/* 16px x 0.625 = 10px(=1rem) */
+}
 body {
     margin-left:10px;
     margin-right:10px;
     background-color:#CABED1;
-    font-family: Meiryo, arial,sans-serif;
+    font-size: 1.6rem;
+    font-feature-settings: "palt";
 }
 #nav, #nav a:link, #nav a:visited{
     color: #fff;
@@ -10,4 +16,16 @@ body {
 }
 #contact{
     color: #C18891;
+}
+
+/* media queries */
+@media only screen and (min-width: 800px) {
+    body {
+        font-size: 1.8rem;
+    }  
+}
+@media only screen and (min-width: 1000px) {
+    body {
+        font-size: 2rem;
+    }  
 }
