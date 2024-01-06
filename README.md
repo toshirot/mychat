@@ -3,13 +3,13 @@
 ![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83)
 
 
-## Demo 動作サンプル
+## Demo/ 動作サンプル
 
 http://74.226.208.203:9011/
 
 # macOS と Linux 用の Bun インストール
 
-## advance preparations 事前準備
+## advance preparations/ 事前準備
 for Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
 ```
 sudo apt install unzip 
@@ -44,14 +44,14 @@ git clone git@github.com:toshirot/mychat.git
 source /home/tato/.bashrc
 ```
 
-## Bun initialization Bunを初期化する
+## Bun initialization/ Bunを初期化する
 ```
 cd mychat
 ```
 ```
 bun init
 ```
-## Execution at port 9012　ポート9012で実行する
+## Execution at port 9012/ ポート9012で実行する
 ```
 bun dev
 
@@ -63,7 +63,7 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 ポートを変更したい場合は「const PORT = 9012;」を変更してください。
 ここでは、デフォルトで「PORT = 9012」としているので、もしそのまま使うならそのポートを開いておく必要があります。
 
-## test　テスト
+## test/ テスト
 
 ※/test/crypto/encrypt-decrypt.test.ts　で「process.env.PASS_PHRASE」を使ってるので
 事前にenv.PASS_PHRASEに何かパスフレーズな文字列を入れておいてください。
