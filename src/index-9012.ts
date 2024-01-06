@@ -376,16 +376,21 @@ ${setCookie}
 
             // Elysia の XSS やバリデーションの確認をまだしていないので、
             // 一応、msgoj を文字列化してスクリプトタグを除去し、オブジェクトへ戻す
+            /*
             if(typeof msgoj=='object'){
                 let msgstr=JSON.stringify(msgoj)
-                msgstr=sanitize(''+msgstr)
+                msgstr=''+sanitize(msgstr)
+                console.log(msgstr)
                 msgoj=JSON.parse(msgstr)
             } else return; // オブジェクト以外は無視する
+            */
   
             // タイプにより処理を分ける
             // type:msg はDBへ登録する
             if(msgoj.head.type==='msg'){
                 console.log('msg',msgoj.body)
+                msgoj.body.name=''+sanitize(msgoj.body.name)
+                msgoj.body.msg=''+sanitize(msgoj.body.msg)
                 msgoj.body.name = msgoj.body.name.slice(0, 20);
                 msgoj.body.msg = msgoj.body.msg.slice(0, 300);
                 let sql_ins = 
