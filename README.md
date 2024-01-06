@@ -76,11 +76,11 @@ http://74.226.208.203:9011/
 Simple Documentation for v0.1.018
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
-## default pakage.json at v0.1.020
+## default pakage.json at v0.1.021
 ```
 {
   "name": "mychat",
-  "version": "0.1.020",
+  "version": "0.1.021",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.ts"
@@ -91,7 +91,8 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
     "@elysiajs/static": "^0.8.1",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
-    "elysia": "0.7.30"
+    "elysia": "0.7.30",
+    "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^12.10.3",
