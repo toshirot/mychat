@@ -82,6 +82,17 @@ button:hover, .button:hover {
 }
 
 /* media queries */
+@media only screen and (max-width: 799px) {
+    h2 {
+        font-size: 2.8rem;
+    }
+    input, textarea{
+        font-size: 1.8rem;
+    }
+    button{
+        font-size: 1.4rem
+    }
+}
 @media only screen and (min-width: 800px) {
     h2 {
         font-size: 2.8rem;
