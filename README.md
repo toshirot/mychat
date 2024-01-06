@@ -35,7 +35,7 @@ powershell -c "iwr bun.sh/install.ps1|iex"
 
 # 以下は 各OS 共通
 
-## clone mychat クローンで mychat をダウンロードする
+## clone mychat/ クローンで mychat をダウンロードする
 ```
 git clone https://github.com/toshirot/mychat.git
 source /home/tato/.bashrc
