@@ -35,7 +35,7 @@ powershell -c "iwr bun.sh/install.ps1|iex"
 
 # 以下は 各OS 共通
 
-## clone mychat
+## clone mychat クローンで mychat をダウンロードする
 ```
 git clone https://github.com/toshirot/mychat.git
 source /home/tato/.bashrc
@@ -44,14 +44,14 @@ git clone git@github.com:toshirot/mychat.git
 source /home/tato/.bashrc
 ```
 
-## Bun initialization
+## Bun initialization Bunを初期化する
 ```
 cd mychat
 ```
 ```
 bun init
 ```
-## Execution at port 9012
+## Execution at port 9012　ポート9012で実行する
 ```
 bun dev
 
@@ -63,7 +63,7 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 ポートを変更したい場合は「const PORT = 9012;」を変更してください。
 ここでは、デフォルトで「PORT = 9012」としているので、もしそのまま使うならそのポートを開いておく必要があります。
 
-## test
+## test　テスト
 
 ※/test/crypto/encrypt-decrypt.test.ts　で「process.env.PASS_PHRASE」を使ってるので
 事前にenv.PASS_PHRASEに何かパスフレーズな文字列を入れておいてください。
