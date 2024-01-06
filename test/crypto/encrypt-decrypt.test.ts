@@ -7,6 +7,7 @@ const testMsg =
 むかしむかしあるところにおじさんとおばさんが住んでいました`;
 
 // あらかじめ環境変数に設定しておく
+// $ export PASS_PHRASE="mypassphrase"
 const PASS_PHRASE = process.env.PASS_PHRASE
 
 describe('AESによる暗号化と復号化', () => {
