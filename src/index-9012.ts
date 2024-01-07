@@ -240,7 +240,7 @@ ${setCookie}
                 const socket = new WebSocket('ws://'+location.host+'/ws');
                 // 接続時イベント
                 socket.onopen = function (event) {
-                    console.log('cookie at onopen: ', document.cookie)
+                    console.log('ws opend: ', event.target.url, new Date())
                     socket.send(JSON.stringify({
                         head:{type: 'info'},
                         body:{
@@ -307,6 +307,10 @@ ${setCookie}
                             } 
                         } catch(e){}
                     }
+                };
+                // 切断時イベント
+                socket.onclose = function (event) {
+                    console.log('ws closed: ', event.target.url, new Date())
                 };
                 // DOM構築時イベント
                 document.addEventListener('DOMContentLoaded', function () {
