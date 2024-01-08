@@ -25,7 +25,7 @@ describe('ブラウザDOM/ LocalStorage', () => {
         document.body.innerHTML = `
             <input type="password" id="pass" name="pass" value="${Passphrase}">
             <script>
-                localStorage.setItem('pass', encrypt("thisismyPass"));
+                localStorage.setItem('pass', encrypt(pass.value));
             </script>
         `
         // input要素からローカルストレージにセットする
