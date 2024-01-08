@@ -89,7 +89,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   ├─ src/
   │    ├─ index-9012.ts // bun dev で起動するファイル
   │    └─ utiles.ts     // 各種関数
-  ├─ public/            // v0.1.015 で追加したstatic ディレクトリ
+  ├─ public/            // static ディレクトリ
   │    └─ css/          // static CSS
   │        ├─ base.css 
   │        ├─ input-box.css
@@ -100,7 +100,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   │    └─ mychat.sqlite-wal // ジャーナルモード用ファイル
   │ 
   ├─ bench/           // ベンチマーク
-  ├─ test/            // テスト
+  ├─ test/            // テスト bun test で起動する
   ├─ README.md
   ├─ bun.lockb
   ├─ node_modules/
