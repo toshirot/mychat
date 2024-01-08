@@ -112,6 +112,9 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 
 ## default pakage.json at v0.1.021
+
+#### 注意※2023/1/7　 "elysia": "0.7.30",　が "elysia": "0.8.00" だとエラーがでた
+
 ```
 {
   "name": "mychat",
