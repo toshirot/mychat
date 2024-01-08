@@ -81,6 +81,36 @@ Simple Documentation for v0.1.017
 ただし、Qiitaでは、v0.1.017までの解説をしています。
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
+
+## Tree at v0.1.021
+
+```
+.mychat/
+  ├─ src/
+  │    ├─ index.ts    // bun dev で起動するファイル
+  │    └─ utiles.ts   // タイムゾーンの変更関数を置いた
+  ├─ public/          // v0.1.015 で追加したstatic ディレクトリ
+  │    └─ css/        // static CSS
+  │        ├─ base.css 
+  │        ├─ input-box.css
+  │        └─ msg-box.css
+  ├─ db/
+  │    ├─ mychat.sqlite     // 通常の SQLiteファイル
+  │    ├─ mychat.sqlite-shm // ジャーナルモード用ファイル
+  │    └─ mychat.sqlite-wal // ジャーナルモード用ファイル
+  │ 
+  ├─ bench/           // ベンチマーク
+  ├─ test/            // テスト
+  ├─ README.md
+  ├─ bun.lockb
+  ├─ node_modules/
+  ├─ happydom.ts
+  ├─ package.json
+  ├─ bunfig.toml
+  └─ tsconfig.json
+ 
+```
+
 ## default pakage.json at v0.1.021
 ```
 {
