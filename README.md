@@ -96,8 +96,8 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   │        └─ msg-box.css
   ├─ db/
   │    ├─ mychat.sqlite     // 通常の SQLiteファイル
-  │    ├─ mychat.sqlite-shm // ジャーナルモード用ファイル
-  │    └─ mychat.sqlite-wal // ジャーナルモード用ファイル
+  │    ├─ mychat.sqlite-shm // WALモード用ファイル
+  │    └─ mychat.sqlite-wal // WALモード用ファイル
   │ 
   ├─ bench/           // ベンチマーク
   ├─ test/            // テスト bun test で起動する
