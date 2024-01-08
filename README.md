@@ -87,10 +87,10 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 .mychat/
   ├─ src/
-  │    ├─ index.ts    // bun dev で起動するファイル
-  │    └─ utiles.ts   // タイムゾーンの変更関数を置いた
-  ├─ public/          // v0.1.015 で追加したstatic ディレクトリ
-  │    └─ css/        // static CSS
+  │    ├─ index-9012.ts // bun dev で起動するファイル
+  │    └─ utiles.ts     // タイムゾーンの変更関数を置いた
+  ├─ public/            // v0.1.015 で追加したstatic ディレクトリ
+  │    └─ css/          // static CSS
   │        ├─ base.css 
   │        ├─ input-box.css
   │        └─ msg-box.css
