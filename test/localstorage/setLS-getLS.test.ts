@@ -4,9 +4,9 @@
 import { describe, expect, it, test } from 'bun:test'
 import crypto from 'crypto';
  
-const getLS = (key:any):any => JSON.parse(localStorage.getItem(key) || '[]')
+const getLS = (key:any, val:any):any  => JSON.parse(decrypt(localStorage.getItem(key) || '[]', val))
 const setLS = (key:any, val:any):any => {
-  localStorage.setItem(key, JSON.stringify(val))
+  localStorage.setItem(key, encrypt(JSON.stringify(val), val))
 }
 
 describe('ブラウザDOM/ LocalStorage', () => {
@@ -16,7 +16,7 @@ describe('ブラウザDOM/ LocalStorage', () => {
         // ローカルストレージにセットする
         setLS('pass', Passphrase)
         // 比較する
-        expect(getLS('pass')).toStrictEqual(Passphrase)
+        expect(getLS('pass', Passphrase)).toStrictEqual(Passphrase)
     })
 
     test('input要素からLocalStorageにセットしてデータを取り出す', () => {
@@ -31,7 +31,7 @@ describe('ブラウザDOM/ LocalStorage', () => {
         // input要素からローカルストレージにセットする
         setLS('pass', document.getElementById('pass')?.value)
         // 比較する
-        expect(getLS('pass')).toStrictEqual(Passphrase)
+        expect(getLS('pass', Passphrase)).toStrictEqual(Passphrase)
     })
 })
 
