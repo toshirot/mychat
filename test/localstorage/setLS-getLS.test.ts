@@ -1,5 +1,6 @@
+// e.g. see happy-dom https://bun.sh/guides/test/happy-dom
 // bun add -d @happy-dom/global-registrator
-//import { Elysia } from 'elysia';
+// 
 import { describe, expect, it, test } from 'bun:test'
 
 const getLS = (key:any):any => JSON.parse(localStorage.getItem(key) || '[]')
