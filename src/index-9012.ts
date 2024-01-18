@@ -401,7 +401,7 @@ ${setCookie}
                 msgoj.body.msg=msgoj.body.msg.replace(/\n/g, '-r-n%n-r-')
                 msgoj.body.name=''+sanitize(msgoj.body.name)
                 msgoj.body.msg=''+sanitize(msgoj.body.msg)
-                msgoj.body.msg=msgoj.body.msg.replace(/-r-n%n-r-/g, '<br>')
+                msgoj.body.msg=msgoj.body.msg.replace(/-r-n%n-r-/g, '<br />')
                 msgoj.body.name = msgoj.body.name.slice(0, 20);
                 msgoj.body.msg = msgoj.body.msg.slice(0, 300);
                 let sql_ins = 
