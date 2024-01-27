@@ -1,9 +1,9 @@
 /* 入力用ボックス */
 
-
-.input_box {
+.input_box,.reg_box {
     max-width:80%;
     margin:0 auto;
+    padding-bottom: 20px;
     text-align:center;
     border-radius:15px;
     background-color:#fff;
@@ -13,6 +13,15 @@
     height: 120px;
     margin-bottom: 18px;
     background-color:#E9C7CC;
+    color: #fff;
+    border-top-right-radius:15px;
+    border-top-left-radius:15px;
+    /*background: linear-gradient(to right, #E9C7CC, #E1FFCA);*/
+}
+.reg_box .head {
+    height: 120px;
+    margin-bottom: 18px;
+    background-color:#c6b1b4;
     color: #fff;
     border-top-right-radius:15px;
     border-top-left-radius:15px;
@@ -51,23 +60,46 @@ input, textarea {
     background: #ddd;
     color:#000;
 }
+.input_tel, #input_pass{
+    max-width: 180px;
+    max-height: 30px;
+    background: #dcced6;
+    padding: 4px 15px;
+    font-size: 1.8rem;
+}
+
 button {
     font-size: 2.8rem;
-    margin-top:15px;
-    margin-bottom:25px;
-    padding: 12px 45px;
+ /*   margin-top:15px;
+    margin-bottom:25px;*/
+    padding: 4px 18px;
     border-radius: 35px;
     border: 1px solid #f4a8ed;
     transition: .5s;
     display: inline-block;
     cursor: pointer;
-    width:33%;
-    min-width: 200px;
+   /* width:33%;
+    min-width: 200px;*/
     color:#fff;
     background-color:#f4a8ed;
 }
 button:hover, .button:hover {
     background: #e78fdf;
+}
+#btn_my_tel_send{
+    max-width: 200px;
+    max-height: 30px;
+}
+.input_box #btn_send{
+    width: 120px;
+}
+.info {
+    font-size: small;
+    padding: 20px;
+}
+.info button{
+    font-size: small;
+    padding: 4px 8px;
 }
 .message {
     /*font-size:1.1em;*/
