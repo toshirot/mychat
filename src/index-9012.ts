@@ -1,11 +1,25 @@
 import { Elysia } from 'elysia';
 import type { WS } from '@types/bun';
-import { html } from '@elysiajs/html'
-import { staticPlugin } from '@elysiajs/static'
+import { html } from '@elysiajs/html';
+import { staticPlugin } from '@elysiajs/static';
 import { Database } from 'bun:sqlite';
-import { adjustHours, getCookie, setCookie } from "./utils";
+import { 
+    adjustHours, 
+    getCookie, 
+    setCookie, 
+    hasDataImg, 
+    dataImgWrap2Img,
+    urlWrap2Img, 
+    urlWrap2Link,
+    inputBox,
+    regBox_1,
+    regBox_2,
+    regBox_3
+} from "./utils";
+import { CryptoJS } from 'crypto-js';
 const crypto = require('crypto');
 import sanitize from 'sanitize-filename';
+import 'dotenv/config';
 
 //===========================================
 // 定数
@@ -13,7 +27,7 @@ import sanitize from 'sanitize-filename';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.021';
+const VERSION = '0.1.023';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -72,6 +86,38 @@ let clients: WebSocket[] = [];
 const app = new Elysia()
     .use(html())
     .use(staticPlugin()) //ここでstaticプラグインを適用する
+
+    //------------------------------------------------------------
+    // SMS送信  ログインチェック POST
+    // セキュリティコードを送信する
+    // e.g. https://reien.top:5000/api/login-tel-sms/
+    .post('/api/sms-code/', ({ body}) => {
+
+        console.log(body.tel  )
+        //console.log(req.body )
+        if(!body)return
+        if(!body.tel)return
+        // console.log('sms-code:',new Date(),req.body)
+
+        const seqCode=!!(''.padStart)?
+            (''+parseInt(Math.random()*10000,10)).padStart(4, "0"):
+            (''+parseInt(Math.random()*10000,10))//ieはpadStartが無いので4桁までの数字
+        let num=''//'下記リンククリックで電話番号確認が完了します。 '
+                +''
+                +'このコードをブラウザに入力してください'
+                +' '
+                +seqCode
+        //telへセキュリティコードSMSを送る
+       // sendSMS(body,  req.body.tel)
+        sendSMS(num,  body.tel)
+        
+        
+        console.log('/api/sms-code/ send to sms', num)
+        //ブラウザへレスポンス
+        //app.send(JSON.stringify(seqCode))
+
+    })
+
     .get('/', ({ cookie: { name, uid } }) => { 
         const DEFAULT_NAME = '通りすがりさん';
         
@@ -99,10 +145,41 @@ const app = new Elysia()
             <meta name="viewport" content="width=device-width,initial-scale=1">
             <title>${CHAT_NAME} updating</title>
             <script>
+// for time
 ${adjustHours}
+// for input box
+${inputBox}
+${regBox_1}
+${regBox_2}
+${regBox_3}
+// for cookie
 ${getCookie}
 ${setCookie}
+// for image and links
+${hasDataImg}
+${dataImgWrap2Img}
+${urlWrap2Img}
+${urlWrap2Link}
+const getLS = (key, val)  => JSON.parse(decrypt(localStorage.getItem(key) || '[]', val))
+const setLS = (key, val) => {
+  localStorage.setItem(key, encrypt(JSON.stringify(val), val))
+}
+// POST
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "same-origin", 
+    cache: "no-cache",
+    credentials: "same-origin", 
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data), 
+  });
+  return response//.json();
+}
             </script>
+            <script src="/public/js/cripto-js.js"></script>
             <link rel="stylesheet" href="/public/css/base.css">
             <link rel="stylesheet" href="/public/css/input-box.css">
             <link rel="stylesheet" href="/public/css/msg-box.css">
@@ -116,124 +193,11 @@ ${setCookie}
                 →Github/mychat <a href="https://github.com/toshirot/mychat">https://github.com/toshirot/mychat</a>
             </div>
 
-
-            <form id="contact">
-                <div class="input_box">
-
-                
-                <div class="head">
-                    <img id=config src="/public/img/config-icon.png" alt="config" width="30" height="30">
-                    <h2>${CHAT_NAME} v${VERSION}</h2>
-                </div>
-                <div class="name_title">
-                名前
-                </div>
-                <input type="text" id="input_name" uid="${uid.value}" placeholder="名前を入れてください" /><br />
-                <div class="msg_title">
-                メッセージ
-                </div>
-                <textarea id="input_msg" placeholder="メッセージを入力してください"></textarea><br />
-                <div class="message">送信</div>
-                <button id="btn_send" type="submit">
-                   送信
-                </button>
-                </div>
-            </form>
-
-            <ul safe id=msgs></ul>
-
-            <div style=font-size:12px;margin-left:30px;clear:both;>
-                <h3>Update</h3>
-                <ul>
-                    <li>2024/01/06 v0.1.022:
-                        <ol>
-                            <li>サニタイズテストを追加</li>
-                        </ol>
-                    </li>
-                    <li>2024/01/05 v0.1.021:
-                        <ol>
-                            <li>サニタイズ修正</li>
-                        </ol>
-                    </li>
-                    <li>2024/01/05 v0.1.020:
-                        <ol>
-                            <li>CSS修正等</li>
-                        </ol>
-                    </li>
-                    <li>2024/01/05 v0.1.019:
-                        <ol>
-                            <li>DOM関連 test追加</li>
-                            <li>決め打ちしてたHOSTを除去</li>
-                            <li>SCRIPT要素とHTMLコメント除去関数追加</li>
-                            <li>testでハードコードしたた認証情報をenvへ移動した</li>
-                        </ol>
-                    </li>
-                    <li>2024/01/04 v0.1.018:
-                        <ol>
-                            <li>cookie処理の修正など</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/31 v0.1.017:
-                        <ol>
-                            <li>定数名の修正など</li>
-                            <li>githubへ公開しました https://github.com/toshirot/mychat</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/30 v0.1.016: 
-                        <ol>
-                            <li>メッセージの改行を有効にした</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/28 v0.1.015: 
-                        <ol>
-                            <li>static プラグインを適用した</li>
-                            <li>cssを/public/css配下へ分割した</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/25 v0.1.014/ v0.1.013/ v0.1.012: 
-                        <ol>
-                            <li>テーブルのname、msgカラムへの文字数制限</li>
-                            <li>入力ボックスにもCSSを適用</li>
-                            <li>名前修正時のcookie登録</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/25 v0.1.011: 
-                        <ol>
-                            <li>会話を左右に分ける</li>
-                            <li>uidをcookieに追加して自分を右側にする</li>
-                            <li>会話をCSSで色分けする</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/24 v0.1.005: 
-                        <ol>
-                            <li>名前欄をcookie保存する</li>
-                            <li>送信したらメッセージ欄をクリアする</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/23 v0.1.004: 
-                        <ol>
-                            <li>メッセージ欄の改行送信機能を追加</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/23 v0.1.003: 
-                        <ol>
-                            <li>rc/utiles.ts にタイムゾーンの変更関数 adjustHours追加</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/22 v0.1.002: 
-                        <ol>
-                            <li>typescript 的な型指定や interface定義追加</li>
-                        </ol>
-                    </li>
-                    <li>2023/12/21 v0.1.001: 
-                        <ol>
-                            <li>interface MsgData を追加</li>
-                            <li>typescript 的な型指定を追加</li>
-                            <li>CHAT_NAME と viersion番号を追加</li>
-                        </ol>
-                    </li>
-                </ul>
-            </div>
+            <div id=contact></div>
+            <script>
+            // 初期ボックス
+            window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
+            </script>
 
             <script>
                 // 接続
@@ -245,7 +209,7 @@ ${setCookie}
                         head:{type: 'info'},
                         body:{
                             name: 'system',
-                            msg: '誰かがサーバーへ接続しました。',
+                            msg:CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse( '誰かがサーバーへ接続しました。'), "123").toString(),
                             uid: 'system'
                         }
                     }))
@@ -292,18 +256,23 @@ ${setCookie}
                                 }
 
                                 // msgbox を作る
+                                let dec_name=CryptoJS.AES.decrypt(data.body[i][1], "123").toString(CryptoJS.enc.Utf8);
+                                let dec_msg=CryptoJS.AES.decrypt(data.body[i][2], "123").toString(CryptoJS.enc.Utf8);
+                                console.log(dec_name, dec_msg)
                                 msgbox='<div class="msgbox '+msg_class+'" style="">\
                                     <div class="namebox">\
-                                    '+data.body[i][1]+' &gt; ('+adjustHours(data.body[i][4], +9)+') \
+                                    '+dec_name+' &gt; ('+adjustHours(data.body[i][4], +9)+') \
                                     </div>\
                                     <div class="msg" uid="'+data.body[i][3]+'" \
                                     style="display:block;"> \
-                                    '+data.body[i][2]+'\
+                                    '+dec_msg+'\
                                     </div>\
                                     <div style="clear:both;inline-block;">\
                                     </div>\
                                 </div>'
-                                msgs.insertAdjacentHTML('afterbegin', msgbox)
+                                if(window.msgs){
+                                    msgs.insertAdjacentHTML('afterbegin', msgbox)
+                                }
                             } 
                         } catch(e){}
                     }
@@ -314,6 +283,7 @@ ${setCookie}
                 };
                 // DOM構築時イベント
                 document.addEventListener('DOMContentLoaded', function () {
+                    if(!window.input_name)return
                     if(!!document.cookie){
                         // 名前をcookieから取得し表示する
                         input_name.value = getCookie('name') 
@@ -327,32 +297,37 @@ ${setCookie}
                     }
                 });
                 // 名前入力時イベント
-                input_name.addEventListener('keyup', function () {
-                    // 名前をcookieに保存する
-                    setCookie('name', input_name.value||input_name);
-                });
-                // 送信ボタンクリック時イベント
-                btn_send.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    // 名前とメッセージがあれば送信する
-                    if(!!input_name.value && !!input_msg.value) {
+                if(window.input_name){
+                    input_name.addEventListener('keyup', function () {
                         // 名前をcookieに保存する
                         setCookie('name', input_name.value||input_name);
-                        // uid cookieを保存する
-                        setCookie('uid', '${uid.value}');
-                        // 送信する
-                        socket.send(JSON.stringify({
-                            head:{type: 'msg'},
-                            body:{
-                                name: input_name.value,
-                                msg: input_msg.value,
-                                uid: '${uid.value}'
-                            }
-                        }));
-                        // 送信したらメッセージ欄を空にする
-                        input_msg.value='';
-                    }
-                });
+                    });
+                }
+
+                // 送信ボタンクリック時イベント
+                if(window.btn_send){
+                    btn_send.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        // 名前とメッセージがあれば送信する
+                        if(!!input_name.value && !!input_msg.value) {
+                            // 名前をcookieに保存する
+                            setCookie('name', input_name.value||input_name);
+                            // uid cookieを保存する
+                            setCookie('uid', '${uid.value}');
+                            // 送信する
+                            socket.send(JSON.stringify({
+                                head:{type: 'msg'},
+                                body:{
+                                    name: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_name.value), "123").toString(),
+                                    msg: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_msg.value,), "123").toString(),
+                                    uid: '${uid.value}'
+                                }
+                            }));
+                            // 送信したらメッセージ欄を空にする
+                            input_msg.value='';
+                        }
+                    });
+                }
             </script>
         </body>
     </html>
@@ -435,6 +410,38 @@ ${setCookie}
             console.error(`Failed to listen to port ${PORT}`);
         }
     });
+
+//------------------------------------------------------------
+// sendSMS
+// @body {string} body text
+// @to {string} tel //e.g. '09046213611'
+// @return {object}
+// e.g. .SMS_の付く定数は環境変数へ登録しておく
+//
+const util = require('util');
+const childProcess = require('child_process');
+const exec = util.promisify(childProcess.exec);
+const INPUT_LEN_TEL=11
+const SMS_TOTEL=process.env.SMS_TOTEL
+const SMS_API_TOKEN= process.env.SMS_API_TOKEN
+const SMS_NOTIFICATION_EMAILS=process.env.SMS_NOTIFICATION_EMAILS
+const endpoint='https://api.smslink.jp/'
+
+async function sendSMS(body, to){
+    if(to.length!==INPUT_LEN_TEL)return
+    console.log("sendSMSLink:===========================\n")
+
+    let curl =`
+    curl "`+endpoint+`api/v1/delivery" \
+    -X POST \
+    -d '{"contacts":[{"phone_number":"`+to+`"}],"text_message":"`+body+`","reserved_at":"","click_count":true,"notification_emails":["`+SMS_NOTIFICATION_EMAILS+`"]}' \
+    -H "Accept:       application/json" \
+    -H "token:        `+process.env.SMS_API_TOKEN+`" \
+    -H "Content-Type: application/json"`
+
+    const res = await exec(curl)
+    return res
+}
 
 //===========================================
 // uid を作成する関数

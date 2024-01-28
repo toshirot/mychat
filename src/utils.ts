@@ -19,7 +19,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
   //===========================================
   // 各種登録用の関数
   //  @returns {String} - HTML文字列
-  export function regBox(CHAT_NAME: string, VERSION: string, uid: string): string{
+  export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): string{
       return `<form>
           <div class="reg_box">
               <div class="head">
@@ -39,10 +39,16 @@ export function adjustHours(date: Date, adjustHour: number): string {
                   method: 'POST',
                   body: JSON.stringify({ tel: input_my_tel.value }),
                   headers: { 'Content-Type': 'application/json' },
+                })
+                .then((response) =>  {
+                    alert(response)
+                    window.contact.innerHTML=regBox_2('${CHAT_NAME}', '${VERSION}', '${uid}');
                 });
+
                 
-                const body = response.json();
-                console.log(body)
+                //const body = response.json();
+                //console.log(body)
+                
                 /*
                  postData('http://74.226.208.203:9013/api/sms-code/', { tel: input_my_tel.value }).then((data) => {
                       console.log(data); 
@@ -79,7 +85,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
               <div class="info">
               <br />
               ※セキュリティコードが届かないときは、
-              <button onclick="window.contact.innerHTML=regBox('${CHAT_NAME}', '${VERSION}', '${uid}')" >戻る</button>
+              <button onclick="window.contact.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}', '${uid}')" >戻る</button>
               で携帯番号を確認して再送してみてください
               </div>
           </div>
@@ -131,7 +137,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
           <div class="head">
               <img id="config" src="/public/img/config-icon.png" 
               alt="config" width="40" height="40" 
-              onclick="window.contact.innerHTML=regBox('${CHAT_NAME}', '${VERSION}')" />
+              onclick="window.contact.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}')" />
               <h2>${CHAT_NAME} v${VERSION} ベースの次の未来</h2>
           </div>
           <div class="name_title">
