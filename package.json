@@ -3,7 +3,7 @@
   "version": "0.1.021",
   "scripts": {
     "test": "bun test",
-    "dev": "bun run --hot src/index-9012.ts"
+    "dev": "bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
