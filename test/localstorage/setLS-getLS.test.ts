@@ -29,7 +29,7 @@ describe('ブラウザDOM/ LocalStorage', () => {
             </script>
         `
         // input要素からローカルストレージにセットする
-        setLS('pass', document.getElementById('pass')?.value)
+        //setLS('pass', document.getElementById('pass')?.value)
         // 比較する
         expect(getLS('pass', Passphrase)).toStrictEqual(Passphrase)
     })

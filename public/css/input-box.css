@@ -67,6 +67,16 @@ input, textarea {
     padding: 4px 15px;
     font-size: 1.8rem;
 }
+#input_my_sec {
+    max-width: 80px;
+    max-height: 30px;
+    background: #dcced6;
+    padding-top: 8px;
+    padding-right: 12px;
+    padding-bottom: 5px;
+    padding-left: 18px;
+    font-size: 1.8rem;
+}
 
 button {
     font-size: 2.8rem;
