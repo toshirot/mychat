@@ -16,7 +16,6 @@ import {
     regBox_2,
     regBox_3
 } from "./utils";
-import { CryptoJS } from 'crypto-js';
 const crypto = require('crypto');
 import sanitize from 'sanitize-filename';
 import 'dotenv/config';
@@ -136,7 +135,6 @@ const app = new Elysia()
             // uid をセットする
             uid.value= mkmd5(Math.random().toString())
         }
-        //name.value=decodeURIComponent(name.value)
     return  `
     <html lang='ja'>
         
@@ -163,20 +161,6 @@ ${urlWrap2Link}
 const getLS = (key, val)  => JSON.parse(decrypt(localStorage.getItem(key) || '[]', val))
 const setLS = (key, val) => {
   localStorage.setItem(key, encrypt(JSON.stringify(val), val))
-}
-// POST
-async function postData(url, data) {
-  const response = await fetch(url, {
-    method: "POST",
-    mode: "same-origin", 
-    cache: "no-cache",
-    credentials: "same-origin", 
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data), 
-  });
-  return response//.json();
 }
             </script>
             <script src="/public/js/cripto-js.js"></script>
@@ -229,6 +213,7 @@ async function postData(url, data) {
                     let msgbox=''
                     for(let i=0;i<${LIMIT};i++){
                         try{
+                            console.log("--"+data.body[i][1].length+"--")
                             if (!data.body || !data.body[i] || !data.body[i][3]) continue;
                             data.body[i][2]=data.body[i][2].replace(/\\n/g, '<br>')
                             // メッセージを出力する
@@ -258,6 +243,7 @@ async function postData(url, data) {
                                 // msgbox を作る
                                 let dec_name=CryptoJS.AES.decrypt(data.body[i][1], "123").toString(CryptoJS.enc.Utf8);
                                 let dec_msg=CryptoJS.AES.decrypt(data.body[i][2], "123").toString(CryptoJS.enc.Utf8);
+                                console.log(data.body[i][1])
                                 console.log(dec_name, dec_msg)
                                 msgbox='<div class="msgbox '+msg_class+'" style="">\
                                     <div class="namebox">\
@@ -319,7 +305,7 @@ async function postData(url, data) {
                                 head:{type: 'msg'},
                                 body:{
                                     name: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_name.value), "123").toString(),
-                                    msg: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_msg.value,), "123").toString(),
+                                    msg: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_msg.value), "123").toString(),
                                     uid: '${uid.value}'
                                 }
                             }));
@@ -377,7 +363,7 @@ async function postData(url, data) {
                 msgoj.body.name=''+sanitize(msgoj.body.name)
                 msgoj.body.msg=''+sanitize(msgoj.body.msg)
                 msgoj.body.msg=msgoj.body.msg.replace(/-r-n%n-r-/g, '<br />')
-                msgoj.body.name = msgoj.body.name.slice(0, 20);
+                msgoj.body.name = msgoj.body.name.slice(0, 300);
                 msgoj.body.msg = msgoj.body.msg.slice(0, 300);
                 let sql_ins = 
                         'INSERT OR IGNORE INTO ' 
