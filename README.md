@@ -52,10 +52,11 @@ cd mychat
 bun init
 ```
 ## Execution at port 9012/ ポート9012で実行する
+※v0.1.023から「.tsx」ファイルを起動しています
 ```
 bun dev
 
-e.g. "dev": "bun run --hot src/index-9012.ts"
+e.g. "dev": "bun run --hot src/index-9012.tsx"
 ```
 if you want to change the port, change "const PORT = 9012;".
 Here, the default is "PORT = 9012", so if you want to use it as is, you will need to open that port.
@@ -82,12 +83,12 @@ Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 
-## Tree at v0.1.021
+## Tree at v0.1.023
 
 ```
 .mychat/
   ├─ src/
-  │    ├─ index-9012.ts // bun dev で起動するファイル
+  │    ├─ index-9012.tsx // bun dev で起動するファイル
   │    └─ utiles.ts     // 各種関数
   ├─ public/            // static ディレクトリ
   │    └─ css/          // static CSS
@@ -111,22 +112,23 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
  
 ```
 
-## default pakage.json at v0.1.021
+## default pakage.json at v0.1.023
 
 #### 注意※2023/1/7　 "elysia": "0.7.30",　が "elysia": "0.8.00" だとエラーがでた
 
 ```
 {
   "name": "mychat",
-  "version": "0.1.021",
+  "version": "0.1.023",
   "scripts": {
     "test": "bun test",
-    "dev": "bun run --hot src/index-9012.ts"
+    "dev": "bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
+    "@types/crypto-js": "^4.2.1",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "elysia": "0.7.30",
