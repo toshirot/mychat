@@ -14,6 +14,10 @@ describe('ブラウザDOM/ LocalStorage', () => {
         // 実際には thisismyPass を平文むき出しにしない
         const Passphrase = "thisismyPass";
         // ローカルストレージにセットする
+        /*
+        About step1 for https://github.com/toshirot/mychat/security/code-scanning/10
+        In this test, the Passphrase is written in code for convenience, but the plan is not to actually bare the plain text of thisismyPass
+        */
         setLS('pass', Passphrase)
         // 比較する
         expect(getLS('pass', Passphrase)).toStrictEqual(Passphrase)
