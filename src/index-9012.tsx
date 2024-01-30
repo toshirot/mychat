@@ -165,11 +165,13 @@ const setLS = (key, val) => {
 }
 const decrypt_js = (str, solt) => CryptoJS.AES.decrypt(str,  solt).toString(CryptoJS.enc.Utf8)
 const encrypt_js = (str, solt) => CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(str), solt).toString()
-const sanitize = (str) => {
+const sanitize_send = (str) => {
     str=(str+'').replace(/\\n/g, '-r-n%n-r-')
-    str=DOMPurify.sanitize(str)
+    return DOMPurify.sanitize(str)
+}
+const sanitize_recive = (str) => {
     str=str.replace(/-r-n%n-r-/g, '<br />')
-    return str
+    return DOMPurify.sanitize(str)
 }
 // socket = createWebSocket('ws://'+location.host+'/ws')
 const createWebSocket = (url) =>{
@@ -283,7 +285,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                     msg_class,
                                     msgLine[0], 
                                     decrypt_js(msgLine[1], "123"), 
-                                    decrypt_js(msgLine[2], "123"), 
+                                    sanitize_recive(decrypt_js(msgLine[2], "123")), 
                                     msgLine[3], 
                                     adjustHours(msgLine[4], +9)
                                 )
@@ -339,8 +341,8 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                             socket.send(JSON.stringify({
                                 head:{type: 'msg'},
                                 body:{
-                                    name: encrypt_js(sanitize(window.input_name.value), "123").toString(),
-                                    msg: encrypt_js(sanitize(window.input_msg.value), "123").toString(),
+                                    name: encrypt_js(sanitize_send(window.input_name.value), "123").toString(),
+                                    msg: encrypt_js(sanitize_send(window.input_msg.value), "123").toString(),
                                     uid: '${uid.value}'
                                 }
                             }));
