@@ -98,17 +98,17 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 .mychat/
   ├─ src/
   │    ├─ index-9012.tsx // bun dev で起動するファイル
-  │    └─ utiles.ts     // 各種関数
-  ├─ public/            // static ディレクトリ
-  │    ├─ css/          // static CSS
+  │    └─ utiles.ts      // 各種関数
+  ├─ public/             // static ディレクトリ
+  │    ├─ css/           // static CSS
   │    │   ├─ base.css 
-  │    │   ├─ input-box.css
-  │    │   └─ msg-box.css
+  │    │   ├─ input-box.css // インプットボックス
+  │    │   └─ msg-box.css   // メッセージボックス
   │    ├─ img
   │    │   └─ config-icon.png
   │    └─ js
-  │        ├─ cripto-js.js
-  │        └─ purify.min.js
+  │        ├─ cripto-js.js  // 暗号/復号
+  │        └─ purify.min.js // サニタイズ
   ├─ db/
   │    ├─ mychat.sqlite     // 通常の SQLiteファイル
   │    ├─ mychat.sqlite-shm // WALモード用ファイル
