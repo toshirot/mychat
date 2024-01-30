@@ -83,6 +83,7 @@ bun test
 
 v0.1.023現在まだパスフレーズをハードコードしてますが、今後修正します。
 現況データは次のようにAESで暗号化されて送受信されます。
+
 ![image](https://github.com/toshirot/mychat/assets/154680/94d387f5-856f-4ab5-bd9a-6eae2b4ce1eb)
 
 ## @see Qiita
