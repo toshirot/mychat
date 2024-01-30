@@ -97,13 +97,13 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 .mychat/
   ├─ src/
-  │    ├─ index-9012.tsx // bun dev で起動するファイル
-  │    └─ utiles.ts      // 各種関数
-  ├─ public/             // static ディレクトリ
-  │    ├─ css/           // static CSS
-  │    │   ├─ base.css 
-  │    │   ├─ input-box.css // インプットボックス
-  │    │   └─ msg-box.css   // メッセージボックス
+  │    ├─ index-9012.tsx    // bun dev で起動するファイル
+  │    └─ utiles.ts         // 各種関数
+  ├─ public/                // static ディレクトリ
+  │    ├─ css/              // static CSS
+  │    │   ├─ base.css      // ベースCSS
+  │    │   ├─ input-box.css // インプットボックスCSS
+  │    │   └─ msg-box.css   // メッセージボックスCSS
   │    ├─ img
   │    │   └─ config-icon.png
   │    └─ js
@@ -114,8 +114,8 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   │    ├─ mychat.sqlite-shm // WALモード用ファイル
   │    └─ mychat.sqlite-wal // WALモード用ファイル
   │ 
-  ├─ bench/           // ベンチマーク
-  ├─ test/            // テスト bun test で起動する
+  ├─ bench/                 // ベンチマーク
+  ├─ test/                  // テスト bun test で起動する
   ├─ README.md
   ├─ bun.lockb
   ├─ node_modules/
