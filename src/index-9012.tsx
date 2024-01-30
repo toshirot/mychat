@@ -170,6 +170,32 @@ const sanitize = (str) => {
     str=str.replace(/-r-n%n-r-/g, '<br />')
     return DOMPurify.sanitize(str)
 }
+// socket = createWebSocket('ws://'+location.host+'/ws')
+const createWebSocket = (url) =>{
+    let wss = new WebSocket(url);
+    wss.onopen = socket.onopen
+    wss.onmessage = socket.onmessage
+    wss.onclose = socket.onclose
+    return wss
+}
+// writeMsg(msgs, msgLine[0] , msgLine[1], "123"), decrypt_js(msgLine[2], "123"), msgLine[3], adjustHours(msgLine[4], +9))
+const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
+    // msgbox を作る
+    msgbox='<div class="msgbox '+msg_class+'" style="">\
+        <div class="namebox">\
+        '+num+': '+ dec_name+' &gt; ('+date+') \
+        </div>\
+        <div class="msg" uid="'+uid+'" \
+        style="display:block;"> \
+        '+dec_msg+'\
+        </div>\
+        <div style="clear:both;inline-block;">\
+        </div>\
+    </div>'
+    if(window.msgs){
+        msgs.insertAdjacentHTML('afterbegin', msgbox)
+    }
+}
             </script>
             <link rel="stylesheet" href="/public/css/base.css">
             <link rel="stylesheet" href="/public/css/input-box.css">
@@ -192,7 +218,9 @@ const sanitize = (str) => {
 
             <script>
                 // 接続
-                const socket = new WebSocket('ws://'+location.host+'/ws');
+                let socket = new WebSocket('ws://'+location.host+'/ws');
+                // 再接続カウンター
+                window.wss={'count':0}
                 // 接続時イベント
                 socket.onopen = function (event) {
                     console.log('ws opend: ', event.target.url, new Date())
@@ -216,18 +244,17 @@ const sanitize = (str) => {
 
                     // 下から上に向かって追記するので SELECT ASC で昇順取得したリストをafterbeginで追記する
                     data.body.reverse()
-                    console.log(data.body)
                     let msg_class='msgbox-left'
                     let msgbox=''
                     for(let i=0;i<${LIMIT};i++){
                         try{
-                            console.log("-0-"+decrypt_js(data.body[i][0], "123")+"-1-"+decrypt_js(data.body[i][1], "123")+"-2-"+decrypt_js(data.body[i][2], "123")+"-3-"+decrypt_js(data.body[i][3], "123")+"-4-"+decrypt_js(data.body[i][4], "123")+"--")
-                            console.log("-0-"+data.body[i][0]+"-1-"+data.body[i][1]+"-2-"+data.body[i][2]+"-3-"+data.body[i][3]+"-4-"+data.body[i][4]+"--")
 
                             if (!data.body || !data.body[i] || !data.body[i][3]) continue;
-                            data.body[i][2]=data.body[i][2].replace(/\\n/g, '<br>')
+                            let msgLine=data.body[i]
+                            
+                            msgLine[2]=msgLine[2].replace(/\\n/g, '<br>')
                             // メッセージを出力する
-                            if(!!data.body[i]){
+                            if(!!msgLine){
                                 // デフォルトのメッセージ表示位置はleft側
                                 msg_class='msgbox-left'
                                 if(data.head.type==='info'){
@@ -240,7 +267,7 @@ const sanitize = (str) => {
                                     let uid_cookie=document.cookie.match(/uid=(.{0,32})/)
                                     // uidクッキーがある場合は、自分のメッセージをright側に表示する
                                     if(uid_cookie){
-                                        if(data.body[i][3]===document.cookie.match(/uid=(.{0,32})/)[1]){
+                                        if(msgLine[3]===document.cookie.match(/uid=(.{0,32})/)[1]){
                                             // 自分のメッセージはright側に表示する
                                             msg_class='msgbox-right'
                                         }
@@ -249,26 +276,16 @@ const sanitize = (str) => {
                                         document.cookie='uid=${uid.value};';
                                     }
                                 }
-
                                 // msgbox を作る
-                                let dec_name=decrypt_js(data.body[i][1], "123");
-                                let dec_msg=decrypt_js(data.body[i][2], "123");
-                                //console.log(data.body[i][1])
-                                //console.log(dec_name, dec_msg)
-                                msgbox='<div class="msgbox '+msg_class+'" style="">\
-                                    <div class="namebox">\
-                                    '+data.body[i][0] +': '+ dec_name+' &gt; ('+adjustHours(data.body[i][4], +9)+') \
-                                    </div>\
-                                    <div class="msg" uid="'+data.body[i][3]+'" \
-                                    style="display:block;"> \
-                                    '+dec_msg+'\
-                                    </div>\
-                                    <div style="clear:both;inline-block;">\
-                                    </div>\
-                                </div>'
-                                if(window.msgs){
-                                    msgs.insertAdjacentHTML('afterbegin', msgbox)
-                                }
+                                writeMsg(
+                                    msgs,
+                                    msg_class,
+                                    msgLine[0], 
+                                    decrypt_js(msgLine[1], "123"), 
+                                    decrypt_js(msgLine[2], "123"), 
+                                    msgLine[3], 
+                                    adjustHours(msgLine[4], +9)
+                                )
                             } 
                         } catch(e){}
                     }
@@ -276,6 +293,13 @@ const sanitize = (str) => {
                 // 切断時イベント
                 socket.onclose = function (event) {
                     console.log('ws closed: ', event.target.url, new Date())
+                    if(window.wss['count']<10){
+                        // 再接続は10回まで
+                        setTimeout(function(){
+                            socket = createWebSocket('ws://'+location.host+'/ws')
+                            window.wss['count']++
+                        }, 100)
+                    }
                 };
                 // DOM構築時イベント
                 document.addEventListener('DOMContentLoaded', function () {
