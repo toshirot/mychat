@@ -167,8 +167,9 @@ const decrypt_js = (str, solt) => CryptoJS.AES.decrypt(str,  solt).toString(Cryp
 const encrypt_js = (str, solt) => CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(str), solt).toString()
 const sanitize = (str) => {
     str=(str+'').replace(/\\n/g, '-r-n%n-r-')
+    str=DOMPurify.sanitize(str)
     str=str.replace(/-r-n%n-r-/g, '<br />')
-    return DOMPurify.sanitize(str)
+    return str
 }
 // socket = createWebSocket('ws://'+location.host+'/ws')
 const createWebSocket = (url) =>{
