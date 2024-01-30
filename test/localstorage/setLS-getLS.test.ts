@@ -41,12 +41,13 @@ describe('ブラウザDOM/ LocalStorage', () => {
 
 
 function encrypt(text: string, password: string) {
-    const cipher = crypto.createCipher('aes-256-cbc', password)
+    const cipher = crypto.createCipheriv('aes-256-cbc', password)
     const crypted = cipher.update(text, 'utf-8', 'hex')
     return crypted + cipher.final('hex')
 }
 function decrypt(text: string, password: string) {
-    const decipher = crypto.createDecipher('aes-256-cbc', password)
+    const decipher = crypto.createDecipheriv('aes-256-cbc', password)
     const decrypted = decipher.update(text, 'hex', 'utf-8')
     return decrypted + decipher.final('utf-8')
 }
+
