@@ -77,6 +77,12 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 bun test
 ```
 
+## 暗号化について
+
+v0.1.023現在まだパスフレーズをハードコードしてますが、今後修正します。
+現況データは次のようにAESで暗号化されて送受信されます。
+![image](https://github.com/toshirot/mychat/assets/154680/94d387f5-856f-4ab5-bd9a-6eae2b4ce1eb)
+
 ## @see Qiita
 Simple Documentation for v0.1.017
 ただし、Qiitaでは、v0.1.017までの解説をしています。
@@ -91,10 +97,15 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   │    ├─ index-9012.tsx // bun dev で起動するファイル
   │    └─ utiles.ts     // 各種関数
   ├─ public/            // static ディレクトリ
-  │    └─ css/          // static CSS
-  │        ├─ base.css 
-  │        ├─ input-box.css
-  │        └─ msg-box.css
+  │    ├─ css/          // static CSS
+  │    │   ├─ base.css 
+  │    │   ├─ input-box.css
+  │    │   └─ msg-box.css
+  │    ├─ img
+  │    │   └─ config-icon.png
+  │    └─ js
+  │        ├─ cripto-js.js
+  │        └─ purify.min.js
   ├─ db/
   │    ├─ mychat.sqlite     // 通常の SQLiteファイル
   │    ├─ mychat.sqlite-shm // WALモード用ファイル
