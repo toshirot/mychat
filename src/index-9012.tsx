@@ -17,7 +17,6 @@ import {
     regBox_3
 } from "./utils";
 const crypto = require('crypto');
-import sanitize from 'sanitize-filename';
 import 'dotenv/config';
 
 //===========================================
@@ -142,6 +141,8 @@ const app = new Elysia()
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width,initial-scale=1">
             <title>${CHAT_NAME} updating</title>
+            <script src="/public/js/cripto-js.js"></script>
+            <script src="/public/js/purify.min.js"></script>
             <script>
 // for time
 ${adjustHours}
@@ -162,8 +163,14 @@ const getLS = (key, val)  => JSON.parse(decrypt(localStorage.getItem(key) || '[]
 const setLS = (key, val) => {
   localStorage.setItem(key, encrypt(JSON.stringify(val), val))
 }
+const decrypt_js = (str, solt) => CryptoJS.AES.decrypt(str,  solt).toString(CryptoJS.enc.Utf8)
+const encrypt_js = (str, solt) => CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(str), solt).toString()
+const sanitize = (str) => {
+    str=(str+'').replace(/\\n/g, '-r-n%n-r-')
+    str=str.replace(/-r-n%n-r-/g, '<br />')
+    return DOMPurify.sanitize(str)
+}
             </script>
-            <script src="/public/js/cripto-js.js"></script>
             <link rel="stylesheet" href="/public/css/base.css">
             <link rel="stylesheet" href="/public/css/input-box.css">
             <link rel="stylesheet" href="/public/css/msg-box.css">
@@ -193,7 +200,7 @@ const setLS = (key, val) => {
                         head:{type: 'info'},
                         body:{
                             name: 'system',
-                            msg:CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse( '誰かがサーバーへ接続しました。'), "123").toString(),
+                            msg: encrypt_js('誰かがサーバーへ接続しました。', "123").toString(),
                             uid: 'system'
                         }
                     }))
@@ -209,11 +216,14 @@ const setLS = (key, val) => {
 
                     // 下から上に向かって追記するので SELECT ASC で昇順取得したリストをafterbeginで追記する
                     data.body.reverse()
+                    console.log(data.body)
                     let msg_class='msgbox-left'
                     let msgbox=''
                     for(let i=0;i<${LIMIT};i++){
                         try{
-                            console.log("--"+data.body[i][1].length+"--")
+                            console.log("-0-"+decrypt_js(data.body[i][0], "123")+"-1-"+decrypt_js(data.body[i][1], "123")+"-2-"+decrypt_js(data.body[i][2], "123")+"-3-"+decrypt_js(data.body[i][3], "123")+"-4-"+decrypt_js(data.body[i][4], "123")+"--")
+                            console.log("-0-"+data.body[i][0]+"-1-"+data.body[i][1]+"-2-"+data.body[i][2]+"-3-"+data.body[i][3]+"-4-"+data.body[i][4]+"--")
+
                             if (!data.body || !data.body[i] || !data.body[i][3]) continue;
                             data.body[i][2]=data.body[i][2].replace(/\\n/g, '<br>')
                             // メッセージを出力する
@@ -241,13 +251,13 @@ const setLS = (key, val) => {
                                 }
 
                                 // msgbox を作る
-                                let dec_name=CryptoJS.AES.decrypt(data.body[i][1], "123").toString(CryptoJS.enc.Utf8);
-                                let dec_msg=CryptoJS.AES.decrypt(data.body[i][2], "123").toString(CryptoJS.enc.Utf8);
-                                console.log(data.body[i][1])
-                                console.log(dec_name, dec_msg)
+                                let dec_name=decrypt_js(data.body[i][1], "123");
+                                let dec_msg=decrypt_js(data.body[i][2], "123");
+                                //console.log(data.body[i][1])
+                                //console.log(dec_name, dec_msg)
                                 msgbox='<div class="msgbox '+msg_class+'" style="">\
                                     <div class="namebox">\
-                                    '+dec_name+' &gt; ('+adjustHours(data.body[i][4], +9)+') \
+                                    '+data.body[i][0] +': '+ dec_name+' &gt; ('+adjustHours(data.body[i][4], +9)+') \
                                     </div>\
                                     <div class="msg" uid="'+data.body[i][3]+'" \
                                     style="display:block;"> \
@@ -304,8 +314,8 @@ const setLS = (key, val) => {
                             socket.send(JSON.stringify({
                                 head:{type: 'msg'},
                                 body:{
-                                    name: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_name.value), "123").toString(),
-                                    msg: CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(window.input_msg.value), "123").toString(),
+                                    name: encrypt_js(sanitize(window.input_name.value), "123").toString(),
+                                    msg: encrypt_js(sanitize(window.input_msg.value), "123").toString(),
                                     uid: '${uid.value}'
                                 }
                             }));
@@ -359,10 +369,6 @@ const setLS = (key, val) => {
             // type:msg はDBへ登録する
             if(msgoj.head.type==='msg'){
                 console.log('msg',msgoj.body)
-                msgoj.body.msg=msgoj.body.msg.replace(/\n/g, '-r-n%n-r-')
-                msgoj.body.name=''+sanitize(msgoj.body.name)
-                msgoj.body.msg=''+sanitize(msgoj.body.msg)
-                msgoj.body.msg=msgoj.body.msg.replace(/-r-n%n-r-/g, '<br />')
                 msgoj.body.name = msgoj.body.name.slice(0, 300);
                 msgoj.body.msg = msgoj.body.msg.slice(0, 300);
                 let sql_ins = 
