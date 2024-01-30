@@ -16,7 +16,7 @@ import {
     regBox_2,
     regBox_3
 } from "./utils";
-const crypto = require('crypto');
+const bcrypt = require("bcrypt");
 import 'dotenv/config';
 
 //===========================================
@@ -132,7 +132,7 @@ const app = new Elysia()
         }
         if(!uid.value){
             // uid をセットする
-            uid.value= mkmd5(Math.random().toString())
+            uid.value= mkUid(Math.random().toString())
         }
     return  `
     <html lang='ja'>
@@ -464,10 +464,12 @@ async function sendSMS(body, to){
 
 //===========================================
 // uid を作成する関数
-//  @param {String} sql - 実行するSQLクエリ
+//  @param {String} str - 文字列
 //  @returns {String} - 結果の文字列
-function mkmd5(str: string): string {
-    return crypto.createHash('md5').update(str).digest('hex')
+function mkUid(str) {
+    const salt = str.slice(0, 16);
+    var hashed = bcrypt.hashSync(str, salt);
+    return hashed;
 }
 
 //===========================================
