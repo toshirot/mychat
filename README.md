@@ -149,6 +149,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
     "@types/crypto-js": "^4.2.1",
+    "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "elysia": "0.7.30",
