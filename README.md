@@ -66,6 +66,8 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 
 ## test/ テスト
 
+現在、testの実行に問題があります。https://github.com/toshirot/mychat/issues/8
+
 ※/test/crypto/encrypt-decrypt.test.ts　で「process.env.PASS_PHRASE」を使ってるので
 事前にenv.PASS_PHRASEに何かパスフレーズな文字列を入れておいてください。
 たとえば、こんな感じで。
