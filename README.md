@@ -18,7 +18,7 @@ sudo apt install unzip
 ```
 curl -fsSL https://bun.sh/install | bash
 or
-curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.0"
+curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.25"
 
 ```
 
