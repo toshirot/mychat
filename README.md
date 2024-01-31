@@ -1,4 +1,4 @@
-# mychat v0.1.023 with Elysia/Bun
+# mychat v0.1.024 with Elysia/Bun
 
 ![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83)
 
@@ -81,7 +81,7 @@ bun test
 
 @see https://github.com/toshirot/mychat/issues/2
 
-v0.1.023現在まだパスフレーズをハードコードしてますが、今後修正します。
+v0.1.024現在まだパスフレーズをハードコードしてますが、今後修正します。
 現況データは次のようにAESで暗号化されて送受信されます。
 
 ![image](https://github.com/toshirot/mychat/assets/154680/94d387f5-856f-4ab5-bd9a-6eae2b4ce1eb)
@@ -98,7 +98,7 @@ Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 
-## Tree at v0.1.023
+## Tree at v0.1.024
 
 ```
 .mychat/
@@ -132,14 +132,14 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
  
 ```
 
-## default pakage.json at v0.1.023
+## default pakage.json at v0.1.024
 
 #### 注意※2023/1/7　 "elysia": "0.7.30",　が "elysia": "0.8.00" だとエラーがでた
 
 ```
 {
   "name": "mychat",
-  "version": "0.1.023",
+  "version": "0.1.024",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.tsx"
