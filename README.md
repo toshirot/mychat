@@ -123,12 +123,12 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   ├─ bench/                 // ベンチマーク
   ├─ test/                  // テスト bun test で起動する
   ├─ README.md
-  ├─ bun.lockb
+  ├─ bun.lockb              // @see https://bun.sh/docs/install/lockfile
   ├─ node_modules/
-  ├─ happydom.ts
+  ├─ happydom.ts            // @see https://bun.sh/guides/test/happy-dom
   ├─ package.json
-  ├─ bunfig.toml
-  └─ tsconfig.json
+  ├─ bunfig.toml            // @see https://bun.sh/docs/runtime/bunfig
+  └─ tsconfig.json          // @see https://bun.sh/docs/runtime/jsx#configuration
  
 ```
 
