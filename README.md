@@ -1,4 +1,4 @@
-# mychat with Elysia/Bun
+# mychat v0.1.023 with Elysia/Bun
 
 ![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83)
 
