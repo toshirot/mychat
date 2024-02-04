@@ -28,9 +28,7 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.25"
 警告: 実験的な Windows ビルドでは安定性は保証されません。
 @see  https://bun.sh/docs/installation#windows
 
-```
-powershell -c "iwr bun.sh/install.ps1|iex"
-```
+ 
 
 # 以下は 各OS 共通
 
