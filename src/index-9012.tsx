@@ -267,6 +267,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                 if(!document.cookie){
                                     // クッキーが無い場合は、メッセージをleft側に表示する
                                     msg_class='msgbox-left'
+                                    document.cookie='uid=${uid.value};';
                                 } else {
                                     let uid_cookie=document.cookie.match(/uid=(.{0,32})/)
                                     // uidクッキーがある場合は、自分のメッセージをright側に表示する
