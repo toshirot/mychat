@@ -17,7 +17,6 @@ import {
     regBox_3
 } from "./utils";
 const crypto = require('crypto');
-const bcrypt = require("bcrypt");
 import 'dotenv/config';
 
 //===========================================
@@ -103,7 +102,7 @@ const app = new Elysia()
             (''+parseInt(Math.random()*10000,10))//ieはpadStartが無いので4桁までの数字
         let num=''//'下記リンククリックで電話番号確認が完了します。 '
                 +''
-                +'このコードをブラウザに入力してください'
+                +'このセキュリティコードをブラウザに入力してください'
                 +' '
                 +seqCode
         //telへセキュリティコードSMSを送る
@@ -113,6 +112,7 @@ const app = new Elysia()
         
         console.log('/api/sms-code/ send to sms', num)
         //ブラウザへレスポンス
+        return JSON.stringify(seqCode)
         //app.send(JSON.stringify(seqCode))
 
     })
@@ -469,10 +469,7 @@ async function sendSMS(body, to){
 //  @param {String} str - 文字列
 //  @returns {String} - 結果の文字列
 function mkUid(str) {
-    //const salt = str.slice(0, 16);
-    //var hashed = bcrypt.hashSync(str, salt);
-    let hashed = crypto.createHash('sha512').update(str).digest('hex')
-    return hashed;
+    return crypto.createHash('sha512').update(str).digest('hex')
 }
 
 //===========================================
