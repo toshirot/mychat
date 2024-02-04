@@ -36,7 +36,7 @@ export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): strin
             <button id="btn_my_tel_send" type="button" 
               onclick=" event.preventDefault();
               input_my_tel.value = getCookie('mytel')||'';
-              const response = fetch('http://74.226.208.203:9013/api/sms-code/', {
+              const response = fetch('http://'+location.host+'/api/sms-code/', {
                 method: 'POST',
                 body: JSON.stringify({ tel: input_my_tel.value }),
                 headers: { 'Content-Type': 'application/json' },
