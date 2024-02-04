@@ -16,6 +16,7 @@ import {
     regBox_2,
     regBox_3
 } from "./utils";
+const crypto = require('crypto');
 const bcrypt = require("bcrypt");
 import 'dotenv/config';
 
@@ -67,7 +68,7 @@ const sql_table_create =
             id INTEGER PRIMARY KEY, 
             name VARCHAR(255), 
             msg VARCHAR(255), 
-            uid VARCHAR(32), 
+            uid VARCHAR(128), 
             created_at TIMESTAMP
         );`
         
@@ -467,8 +468,9 @@ async function sendSMS(body, to){
 //  @param {String} str - 文字列
 //  @returns {String} - 結果の文字列
 function mkUid(str) {
-    const salt = str.slice(0, 16);
-    var hashed = bcrypt.hashSync(str, salt);
+    //const salt = str.slice(0, 16);
+    //var hashed = bcrypt.hashSync(str, salt);
+    let hashed = crypto.createHash('sha512').update(str).digest('hex')
     return hashed;
 }
 
