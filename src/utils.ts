@@ -26,7 +26,7 @@ export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): strin
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
                 onclick="window.contact.innerHTML=regBox_2('${CHAT_NAME}', '${VERSION}', '${uid}')" />
-                <h2>${CHAT_NAME} v${VERSION}/ 設定1</h2>
+                <h2>${CHAT_NAME}/ 設定1</h2>
             </div>
             <div class="my_tel_title">
             ご自身の携帯電話番号を<br />入力・登録してください
@@ -62,7 +62,7 @@ export function regBox_2(CHAT_NAME: string, VERSION: string, uid: string): strin
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
                 onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
-                <h2>${CHAT_NAME} v${VERSION}/ 設定2</h2>
+                <h2>${CHAT_NAME}/ 設定2</h2>
             </div>
             <div class="my_secu_title">
             届いたセキュリティコードを<br />入力してください
@@ -90,7 +90,7 @@ export function regBox_3(CHAT_NAME: string, VERSION: string, uid: string): strin
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
                 onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
-                <h2>${CHAT_NAME} v${VERSION} </h2>
+                <h2>${CHAT_NAME}</h2>
             </div>
             <div class="my_tel_title">
             貴方の電話番号
