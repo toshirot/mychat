@@ -43,7 +43,6 @@ export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): strin
               })
               .then((response) =>  {
                   setCookie('mytel', input_my_tel.value);
-                  alert(response)
                   window.contact.innerHTML=regBox_2('${CHAT_NAME}', '${VERSION}', '${uid}');
               });" 
                />
