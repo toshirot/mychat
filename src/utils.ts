@@ -35,14 +35,15 @@ export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): strin
             <br />
             <button id="btn_my_tel_send" type="button" 
               onclick=" event.preventDefault();
-              input_my_tel.value = getCookie('mytel')||'';
+              input_my_tel.value = input_my_tel.value||getCookie('mytel')||'';
+              setCookie('mytel', input_my_tel.value);
+              console.log(input_my_tel.value)
               const response = fetch('http://'+location.host+'/api/sms-code/', {
                 method: 'POST',
                 body: JSON.stringify({ tel: input_my_tel.value }),
                 headers: { 'Content-Type': 'application/json' },
               })
               .then((response) =>  {
-                  setCookie('mytel', input_my_tel.value);
                   window.contact.innerHTML=regBox_2('${CHAT_NAME}', '${VERSION}', '${uid}');
               });" 
                />
