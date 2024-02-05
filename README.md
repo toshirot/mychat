@@ -23,6 +23,10 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.25"
 
 # Windows 用の Bun インストール
 
+まだWinndows版はまだのようです。
+※「Windows is happening on February 15th　Bun のテストの 78% は Windows 上で合格しましたが、まだリリースするには十分ではありません。」
+https://bun.sh/blog/bun-v1.0.26#windows-is-happening-on-february-15th
+
 ## Bun install
 
 警告: 実験的な Windows ビルドでは安定性は保証されません。
