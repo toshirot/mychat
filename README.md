@@ -97,7 +97,7 @@ Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 
-## Tree at v0.1.024
+## Tree at v0.1.025
 
 ```
 .mychat/
@@ -131,14 +131,14 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
  
 ```
 
-## default pakage.json at v0.1.024
+## default pakage.json
 
 #### 注意※2023/1/7　 "elysia": "0.7.30",　が "elysia": "0.8.00" だとエラーがでた
 
 ```
 {
   "name": "mychat",
-  "version": "0.1.024",
+  "version": "0.1.025",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.tsx"
@@ -148,7 +148,6 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
     "@types/crypto-js": "^4.2.1",
-    "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "elysia": "0.7.30",
