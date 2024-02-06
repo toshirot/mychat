@@ -6,14 +6,14 @@
 
 http://74.226.208.203:9013/
 
-# macOS と Linux 用の Bun インストール
+# MacOS と Linux 用の Bun インストール
 
-## advance preparations/ 事前準備
+## Advance preparations/ 事前準備
 for Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
 ```
 sudo apt install unzip 
 ```
-## Bun install
+## Bun install/ Bunインストール
 ```
 curl -fsSL https://bun.sh/install | bash
 or
@@ -21,24 +21,7 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.25"
 
 ```
 
-# Windows 用の Bun インストール
-
-BunのWinndows版はまだのようです。
-
-> Windows is happening on February 15th　Bun のテストの 78% は Windows 上で合格しましたが、まだリリースするには十分ではありません。
-> 
-https://bun.sh/blog/bun-v1.0.26#windows-is-happening-on-february-15th
-
-## Bun install
-
-警告: 実験的な Windows ビルドでは安定性は保証されません。
-@see  https://bun.sh/docs/installation#windows
-
- 
-
-# 以下は 各OS 共通
-
-## clone mychat/ クローンで mychat をダウンロードする
+## Clone mychat/ クローンで mychat をダウンロードする
 ```
 git clone https://github.com/toshirot/mychat.git
 source /home/tato/.bashrc
@@ -67,7 +50,7 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 ポートを変更したい場合は「const PORT = 9012;」を変更してください。
 ここでは、デフォルトで「PORT = 9012」としているので、もしそのまま使うならそのポートを開いておく必要があります。
 
-## test/ テスト
+## Test/ テスト
 
 現在、testの実行に問題があります。https://github.com/toshirot/mychat/issues/8
 
@@ -82,7 +65,7 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 bun test
 ```
 
-## 暗号化について
+## Crypto/ 暗号化について
 
 @see https://github.com/toshirot/mychat/issues/2
 
@@ -91,7 +74,7 @@ v0.1.024現在まだパスフレーズをハードコードしてますが、今
 
 ![image](https://github.com/toshirot/mychat/assets/154680/94d387f5-856f-4ab5-bd9a-6eae2b4ce1eb)
 
-## サニタイズについて
+## Sanitize/ サニタイズについて
 
 普通はサニタイズは、サーバー側でやれば良いのだけど、end-to-endで暗号化すると、サーバー側は全く読めなくなるので、サニタイズもできない。そこで、クライアント側で送信側と受信側で2回やってる
 
@@ -137,7 +120,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
  
 ```
 
-## default pakage.json
+## Default pakage.json
 
 #### 注意※2023/1/7　 "elysia": "0.7.30",　が "elysia": "0.8.00" だとエラーがでた
 
