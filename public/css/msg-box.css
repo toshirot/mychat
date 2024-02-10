@@ -33,6 +33,7 @@
     max-width: 200px;
     margin-left:5px;
     background:#e4e5e9;
+    
 }
 .msgbox-right:after{
     left:100%;
@@ -45,6 +46,32 @@
 .msgbox-info:after{
     right:100%;
     border-right-color #e4e5e9;
+}
+.msgbox-right-first{
+    animation: anim-right 0.5s forwards;
+    margin-right: 25px;
+}
+.msgbox-left-first{
+    animation: anim-left 0.5s forwards;
+    margin-left: -280px;
+}
+@keyframes anim-right {
+    0% {
+        transform: translateX(300px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+@keyframes anim-left {
+    0% {
+    transform: translateX(0px);
+    }
+  
+    100% {
+    transform: translateX(300px);
+    }
 }
 :where(.msgbox-left,.msgbox-right,.msgbox-info):after{
     border: solid transparent;

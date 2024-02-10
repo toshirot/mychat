@@ -14,7 +14,8 @@ import {
     inputBox,
     regBox_1,
     regBox_2,
-    regBox_3
+    regBox_3,
+    isSendingAllowed
 } from "./utils";
 const crypto = require('crypto');
 import 'dotenv/config';
@@ -25,7 +26,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.025';
+const VERSION = '0.1.0261';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -48,7 +49,7 @@ interface MsgData {
 }
 
 //===========================================
-// データベースの作成
+// Chat用データベースの作成
 
 // データベースファイルの名前を指定
 const DB_FILE_NAME = './db/'+CHAT_NAME+'.sqlite';
@@ -71,7 +72,7 @@ const sql_table_create =
             created_at TIMESTAMP
         );`
         
-// SQLを実行する　
+// SQLを実行する
 doQuery(db, sql_table_create);
 
 //===========================================
@@ -106,9 +107,13 @@ const app = new Elysia()
                 +' '
                 +seqCode
         //telへセキュリティコードSMSを送る
-       // sendSMS(body,  req.body.tel)
-        sendSMS(num,  body.tel)
-        
+        // sendSMS(body,  req.body.tel)
+        isSendingAllowed(body.tel, (result) => {
+            if (result) {
+                console.log('Sending is allowed');
+                sendSMS(num,  body.tel)
+            }
+        }); 
         
         console.log('/api/sms-code/ send to sms', num)
         //ブラウザへレスポンス
@@ -248,6 +253,8 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
 
                     // 下から上に向かって追記するので SELECT ASC で昇順取得したリストをafterbeginで追記する
                     data.body.reverse()
+                    const msgLastNum=data.body.length-1
+                    console.log('msgLastNum', msgLastNum)
                     let msg_class='msgbox-left'
                     let msgbox=''
                     for(let i=0;i<${LIMIT};i++){
@@ -269,10 +276,10 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                     msg_class='msgbox-left'
                                     document.cookie='uid=${uid.value};';
                                 } else {
-                                    let uid_cookie=document.cookie.match(/uid=(.{0,32})/)
+                                    let uid_cookie=document.cookie.match(/uid=(.{0,128})/)
                                     // uidクッキーがある場合は、自分のメッセージをright側に表示する
                                     if(uid_cookie){
-                                        if(msgLine[3]===document.cookie.match(/uid=(.{0,32})/)[1]){
+                                        if(msgLine[3]===document.cookie.match(/uid=(.{0,128})/)[1]){
                                             // 自分のメッセージはright側に表示する
                                             msg_class='msgbox-right'
                                         }
@@ -280,6 +287,12 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                         // uid cookieをセットする
                                         document.cookie='uid=${uid.value};';
                                     }
+                                }
+                                console.log('i msgLine[0] msgLastNum2', i, msgLine[0], msgLastNum, i===msgLastNum, (i===msgLastNum && msg_class==='msgbox-left'), (i===msgLastNum && msg_class==='msgbox-right'))
+                                if(i===msgLastNum && msg_class==='msgbox-left'){
+                                    msg_class=msg_class + " msgbox-left-first"
+                                } else if(i===msgLastNum && msg_class==='msgbox-right'){
+                                    msg_class=msg_class + " msgbox-right-first"
                                 }
                                 // msgbox を作る
                                 writeMsg(
@@ -469,7 +482,10 @@ async function sendSMS(body, to){
 //  @param {String} str - 文字列
 //  @returns {String} - 結果の文字列
 function mkUid(str) {
+   // const salt = str.slice(0, 16);
+    //var hashed = bcrypt.hashSync(str, salt);
     return crypto.createHash('sha512').update(str).digest('hex')
+    //return hashed;
 }
 
 //===========================================
