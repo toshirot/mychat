@@ -1,3 +1,138 @@
+
+//===========================================
+// telを保存して同じtel番号の連続送信を防ぐ
+//  @param {String} tel - tel番号
+// ・30秒以内に同じtel番号があればfalseを返す/インターバル30秒置かないと発信できない
+// ・5分以内に同じtel番号が5件あればfalseを返す/5分間に5回以上発信できない
+import { Database } from 'bun:sqlite';
+/**
+isSendingAllowed(tel, (result) => {
+    if (result) {
+        console.log('Sending is allowed');
+    }
+}); 
+*/
+// データベース初期化とテーブル作成
+function initializeDatabase(): Database {
+    const SMS_DB_FILE_NAME = './db/SMS.sqlite';
+    const SMS_TABLE_NAME = 'sms_table_name';
+    const db = new Database(SMS_DB_FILE_NAME, { create: true });
+    db.exec('PRAGMA journal_mode = WAL;');
+
+    db.exec(`CREATE TABLE IF NOT EXISTS ${SMS_TABLE_NAME} (
+        id INTEGER PRIMARY KEY, 
+        tel VARCHAR(11), 
+        created_at TIMESTAMP
+    )`);
+
+    return db;
+}
+
+
+
+function getRecentCount(db: Database): Promise<number> {
+    return new Promise((resolve, reject) => {
+        db.exec(`
+            SELECT COUNT(*) AS recent_count
+            FROM sms_table_name
+            ORDER BY created_at DESC
+            LIMIT 5
+        `, (err, row) => {
+            if (err) {
+                console.error(err.message);
+                reject(0);
+            } else {
+                resolve(row ? row.recent_count : 0);
+            }
+        });
+    });
+}
+// 直近の同じ電話番号の送信履歴を取得
+/*
+function getRecentCount(db: Database, tel: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+        db.exec(`
+            SELECT COUNT(*) AS recent_count
+            FROM sms_table_name
+            WHERE tel = ?
+            ORDER BY created_at DESC
+            LIMIT 5
+        `, [tel], (err, row) => {
+            if (err) {
+                console.error(err.message);
+                reject(0);
+            } else {
+                resolve(row ? row.recent_count : 0);
+            }
+        });
+    });
+}*/
+
+// 最後の送信履歴からの経過時間を取得
+function getTimeDiff(db: Database, tel: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+        db.exec(`
+            SELECT strftime('%s', 'now') - strftime('%s', MAX(created_at)) AS time_diff
+            FROM sms_table_name
+            WHERE tel = ?
+        `, [tel], (err, row) => {
+            if (err) {
+                console.error(err.message);
+                reject(0);
+            } else {
+                resolve(row ? row.time_diff : 0);
+            }
+        });
+    });
+}
+
+// データベースをクローズ
+function closeDatabase(db: Database): void {
+    db.close();
+}
+
+export async function isSendingAllowed(tel: string): Promise<boolean> {
+    try {
+        console.log('tel', tel);
+        tel = tel.replace(/[^0-9a-zA-Z]/g, '');
+
+        const db = initializeDatabase();
+        
+        const recentCount = await getRecentCount(db, tel);
+        console.log( recentCount)
+        
+        if (recentCount === 5) {
+            const timeDiff = await getTimeDiff(db, tel);
+            console.log(recentCount, timeDiff);
+
+            if (timeDiff < 300) { // 5 minutes = 300 seconds
+                closeDatabase(db);
+                return false;
+            }
+        }
+
+        closeDatabase(db);
+        return true;
+    } catch (error) {
+        console.error(error.message);
+        return false;
+    }
+}
+
+// 電話番号をセットする関数
+function setPhoneNumber(tel: string): Promise<void> {
+    return new Promise((resolve) => {
+        // ここで電話番号のセットやバリデーションを行う
+        // 例: tel = tel.replace(/[^0-9a-zA-Z]/g, '');
+
+        // 電話番号をセットした後、resolve() でPromiseを完了させる
+        resolve();
+    });
+}
+
+// 関数を呼び出す
+setPhoneNumber("123-456-7890");
+
 //===========================================
 // タイムゾーンを変更する e.g. UTC -> JST 
 //  @param {Object} date - Date インスタンス
@@ -26,7 +161,7 @@ export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): strin
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
                 onclick="window.contact.innerHTML=regBox_2('${CHAT_NAME}', '${VERSION}', '${uid}')" />
-                <h2>${CHAT_NAME}/ 設定1</h2>
+                <h2>自身の携帯番号</h2>
             </div>
             <div class="my_tel_title">
             ご自身の携帯電話番号を<br />入力・登録してください
@@ -62,26 +197,42 @@ export function regBox_2(CHAT_NAME: string, VERSION: string, uid: string): strin
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
                 onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
-                <h2>${CHAT_NAME}/ 設定2</h2>
+                <h2>認証</h2>
             </div>
             <div class="my_secu_title">
             届いたセキュリティコードを<br />入力してください
             </div>
-            <input type="tel" id="input_my_secu" class="input_tel" maxlength="4"  max="4" placeholder="セキュリティコード" onload="this.focus()"
-                    onkeyup="if(this.value.length===4){ }"
-            />
+            <input type="tel" id="input_my_secu" class="input_tel" 
+                maxlength="4"  
+                max="4" placeholder="セキュリティコード" autofocus />
+            <button id="btn_my_tel_send" type="button" 
+            onclick=" 
+                event.preventDefault();
+                const response = fetch('http://'+location.host+'/api/sec/', {
+                    method: 'POST',
+                    body: JSON.stringify({ sec: input_my_secu.value }),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then((response) =>  {
+                    window.contact.innerHTML=regBox_3('${CHAT_NAME}', '${VERSION}', '${uid}');
+                });" 
+             />
+          登録
+          </button>
             <br />
             <div class="info">
             <br />
-            ※セキュリティコードが届かないときは、
-            <button onclick="window.contact.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}', '${uid}')" >戻る</button>
+            ※もしセキュリティコードが届かないときは、
+            <button
+                style="background: #dcced6; border: 1px solid #dcced6; padding: 5px; margin: 5px;"
+                onclick="window.contact.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}', '${uid}')" >戻る</button>
             で携帯番号を確認して再送してみてください
             </div>
         </div>
     </form>`
 }
 //===========================================
-// パスフレーズ登録用の関数
+// 相手の携帯番号登録用の関数
 //  @returns {String} - HTML文字列
 export function regBox_3(CHAT_NAME: string, VERSION: string, uid: string): string{
     return `<form>
@@ -90,22 +241,42 @@ export function regBox_3(CHAT_NAME: string, VERSION: string, uid: string): strin
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
                 onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
-                <h2>${CHAT_NAME}</h2>
+                <h2>相手の携帯番号</h2>
             </div>
-            <div class="my_tel_title">
-            貴方の電話番号
-            </div>
-            <input type="text" id="input_my_tel" class="input_tel" placeholder="" />
-            <button id="btn_my_tel_send"  class="input_tel" type="submit">
-            送信
-            </button>
             <div class="to_tel_title">
-            接続したい相手の電話番号
+            接続したい相手の携帯番号
+            <input type="text" id="input_to_tel" class="input_tel" placeholder="" autofocus /><br />
             </div>
-            <button id="btn_to_tel_send" class="input_tel"  type="submit">
-            送信
-            </button>
-            <input type="text" id="input_to_tel" class="input_tel" placeholder="" /><br />
+            <button id="btn_to_tel_send" type="submit" type="button" 
+            onclick=" 
+                event.preventDefault();
+                const response = fetch('http://'+location.host+'/api/sec/', {
+                    method: 'POST',
+                    body: JSON.stringify({ sec: input_my_secu.value }),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then((response) =>  {
+                    window.contact.innerHTML=regBox_4('${CHAT_NAME}', '${VERSION}', '${uid}');
+                });" 
+             />
+          登録
+          </button>
+
+        </div>
+    </form>`
+}
+//===========================================
+// パスフレーズ登録用の関数
+//  @returns {String} - HTML文字列
+export function regBox_4(CHAT_NAME: string, VERSION: string, uid: string): string{
+    return `<form>
+        <div class="reg_box">
+            <div class="head">
+                <img id="config" src="/public/img/config-icon.png" 
+                alt="config" width="40" height="40" 
+                onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
+                <h2>パスフレーズ</h2>
+            </div>
             <div class="pass_title">
             パスフレーズ<span style="font-size:1.2rem;vertical-align: middle;"> (半角英数字8文字以上) </span>
             </div>
