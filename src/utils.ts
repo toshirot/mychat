@@ -2,8 +2,7 @@
 //===========================================
 // telを保存して同じtel番号の連続送信を防ぐ
 //  @param {String} tel - tel番号
-// ・30秒以内に同じtel番号があればfalseを返す/インターバル30秒置かないと発信できない
-// ・5分以内に同じtel番号が5件あればfalseを返す/5分間に5回以上発信できない
+
 import { Database } from 'bun:sqlite';
 /**
 isSendingAllowed(tel, (result) => {
@@ -11,10 +10,17 @@ isSendingAllowed(tel, (result) => {
         console.log('Sending is allowed');
     }
 }); 
+cd ../../../../../../../
+INSERT INTO sms_table_name (tel, created_at)
+            VALUES ('09046213611', datetime('now'));
+
+insertTel(tel) 
+
 */
 // データベース初期化とテーブル作成
-function initializeDatabase(): Database {
-    const SMS_DB_FILE_NAME = './db/SMS.sqlite';
+export function initDB(): Database {
+
+    const SMS_DB_FILE_NAME = __dirname+'/../db/SMS.sqlite';
     const SMS_TABLE_NAME = 'sms_table_name';
     const db = new Database(SMS_DB_FILE_NAME, { create: true });
     db.exec('PRAGMA journal_mode = WAL;');
@@ -24,63 +30,26 @@ function initializeDatabase(): Database {
         tel VARCHAR(11), 
         created_at TIMESTAMP
     )`);
-
     return db;
 }
 
-
-
-function getRecentCount(db: Database): Promise<number> {
-    return new Promise((resolve, reject) => {
-        db.exec(`
-            SELECT COUNT(*) AS recent_count
-            FROM sms_table_name
-            ORDER BY created_at DESC
-            LIMIT 5
-        `, (err, row) => {
-            if (err) {
-                console.error(err.message);
-                reject(0);
-            } else {
-                resolve(row ? row.recent_count : 0);
-            }
-        });
-    });
-}
-// 直近の同じ電話番号の送信履歴を取得
+// 新しい電話番号をデータベースに追加する関数
 /*
-function getRecentCount(db: Database, tel: string): Promise<number> {
+            INSERT INTO sms_table_name (tel, created_at)
+            VALUES ( '07077776006', datetime('now'))
+*/
+export async function insertTel(tel: string): Promise<void> {
+    const db = initDB()
     return new Promise((resolve, reject) => {
         db.exec(`
-            SELECT COUNT(*) AS recent_count
-            FROM sms_table_name
-            WHERE tel = ?
-            ORDER BY created_at DESC
-            LIMIT 5
-        `, [tel], (err, row) => {
+            INSERT INTO sms_table_name (tel, created_at)
+            VALUES (?, datetime('now'))
+        `, [tel], (err) => {
             if (err) {
                 console.error(err.message);
-                reject(0);
+                reject(err.message);
             } else {
-                resolve(row ? row.recent_count : 0);
-            }
-        });
-    });
-}*/
-
-// 最後の送信履歴からの経過時間を取得
-function getTimeDiff(db: Database, tel: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-        db.exec(`
-            SELECT strftime('%s', 'now') - strftime('%s', MAX(created_at)) AS time_diff
-            FROM sms_table_name
-            WHERE tel = ?
-        `, [tel], (err, row) => {
-            if (err) {
-                console.error(err.message);
-                reject(0);
-            } else {
-                resolve(row ? row.time_diff : 0);
+                resolve();
             }
         });
     });
@@ -90,48 +59,115 @@ function getTimeDiff(db: Database, tel: string): Promise<number> {
 function closeDatabase(db: Database): void {
     db.close();
 }
-
+// telを正規化する
+export function normalizeTelNum(tel: string): string {
+    return tel.replace(/[^0-9]/g, '');
+}
+// telの桁をチェックする
+export function chkTelLen(tel: string): boolean {
+    return tel.length===11?true:false;
+}
 export async function isSendingAllowed(tel: string): Promise<boolean> {
+    // ・30秒以内に同じtel番号があればfalseを返す/インターバル30秒置かないと発信できない
+
     try {
-        console.log('tel', tel);
-        tel = tel.replace(/[^0-9a-zA-Z]/g, '');
+        console.log('tel', tel, typeof tel);
+        tel = normalizeTelNum(tel)
+        console.log('tel', tel, typeof tel);
+        const db = initDB();
 
-        const db = initializeDatabase();
-        
-        const recentCount = await getRecentCount(db, tel);
-        console.log( recentCount)
-        
-        if (recentCount === 5) {
-            const timeDiff = await getTimeDiff(db, tel);
-            console.log(recentCount, timeDiff);
+        // 直近の同じ電話番号の送信件数を取得
+        //const recentCount = getRecentCount(db, tel);
+        //console.log('recentCount', recentCount, typeof recentCount);
 
-            if (timeDiff < 300) { // 5 minutes = 300 seconds
-                closeDatabase(db);
-                return false;
-            }
+        // msec秒以内にカラム tel があるか
+        let msec = 30000 
+        let hadit= await hasTel(db, tel, msec);
+        console.log('hadit', hadit, typeof hadit);
+        
+        if (hadit) {
+            // 有れば終了
+            closeDatabase(db);
+            return false;
+        } else {
+            // 無ければ送信OK
+            return true;
         }
 
-        closeDatabase(db);
-        return true;
+        
+
     } catch (error) {
         console.error(error.message);
         return false;
     }
 }
 
-// 電話番号をセットする関数
-function setPhoneNumber(tel: string): Promise<void> {
-    return new Promise((resolve) => {
-        // ここで電話番号のセットやバリデーションを行う
-        // 例: tel = tel.replace(/[^0-9a-zA-Z]/g, '');
-
-        // 電話番号をセットした後、resolve() でPromiseを完了させる
-        resolve();
-    });
+// ===========================================
+// 指定された電話番号に関連する最新のSMSの数を取得します。
+//
+// @param {Database} db - Database インスタンス
+// @param {string} tel - SMS数を取得する電話番号
+// @returns {number} - 指定した電話番号に関連する最新のSMSの数
+function getRecentCount(db: Database, tel: string){
+    return  db.query(`
+        SELECT COUNT(*) AS recent_count
+        FROM sms_table_name
+        WHERE tel = ?
+        ORDER BY created_at DESC
+        LIMIT 50
+    `)
+    .get(tel);
 }
 
-// 関数を呼び出す
-setPhoneNumber("123-456-7890");
+//===========================================
+// 現在の時刻と指定された電話番号の作成日時との時間差
+//  @param {Database} db - Database インスタンス
+//  @param {string} tel - 時間差を計算する電話番号
+//  @returns {number|null} - 秒単位の時間差。一致するレコードが見つからない場合はnull
+export async function getTimeDiff(db: Database, tel: string){
+    return db.query(`
+        SELECT strftime('%s', 'now') - strftime('%s', MAX(created_at)) AS time_diff
+        FROM sms_table_name
+        WHERE tel = ?
+        LIMIT 1
+    `)
+    .get(tel);
+}
+//===========================================
+// sec 秒以内にカラム tel があるかを調べたい
+//  @param {Database} db - Database インスタンス
+//  @param {string} tel - 電話番号
+//  @param {Number} msec - ミリ秒数
+//  @returns {boolean} - 存在すればtrue、存在しなければfalseを返す
+/*
+SELECT created_at
+        FROM sms_table_name
+        WHERE tel = '07077776006'
+        ORDER BY created_at DESC
+        LIMIT 1;
+*/
+export async function hasTel(db: Database, tel: string, msec: number){
+    try {
+        // SQLクエリの実行
+        const res = await db.query(`
+            SELECT created_at
+            FROM sms_table_name
+            WHERE tel = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+        `).get(tel);
+
+    let created_at_unix=new Date(res.created_at).getTime()//+ (9 * 60 * 60 * 1000)
+    let sabun = new Date().getTime()-created_at_unix
+    console.log('sabun', sabun,  'msec', msec, res && sabun <= msec)
+        // 結果が存在し、かつ作成日時が現在の日時からmsecミリ秒以内のものであればtrueを返す
+        return res && sabun <= msec;
+    } catch (error) {
+        // エラーハンドリング（エラーが発生した場合は例外をキャッチしてfalseを返す）
+        console.error('Error executing SQL query:', error);
+        return false;
+    }
+}
 
 //===========================================
 // タイムゾーンを変更する e.g. UTC -> JST 
@@ -298,7 +334,7 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
             <img id="config" src="/public/img/config-icon.png" 
             alt="config" width="40" height="40" 
             onclick="window.contact.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}')" />
-            <h2>${CHAT_NAME} v${VERSION} </h2>
+            <h2><a id=input_box_title_link href=http://`+location.host+`>${CHAT_NAME} v${VERSION} </a></h2>
         </div>
         <div class="name_title">
         名前
@@ -337,6 +373,41 @@ export function setCookie(key: string, value: string):string{
     return document.cookie=key+'='+encodeURIComponent(value)+''
 }
 
+//===========================================
+// 画像をドラッグアンドドロップした際に、その画像の data:image URI を取得する
+// 
+export function getDataImageByDrop(dropElmentId): boolean{
+    document.addEventListener('DOMContentLoaded', function () {
+        let dropElment = document.getElementById(dropElmentId);
+        dropElment.addEventListener('drop', function (e) {
+            e.preventDefault(); // デフォルトのドロップ操作をキャンセル
+    
+            // ドロップされたファイルが存在するか確認
+            if (e.dataTransfer.files.length > 0) {
+                var droppedFile = e.dataTransfer.files[0];
+    
+                // FileReader を使用して画像ファイルを読み込む
+                var reader = new FileReader();
+    
+                reader.onload = function (event) {
+                    var imageDataURI = event.target.result;
+                    console.log('画像のdata:image URI:', imageDataURI);
+    
+                    // ここで imageDataURI を使って何かしらの処理を行うことができます
+                };
+    
+                // 画像ファイルを読み込む
+                reader.readAsDataURL(droppedFile);
+            }
+        });
+    
+        // ドラッグオーバーイベントをキャンセルしてドロップを許可
+        dropElment.addEventListener('dragover', function (e) {
+            e.preventDefault();
+        });
+    });
+}
+
 
 //===========================================
 // 画像dataの有無
@@ -369,10 +440,11 @@ export function dataImgWrap2Img(wkmsg: string): string {
 }
 //===========================================
 // 画像urlを img 要素に変換する
+//  (※urlWrap2Linkと併用する場合は、urlWrap2Linkを先に実行する)
 // 
 export function urlWrap2Img(wkmsg: string): string {
     // 画像文字列抽出用正規表現 gで複数にマッチする
-    let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp))(.*)$/i,
+    let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp|webp))(.*)$/i,
     tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:480px;></a>$4<div style=font-size:0.7rem>$2</div>"
     
     // match
@@ -395,7 +467,7 @@ export function urlWrap2Link(wkmsg: string): string {
     if(mobile){
         target='_self';
     }
-    let imgRegEx=/\.(jpg|jpeg|gif|png|bmp)$/i
+    let imgRegEx=/\.(jpg|jpeg|gif|png|bmp|webp)$/i
     // url文字列抽出用正規表現 gで複数にマッチする
     let urlRegEx = /(s?https?:\/{2,}[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g,
         tolink = "<a href='$1'>$1</a>"

@@ -60,6 +60,11 @@ input, textarea {
     background: #ddd;
     color:#000;
 }
+#input_box_title_link{
+    text-decoration:none;
+    color: #696565;
+}
+
 .input_tel, #input_pass{
     max-width: 180px;
     max-height: 30px;

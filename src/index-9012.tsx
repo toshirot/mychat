@@ -7,6 +7,7 @@ import {
     adjustHours, 
     getCookie, 
     setCookie, 
+    getDataImageByDrop,
     hasDataImg, 
     dataImgWrap2Img,
     urlWrap2Img, 
@@ -26,7 +27,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.0261';
+const VERSION = '0.1.026';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -61,13 +62,14 @@ const db = new Database(DB_FILE_NAME, { create: true });
 db.exec('PRAGMA journal_mode = WAL;');
 
 // テーブルが存在しない場合はテーブルを作成
+// 型は互換性考慮のため、VARCHAR と TIMESTAMP にしている <これは正しい型ではない>
 const sql_table_create =
     `CREATE TABLE IF NOT EXISTS 
         ${TABLE_NAME}
         (
             id INTEGER PRIMARY KEY, 
             name VARCHAR(255), 
-            msg VARCHAR(255), 
+            msg VARCHAR(4000), 
             uid VARCHAR(128), 
             created_at TIMESTAMP
         );`
@@ -161,6 +163,8 @@ ${regBox_3}
 ${getCookie}
 ${setCookie}
 // for image and links
+${getDataImageByDrop}
+getDataImageByDrop('input_msg')
 ${hasDataImg}
 ${dataImgWrap2Img}
 ${urlWrap2Img}
@@ -202,6 +206,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
         </div>\
     </div>'
     if(window.msgs){
+        //console.log(num, msgbox, typeof msgbox)
         msgs.insertAdjacentHTML('afterbegin', msgbox)
     }
 }
@@ -288,7 +293,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                         document.cookie='uid=${uid.value};';
                                     }
                                 }
-                                console.log('i msgLine[0] msgLastNum2', i, msgLine[0], msgLastNum, i===msgLastNum, (i===msgLastNum && msg_class==='msgbox-left'), (i===msgLastNum && msg_class==='msgbox-right'))
+                                // 最後のメッセージはfirstクラスを付ける
                                 if(i===msgLastNum && msg_class==='msgbox-left'){
                                     msg_class=msg_class + " msgbox-left-first"
                                 } else if(i===msgLastNum && msg_class==='msgbox-right'){
@@ -348,6 +353,10 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         e.preventDefault();
                         // 名前とメッセージがあれば送信する
                         if(!!input_name.value && !!input_msg.value) {
+                            // urlをlink Element に変換する
+                            input_msg.value=urlWrap2Link(input_msg.value)
+                            // 画像urlを img 要素に変換する
+                            input_msg.value=urlWrap2Img(input_msg.value)
                             // 名前をcookieに保存する
                             setCookie('name', input_name.value||input_name);
                             // uid cookieを保存する
@@ -412,7 +421,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             if(msgoj.head.type==='msg'){
                 console.log('msg',msgoj.body)
                 msgoj.body.name = msgoj.body.name.slice(0, 300);
-                msgoj.body.msg = msgoj.body.msg.slice(0, 300);
+                msgoj.body.msg = msgoj.body.msg.slice(0, 2000);
                 let sql_ins = 
                         'INSERT OR IGNORE INTO ' 
                         + TABLE_NAME 
