@@ -1,4 +1,4 @@
-# mychat v0.1.025 with Elysia/Bun
+# mychat v0.1.026 with Elysia/Bun
 
 <a href="http://74.226.208.203:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/c4ef7aa2-7f31-4440-9ca5-281a2da7bc83) </a>
 
@@ -86,7 +86,7 @@ Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 
-## Tree at v0.1.025
+## Tree at v0.1.026
 
 ```
 .mychat/
@@ -106,7 +106,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   ├─ db/
   │    ├─ mychat.sqlite     // 通常の SQLiteファイル
   │    ├─ mychat.sqlite-shm // WALモード用ファイル
-  │    └─ mychat.sqlite-wal // WALモード用ファイル
+  │    ├─ mychat.sqlite-wal // WALモード用ファイル
   │ 
   ├─ bench/                 // ベンチマーク
   ├─ test/                  // テスト bun test で起動する
@@ -127,7 +127,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 {
   "name": "mychat",
-  "version": "0.1.025",
+  "version": "0.1.026",
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index-9012.tsx"
