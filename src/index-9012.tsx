@@ -26,7 +26,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_03';
+const VERSION = '0.1.026_04';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -91,7 +91,7 @@ const app = new Elysia()
     // SMS送信  ログインチェック POST
     // セキュリティコードを送信する
     // e.g. https://reien.top:5000/api/login-tel-sms/
-    .post('/api/sms-code/', ({ body}) => {
+    .post('/api/sms-code/', ({body}) => {
 
         console.log(body.tel  )
         //console.log(req.body )
@@ -109,14 +109,19 @@ const app = new Elysia()
                 +seqCode
         //telへセキュリティコードSMSを送る
         // sendSMS(body,  req.body.tel)
-        isSendingAllowed(body.tel, (result) => {
-            if (result) {
-                console.log('Sending is allowed');
-                sendSMS(num,  body.tel)
-            }
-        }); 
+        isSendingAllowed(body.tel)
+            .then((result) => {
+                if (result) {
+                    console.log('/api/sms-code/ send to sms', num)
+                    sendSMS(num,  body.tel)
+                } else {
+                    console.log("Sending is not allowed.");
+                }
+            })
+            .catch((error) => {
+                console.error("An error occurred:", error);
+            });
         
-        console.log('/api/sms-code/ send to sms', num)
         //ブラウザへレスポンス
         return JSON.stringify(seqCode)
         //app.send(JSON.stringify(seqCode))

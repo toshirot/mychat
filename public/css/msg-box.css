@@ -15,9 +15,11 @@
     text-align:left;
 }
 .msgbox .msg{
-    margin-top: 0px 
+    margin-top: 0px;
 }
-
+.msg img{
+    max-width: 40%;
+}
 .msgbox-right{
     float: right;
     margin-right:25px;
