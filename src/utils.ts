@@ -343,7 +343,11 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         <div class="msg_title">
         メッセージ
         </div>
-        <textarea id="input_msg" placeholder="メッセージを入力してください"></textarea><br />
+        <div id="input_msg" class="textarea" contenteditable placeholder="メッセージを入力してください"></div>
+        <br />
+        <div id="drop_area">
+          画像はここへドラッグドロップしてください
+        </div>
         <div class="message">送信</div>
         <button id="btn_send" type="submit">
         送信
@@ -374,42 +378,6 @@ export function setCookie(key: string, value: string):string{
 }
 
 //===========================================
-// 画像をドラッグアンドドロップした際に、その画像の data:image URI を取得する
-// 
-export function getDataImageByDrop(dropElmentId): boolean{
-    document.addEventListener('DOMContentLoaded', function () {
-        let dropElment = document.getElementById(dropElmentId);
-        dropElment.addEventListener('drop', function (e) {
-            e.preventDefault(); // デフォルトのドロップ操作をキャンセル
-    
-            // ドロップされたファイルが存在するか確認
-            if (e.dataTransfer.files.length > 0) {
-                var droppedFile = e.dataTransfer.files[0];
-    
-                // FileReader を使用して画像ファイルを読み込む
-                var reader = new FileReader();
-    
-                reader.onload = function (event) {
-                    var imageDataURI = event.target.result;
-                    console.log('画像のdata:image URI:', imageDataURI);
-    
-                    // ここで imageDataURI を使って何かしらの処理を行うことができます
-                };
-    
-                // 画像ファイルを読み込む
-                reader.readAsDataURL(droppedFile);
-            }
-        });
-    
-        // ドラッグオーバーイベントをキャンセルしてドロップを許可
-        dropElment.addEventListener('dragover', function (e) {
-            e.preventDefault();
-        });
-    });
-}
-
-
-//===========================================
 // 画像dataの有無
 // 
 export function hasDataImg(wkmsg: string): boolean{
@@ -422,22 +390,53 @@ export function hasDataImg(wkmsg: string): boolean{
         return false
     }
 }
+
 //===========================================
-// 画像dataを img 要素
+// 画像をドラッグアンドドロップした際に、その画像の data:image URI を取得する
 // 
-export function dataImgWrap2Img(wkmsg: string): string {
-    // 画像data抽出用正規表現 
-    //data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAABWCAYAAACHKqnqAAADLElEQVR4Ae3cQU7bQBgF4Jw23CCnLHcgKa7oBhaRotBFXBlpIjCTEbOJn6UPKXI8Y4nX759HYNPN6GtVAqfTaTwcfo/7/cFrQYPNqk6NsB8C7
-    let urlRegEx = /^(.*)(data:image\/[a-z]+;base64,.*)/i
-    let tolink = "<img src='$2' style=max-width:50%;>"
-    let reg=wkmsg.match(urlRegEx)
-    // マッチしたすべてのurl文字列を img要素でラップする
-    if (reg){
-        wkmsg = wkmsg.replace(urlRegEx, tolink)
-        console.log('this is img data.')
-    }
-    return wkmsg
+
+export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
+    const textArea = document.getElementById(msgboxId);
+    const dropArea = document.getElementById(dropElmentId);
+
+    // -----------------------------------------------------
+    // イベント処理
+
+        // ドラッグオーバー時の処理
+        dropArea.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          dropArea.style.border = '4px dashed #d09696';
+        });
+      
+        // ドラッグアウト時の処理
+        dropArea.addEventListener('dragleave', function() {
+          dropArea.style.border = '2px dashed #ccc';
+        });
+      
+        // ドロップ時の処理
+        dropArea.addEventListener('drop', function(e) {
+          e.preventDefault();
+          dropArea.style.border = '2px dashed #ccc';
+      
+          // ドロップされたファイルを取得
+          let file = e.dataTransfer.files[0];
+      
+          // FileReaderを使用して画像のdata URIを取得
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            let dataUri = event.target.result;
+
+            let imgElm = "<img src='"+dataUri+"' style=max-width:20%;>"
+            // textAreaにdata URIを貼り付け
+            textArea.innerHTML = imgElm;
+          };
+      
+          // ファイルを読み込む
+          reader.readAsDataURL(file);
+        });
+
 }
+
 //===========================================
 // 画像urlを img 要素に変換する
 //  (※urlWrap2Linkと併用する場合は、urlWrap2Linkを先に実行する)
@@ -445,7 +444,7 @@ export function dataImgWrap2Img(wkmsg: string): string {
 export function urlWrap2Img(wkmsg: string): string {
     // 画像文字列抽出用正規表現 gで複数にマッチする
     let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp|webp))(.*)$/i,
-    tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:480px;></a>$4<div style=font-size:0.7rem>$2</div>"
+    tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:20%;></a>$4<div style=font-size:0.7rem>$2</div>"
     
     // match
     let reg=wkmsg.match(urlRegEx)

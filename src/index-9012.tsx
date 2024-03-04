@@ -9,7 +9,6 @@ import {
     setCookie, 
     getDataImageByDrop,
     hasDataImg, 
-    dataImgWrap2Img,
     urlWrap2Img, 
     urlWrap2Link,
     inputBox,
@@ -27,7 +26,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026';
+const VERSION = '0.1.026_03';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -69,7 +68,7 @@ const sql_table_create =
         (
             id INTEGER PRIMARY KEY, 
             name VARCHAR(255), 
-            msg VARCHAR(4000), 
+            msg VARCHAR(200000), 
             uid VARCHAR(128), 
             created_at TIMESTAMP
         );`
@@ -164,9 +163,10 @@ ${getCookie}
 ${setCookie}
 // for image and links
 ${getDataImageByDrop}
-getDataImageByDrop('input_msg')
+document.addEventListener('DOMContentLoaded', function() {
+    getDataImageByDrop(document, 'input_msg', 'drop_area')
+})
 ${hasDataImg}
-${dataImgWrap2Img}
 ${urlWrap2Img}
 ${urlWrap2Link}
 const getLS = (key, val)  => JSON.parse(decrypt(localStorage.getItem(key) || '[]', val))
@@ -352,11 +352,13 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                     btn_send.addEventListener('click', function (e) {
                         e.preventDefault();
                         // 名前とメッセージがあれば送信する
-                        if(!!input_name.value && !!input_msg.value) {
+                        if(!!input_name.value && !!input_msg.innerHTML) {
                             // urlをlink Element に変換する
-                            input_msg.value=urlWrap2Link(input_msg.value)
+                            input_msg.innerHTML=urlWrap2Link(input_msg.innerHTML)
                             // 画像urlを img 要素に変換する
-                            input_msg.value=urlWrap2Img(input_msg.value)
+                            input_msg.innerHTML=urlWrap2Img(input_msg.innerHTML)
+                            // 画像dataを img 要素に変換する
+                            input_msg.innerHTML=urlWrap2Img(input_msg.innerHTML)
                             // 名前をcookieに保存する
                             setCookie('name', input_name.value||input_name);
                             // uid cookieを保存する
@@ -366,12 +368,12 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                 head:{type: 'msg'},
                                 body:{
                                     name: encrypt_js(sanitize_send(window.input_name.value), "123").toString(),
-                                    msg: encrypt_js(sanitize_send(window.input_msg.value), "123").toString(),
+                                    msg: encrypt_js(sanitize_send(window.input_msg.innerHTML), "123").toString(),
                                     uid: '${uid.value}'
                                 }
                             }));
                             // 送信したらメッセージ欄を空にする
-                            input_msg.value='';
+                            input_msg.innerHTML='';
                         }
                     });
                 }
@@ -421,7 +423,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             if(msgoj.head.type==='msg'){
                 console.log('msg',msgoj.body)
                 msgoj.body.name = msgoj.body.name.slice(0, 300);
-                msgoj.body.msg = msgoj.body.msg.slice(0, 2000);
+                msgoj.body.msg = msgoj.body.msg.slice(0, 200000);
                 let sql_ins = 
                         'INSERT OR IGNORE INTO ' 
                         + TABLE_NAME 
