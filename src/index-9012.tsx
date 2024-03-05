@@ -8,7 +8,8 @@ import {
     getCookie, 
     setCookie, 
     getDataImageByDrop,
-    hasDataImg, 
+    hasDataImg,
+    dataImgWrap2Img,
     urlWrap2Img, 
     urlWrap2Link,
     inputBox,
@@ -26,7 +27,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_04';
+const VERSION = '0.1.026_06';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -171,6 +172,7 @@ ${getDataImageByDrop}
 document.addEventListener('DOMContentLoaded', function() {
     getDataImageByDrop(document, 'input_msg', 'drop_area')
 })
+${dataImgWrap2Img}
 ${hasDataImg}
 ${urlWrap2Img}
 ${urlWrap2Link}
@@ -357,23 +359,25 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                     btn_send.addEventListener('click', function (e) {
                         e.preventDefault();
                         // 名前とメッセージがあれば送信する
-                        if(!!input_name.value && !!input_msg.innerHTML) {
+                        let input_name_val = input_name.value;
+                        let input_msg_val = input_msg.innerHTML;
+                        if(!!input_name_val && !!input_msg_val) {
                             // urlをlink Element に変換する
-                            input_msg.innerHTML=urlWrap2Link(input_msg.innerHTML)
+                            input_msg_val=urlWrap2Link(input_msg_val)
                             // 画像urlを img 要素に変換する
-                            input_msg.innerHTML=urlWrap2Img(input_msg.innerHTML)
-                            // 画像dataを img 要素に変換する
-                            input_msg.innerHTML=urlWrap2Img(input_msg.innerHTML)
+                            input_msg_val=urlWrap2Img(input_msg_val)
+                            // 画像data スキームを img 要素に変換する
+                            input_msg_val=dataImgWrap2Img(input_msg_val)
                             // 名前をcookieに保存する
-                            setCookie('name', input_name.value||input_name);
+                            setCookie('name', input_name_val||input_name);
                             // uid cookieを保存する
                             setCookie('uid', '${uid.value}');
                             // 送信する
                             socket.send(JSON.stringify({
                                 head:{type: 'msg'},
                                 body:{
-                                    name: encrypt_js(sanitize_send(window.input_name.value), "123").toString(),
-                                    msg: encrypt_js(sanitize_send(window.input_msg.innerHTML), "123").toString(),
+                                    name: encrypt_js(sanitize_send(input_name_val), "123").toString(),
+                                    msg: encrypt_js(sanitize_send(input_msg_val), "123").toString(),
                                     uid: '${uid.value}'
                                 }
                             }));

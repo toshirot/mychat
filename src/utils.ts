@@ -422,11 +422,12 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
           let file = e.dataTransfer.files[0];
       
           // FileReaderを使用して画像のdata URIを取得
-          var reader = new FileReader();
+          let reader = new FileReader();
           reader.onload = function(event) {
             let dataUri = event.target.result;
 
-            let imgElm = "<img src='"+dataUri+"' style=max-width:20%;>"
+           // let imgElm = "<img src='"+dataUri+"' style=max-width:20%;>"
+            let imgElm = "<a target='_blank' href='"+dataUri+"'><img src='$2' style=max-width:20%;></a><div style=font-size:0.7rem>"+dataUri+"</div>"
             // textAreaにdata URIを貼り付け
             textArea.innerHTML = imgElm;
           };
