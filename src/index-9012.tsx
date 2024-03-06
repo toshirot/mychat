@@ -27,11 +27,11 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_06';
+const VERSION = '0.1.026_07';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
-const PORT = 9012;
+const PORT = 9013;
 
 //===========================================
 // interface
@@ -226,9 +226,9 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
         <body>
 
             <div id=nav>
-                <a href="https://qiita.com/toshirot/items/c5654156c8799ac28d83" target=qiita>
-                →このチャットの作り方</a><br>
-                →Github/mychat <a href="https://github.com/toshirot/mychat">https://github.com/toshirot/mychat</a>
+                <a href="https://github.com/toshirot/mychat">
+                    <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;right:8px;top:8px;">
+                </a>
             </div>
 
             <div id=contact></div>
