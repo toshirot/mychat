@@ -345,8 +345,24 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         </div>
         <div id="input_msg" class="textarea" contenteditable placeholder="メッセージを入力してください"></div>
         <br />
+        <style>
+            #file-input {
+                display: none; /* ファイル選択ボタンを非表示にする */
+            }
+
+            #custom-icon {
+                width: 50px; /* アイコンの幅を指定 */
+                height: 50px; /* アイコンの高さを指定 */
+                cursor: pointer; /* カーソルをポインターに変更 */
+            }
+        </style>
         <div id="drop_area">
-          画像はここへドラッグドロップしてください
+          画像はここへドロップか、選択 <label for="file-input">
+          <img src="/public/img/img-icon.svg?" alt="画像選択アイコン" class="img-icon">
+            </label>
+            
+            <!-- ファイル選択ボタン -->
+            <input type="file" id="file-input" accept="image/*">
         </div>
         <div class="message">送信</div>
         <button id="btn_send" type="submit">
@@ -426,8 +442,11 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
           reader.onload = function(event) {
             let dataUri = event.target.result;
 
+            console.log(dataUri)
+
            // let imgElm = "<img src='"+dataUri+"' style=max-width:20%;>"
-            let imgElm = "<a target='_blank' href='"+dataUri+"'><img src='$2' style=max-width:20%;></a><div style=font-size:0.7rem>"+dataUri+"</div>"
+            //let imgElm = "<a target='_blank' href='"+dataUri+"'><img src='"+dataUri+"' style=max-width:20%;></a><div style=font-size:0.7rem>"+dataUri+"</div>"
+            let imgElm = "<a target='_blank' href='"+dataUri+"'><img src='"+dataUri+"' style=max-width:20%;></a>"
             // textAreaにdata URIを貼り付け
             textArea.innerHTML = imgElm;
           };
@@ -438,6 +457,22 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
 
 }
 
+//===========================================
+// 画像dataを img 要素
+// 
+export function dataImgWrap2Img(wkmsg: string): string {
+    // 画像data抽出用正規表現 
+    //data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAABWCAYAAACHKqnqAAADLElEQVR4Ae3cQU7bQBgF4Jw23CCnLHcgKa7oBhaRotBFXBlpIjCTEbOJn6UPKXI8Y4nX759HYNPN6GtVAqfTaTwcfo/7/cFrQYPNqk6NsB8C7
+    let urlRegEx = /^(.*)(data:image\/[a-z]+;base64,.*)/i
+    let tolink = "<img src='$2' style=max-width:50%;>"
+    let reg=wkmsg.match(urlRegEx)
+    // マッチしたすべてのurl文字列を img要素でラップする
+    if (reg){
+        wkmsg = wkmsg.replace(urlRegEx, tolink)
+        console.log('this is img data.')
+    }
+    return wkmsg
+}
 //===========================================
 // 画像urlを img 要素に変換する
 //  (※urlWrap2Linkと併用する場合は、urlWrap2Linkを先に実行する)

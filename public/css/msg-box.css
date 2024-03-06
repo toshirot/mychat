@@ -14,8 +14,9 @@
     box-shadow: 5px 10px 15px #b6b6b6;
     text-align:left;
 }
-.msgbox .msg{
+.msgbox .msg * {
     margin-top: 0px;
+    overflow-wrap: break-word;
 }
 .msg img{
     max-width: 40%;
