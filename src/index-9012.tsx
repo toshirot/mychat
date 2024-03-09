@@ -27,11 +27,11 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_07';
+const VERSION = '0.1.026_08';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
-const PORT = 9013;
+const PORT = 9012;
 
 //===========================================
 // interface
@@ -171,6 +171,7 @@ ${setCookie}
 ${getDataImageByDrop}
 document.addEventListener('DOMContentLoaded', function() {
     getDataImageByDrop(document, 'input_msg', 'drop_area')
+    getDataImageByDrop(document, 'input_msg', 'input_msg')
 })
 ${dataImgWrap2Img}
 ${hasDataImg}
@@ -362,6 +363,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         let input_name_val = input_name.value;
                         let input_msg_val = input_msg.innerHTML;
                         if(!!input_name_val && !!input_msg_val) {
+                            console.log('click', input_msg_val)
                             // urlをlink Element に変換する
                             input_msg_val=urlWrap2Link(input_msg_val)
                             // 画像urlを img 要素に変換する

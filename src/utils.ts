@@ -413,26 +413,34 @@ export function hasDataImg(wkmsg: string): boolean{
 
 export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
     const textArea = document.getElementById(msgboxId);
-    const dropArea = document.getElementById(dropElmentId);
+    let dropArea = document.getElementById(dropElmentId);
 
     // -----------------------------------------------------
     // イベント処理
 
         // ドラッグオーバー時の処理
         dropArea.addEventListener('dragover', function(e) {
-          e.preventDefault();
-          dropArea.style.border = '4px dashed #d09696';
+            e.preventDefault();
+            dropArea.style.border = '4px dashed #d09696';
         });
       
-        // ドラッグアウト時の処理
+        // ドラッグアウト時の処理 
+        // dropAreaがtextAreaの場合はtextAreaのborderを戻す
         dropArea.addEventListener('dragleave', function() {
           dropArea.style.border = '2px dashed #ccc';
+          if(textArea===dropArea){
+            textArea.style.border = '';
+          }
         });
       
         // ドロップ時の処理
+        // dropAreaがtextAreaの場合はtextAreaのborderを戻す
         dropArea.addEventListener('drop', function(e) {
           e.preventDefault();
           dropArea.style.border = '2px dashed #ccc';
+          if(textArea===dropArea){
+            textArea.style.border = '';
+          }
       
           // ドロップされたファイルを取得
           let file = e.dataTransfer.files[0];
@@ -441,12 +449,11 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
           let reader = new FileReader();
           reader.onload = function(event) {
             let dataUri = event.target.result;
-
-            console.log(dataUri)
-
-           // let imgElm = "<img src='"+dataUri+"' style=max-width:20%;>"
-            //let imgElm = "<a target='_blank' href='"+dataUri+"'><img src='"+dataUri+"' style=max-width:20%;></a><div style=font-size:0.7rem>"+dataUri+"</div>"
-            let imgElm = "<a target='_blank' href='"+dataUri+"'><img src='"+dataUri+"' style=max-width:20%;></a>"
+            console.log('getDataImageByDrop', dataUri)
+            if(dataUri.indexOf('<a')!==-1)return dataUri;
+            if(dataUri.indexOf('<img')!==-1)return dataUri;
+             
+            let imgElm = "<img src='"+dataUri+"' style=max-width:20%; />"
             // textAreaにdata URIを貼り付け
             textArea.innerHTML = imgElm;
           };
@@ -461,10 +468,13 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
 // 画像dataを img 要素
 // 
 export function dataImgWrap2Img(wkmsg: string): string {
+    console.log('dataImgWrap2Img', wkmsg)
+    if(wkmsg.indexOf('<a')!==-1)return wkmsg;
+    if(wkmsg.indexOf('<img')!==-1)return wkmsg;
     // 画像data抽出用正規表現 
     //data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAABWCAYAAACHKqnqAAADLElEQVR4Ae3cQU7bQBgF4Jw23CCnLHcgKa7oBhaRotBFXBlpIjCTEbOJn6UPKXI8Y4nX759HYNPN6GtVAqfTaTwcfo/7/cFrQYPNqk6NsB8C7
     let urlRegEx = /^(.*)(data:image\/[a-z]+;base64,.*)/i
-    let tolink = "<img src='$2' style=max-width:50%;>"
+    let tolink = "<img src='$2' style=max-width:20%;>"
     let reg=wkmsg.match(urlRegEx)
     // マッチしたすべてのurl文字列を img要素でラップする
     if (reg){
@@ -478,9 +488,13 @@ export function dataImgWrap2Img(wkmsg: string): string {
 //  (※urlWrap2Linkと併用する場合は、urlWrap2Linkを先に実行する)
 // 
 export function urlWrap2Img(wkmsg: string): string {
+    console.log('urlWrap2Img', wkmsg)
+    if(wkmsg.indexOf('<a')!==-1)return wkmsg;
+    if(wkmsg.indexOf('<img')!==-1)return wkmsg;
     // 画像文字列抽出用正規表現 gで複数にマッチする
-    let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp|webp))(.*)$/i,
-    tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:20%;></a>$4<div style=font-size:0.7rem>$2</div>"
+    let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp|webp|ai|eps))(.*)$/i,
+    //tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:20%;></a>$4<div style=font-size:0.7rem>$2</div>" 
+    tolink = "<img src='$2' style=max-width:20%;>"
     
     // match
     let reg=wkmsg.match(urlRegEx)
@@ -496,13 +510,16 @@ export function urlWrap2Img(wkmsg: string): string {
 // urlをlink Element に変換する
 // 
 export function urlWrap2Link(wkmsg: string): string {
+    console.log('urlWrap2Link', wkmsg)
+    if(wkmsg.indexOf('<a')!==-1)return wkmsg;
+    if(wkmsg.indexOf('<img')!==-1)return wkmsg;
     let lists=[]
     let mobile=('touchstart' in window);
     let target='_blank';
     if(mobile){
         target='_self';
     }
-    let imgRegEx=/\.(jpg|jpeg|gif|png|bmp|webp)$/i
+    let imgRegEx=/\.(jpg|jpeg|gif|png|bmp|webp|ai|eps)$/i
     // url文字列抽出用正規表現 gで複数にマッチする
     let urlRegEx = /(s?https?:\/{2,}[-_.!~*'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g,
         tolink = "<a href='$1'>$1</a>"

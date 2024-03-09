@@ -24,12 +24,12 @@
 .msgbox-right{
     float: right;
     margin-right:25px;
-    background:#fff8ca;
+    background:#fffdf3;
 }
 .msgbox-left{
     float: left;
     margin-left:20px;
-    background:#E1FFCA;
+    background:#f4ffec;
 }
 .msgbox-info{
     float: right;
@@ -40,15 +40,15 @@
 }
 .msgbox-right:after{
     left:100%;
-    border-left-color:#fff8ca;
+    border-left-color:#fffdf3;
 }
 .msgbox-left:after{
     right:100%;
-    border-right-color:#E1FFCA;
+    border-right-color:#f4ffec;
 }
 .msgbox-info:after{
     right:100%;
-    border-right-color #e4e5e9;
+    border-right-color: #e4e5e9;
 }
 .msgbox-right-first{
     animation: anim-right 0.5s forwards;
