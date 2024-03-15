@@ -232,7 +232,7 @@ export function regBox_2(CHAT_NAME: string, VERSION: string, uid: string): strin
             <div class="head">
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
-                onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
+                onclick="location.href=location.href" />
                 <h2>認証</h2>
             </div>
             <div class="my_secu_title">
@@ -276,7 +276,7 @@ export function regBox_3(CHAT_NAME: string, VERSION: string, uid: string): strin
             <div class="head">
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
-                onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
+                onclick="location.href=location.href" />
                 <h2>相手の携帯番号</h2>
             </div>
             <div class="to_tel_title">
@@ -310,7 +310,7 @@ export function regBox_4(CHAT_NAME: string, VERSION: string, uid: string): strin
             <div class="head">
                 <img id="config" src="/public/img/config-icon.png" 
                 alt="config" width="40" height="40" 
-                onclick="window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
+                onclick="location.href=location.href" />
                 <h2>パスフレーズ</h2>
             </div>
             <div class="pass_title">
@@ -370,9 +370,9 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         </button>
         </div>
     </form>
-    
     <ul safe id=msgs></ul>
     `
+
 }
 
 //===========================================

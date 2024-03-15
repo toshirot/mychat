@@ -27,7 +27,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_08';
+const VERSION = '0.1.026_09';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // ポート HTTP と WebSocket 共通
@@ -177,6 +177,7 @@ ${dataImgWrap2Img}
 ${hasDataImg}
 ${urlWrap2Img}
 ${urlWrap2Link}
+
 const getLS = (key, val)  => JSON.parse(decrypt(localStorage.getItem(key) || '[]', val))
 const setLS = (key, val) => {
   localStorage.setItem(key, encrypt(JSON.stringify(val), val))
@@ -237,9 +238,34 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             // 初期ボックス
             window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
             </script>
-
             <script>
-                // 接続
+            const fileInput = document.getElementById('file-input');
+            const inputMsg = document.getElementById('input_msg');
+        
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+            
+                if (file) {
+                    const reader = new FileReader();
+            
+                    reader.onload = function(e) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = e.target.result;
+                        imgElement.alt = 'Thumbnail';
+                        imgElement.style.maxWidth = '50%';
+                        imgElement.style.maxHeight = '50%';
+                        inputMsg.innerHTML = ''; // Clear previous content
+                        inputMsg.appendChild(imgElement);
+                    };
+            
+                    reader.readAsDataURL(file);
+                } else {
+                    inputMsg.textContent = 'No file selected';
+                }
+            });
+            </script>
+            <script>
+                // ws接続
                 let socket = new WebSocket('ws://'+location.host+'/ws');
                 // 再接続カウンター
                 window.wss={'count':0}
