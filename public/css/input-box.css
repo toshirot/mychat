@@ -43,6 +43,16 @@ input {
 #input_msg{
     display: inline-block;
     text-align: left;
+    margin-bottom: 0px;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+#input_msg img{
+    max-width: 40%;
+    max-height: 40%;
+    vertical-align: middle;
 }
 textarea, .textarea {
     min-height:100px;
@@ -71,21 +81,37 @@ input, textarea, .textarea  {
 
 #drop_area{
     font-size: 14px;
-    text-align: center;
-    border: 2px dashed #ccc;
+    text-align: left;
+
+    /*border: 2px dashed #ccc;*/
     padding: 4px 10px;
-    border-radius: 12px;
+    padding-left: 18px;
+    padding-top: 3px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    height: 30px;
     width: 80%;
+    max-width: 600px;
     box-sizing: border-box;
-    max-width: 360px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
+    background-color: #eee;
 }
+
 .img-icon{
     width: 20px;
     height: 20px;
-    vertical-align: middle; 
+    vertical-align: middle;
+    background-color: #eee;
+}
+.img-icon:hover{
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    background-color: #fff;
 }
 .input_tel, #input_pass{
     max-width: 180px;

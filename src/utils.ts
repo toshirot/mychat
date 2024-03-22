@@ -344,20 +344,8 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         メッセージ
         </div>
         <div id="input_msg" class="textarea" contenteditable placeholder="メッセージを入力してください"></div>
-        <br />
-        <style>
-            #file-input {
-                display: none; /* ファイル選択ボタンを非表示にする */
-            }
-
-            #custom-icon {
-                width: 50px; /* アイコンの幅を指定 */
-                height: 50px; /* アイコンの高さを指定 */
-                cursor: pointer; /* カーソルをポインターに変更 */
-            }
-        </style>
         <div id="drop_area">
-          画像はここへドロップか、選択 <label for="file-input">
+          <label for="file-input">
           <img src="/public/img/img-icon.svg?" alt="画像選択アイコン" class="img-icon">
             </label>
             
@@ -370,6 +358,17 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         </button>
         </div>
     </form>
+    <style>
+        #file-input {
+            display: none; /* ファイル選択ボタンを非表示にする */
+        }
+
+        #custom-icon {
+            width: 50px; /* アイコンの幅を指定 */
+            height: 50px; /* アイコンの高さを指定 */
+            cursor: pointer; /* カーソルをポインターに変更 */
+        }
+    </style>
     <ul safe id=msgs></ul>
     `
 
@@ -453,7 +452,7 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
             if(dataUri.indexOf('<a')!==-1)return dataUri;
             if(dataUri.indexOf('<img')!==-1)return dataUri;
              
-            let imgElm = "<img src='"+dataUri+"' style=max-width:20%; />"
+            let imgElm = "<img src='"+dataUri+"' />"
             // textAreaにdata URIを貼り付け
             textArea.innerHTML = imgElm;
           };
@@ -474,7 +473,7 @@ export function dataImgWrap2Img(wkmsg: string): string {
     // 画像data抽出用正規表現 
     //data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAABWCAYAAACHKqnqAAADLElEQVR4Ae3cQU7bQBgF4Jw23CCnLHcgKa7oBhaRotBFXBlpIjCTEbOJn6UPKXI8Y4nX759HYNPN6GtVAqfTaTwcfo/7/cFrQYPNqk6NsB8C7
     let urlRegEx = /^(.*)(data:image\/[a-z]+;base64,.*)/i
-    let tolink = "<img src='$2' style=max-width:20%;>"
+    let tolink = "<img src='$2'>"
     let reg=wkmsg.match(urlRegEx)
     // マッチしたすべてのurl文字列を img要素でラップする
     if (reg){
@@ -494,7 +493,7 @@ export function urlWrap2Img(wkmsg: string): string {
     // 画像文字列抽出用正規表現 gで複数にマッチする
     let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp|webp|ai|eps))(.*)$/i,
     //tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:20%;></a>$4<div style=font-size:0.7rem>$2</div>" 
-    tolink = "<img src='$2' style=max-width:20%;>"
+    tolink = "<img src='$2'>"
     
     // match
     let reg=wkmsg.match(urlRegEx)
