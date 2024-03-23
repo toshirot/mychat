@@ -30,8 +30,14 @@ const CHAT_NAME = 'myChat';
 const VERSION = '0.1.026_10';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
+// HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
+const HTTP_PLOTOCOL = 'http://'
+// ホストまたはIP
+const HOST = '74.226.208.203'
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
+// ホームURL
+const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
 
 //===========================================
 // interface
@@ -203,7 +209,7 @@ const createWebSocket = (url) =>{
 // writeMsg(msgs, msgLine[0] , msgLine[1], "123"), decrypt_js(msgLine[2], "123"), msgLine[3], adjustHours(msgLine[4], +9))
 const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
     // msgbox を作る
-    msgbox='<div class="msgbox '+msg_class+'" style="">\
+    let msgbox='<div class="msgbox '+msg_class+'" style="">\
         <div class="namebox">\
         '+num+': '+ dec_name+' &gt; ('+date+') \
         </div>\
@@ -228,8 +234,11 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
         <body>
 
             <div id=nav>
-                <a href="https://github.com/toshirot/mychat">
-                    <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;right:8px;top:8px;">
+                <a href="${HOME_URL}" alt=home>
+                    <img src="/public/img/icon-home.svg" style="width:30px;height:30px;position:absolute;left:8px;top:8px;">
+                </a>
+                <a href="https://github.com/toshirot/mychat" alt=github>
+                    <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;left:38px;top:8px;">
                 </a>
             </div>
 
@@ -286,6 +295,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
 
                     // event.data is 
                     //  e.g. '{"head":{"type":"msg"},"body":[[52,"aa","aa","2023-12-20 14:39:04"]]}'
+
                     if(!event.data)return // 無ければ無視する
                     let data=JSON.parse(event.data) // object化する
                     if(!data.body)return // 無ければ無視する
@@ -294,8 +304,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                     data.body.reverse()
                     const msgLastNum=data.body.length-1
                     console.log('msgLastNum', msgLastNum)
-                    let msg_class='msgbox-left'
-                    let msgbox=''
+
                     for(let i=0;i<${LIMIT};i++){
                         try{
 
@@ -303,10 +312,11 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                             let msgLine=data.body[i]
                             
                             msgLine[2]=msgLine[2].replace(/\\n/g, '<br>')
+
                             // メッセージを出力する
                             if(!!msgLine){
                                 // デフォルトのメッセージ表示位置はleft側
-                                msg_class='msgbox-left'
+                                let msg_class='msgbox-left'
                                 if(data.head.type==='info'){
                                     msg_class='msgbox-info'
                                 }
@@ -476,7 +486,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 // infoは DB へ保存しない。
                 // 届いたinfoメッセージをブロードキャストする
                 let time=new Date()
-                broadCast(ws, msgoj.head.type, [['', '--※info', msgoj.body.msg, msgoj.body.uid, 
+                broadCast(ws, msgoj.head.type, [['system', '--※info', msgoj.body.msg, msgoj.body.uid, 
                   // UTCから日本時間への変換をクライアント側でしてるので、
                   // クライアントから届いた日本時間をマイナス9時間して 
                   // SQLite出力同様のUTCに揃える

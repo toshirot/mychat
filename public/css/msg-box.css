@@ -1,6 +1,7 @@
 /* メッセージ用ボックス */
 .msgbox{
     position:relative;
+    display: block;
     width:80%;
     min-height:0px;
     margin-top:10px;
@@ -23,16 +24,19 @@
 }
 .msgbox-right{
     float: right;
+    clear: both;
     margin-right:25px;
     background:#fffdf3;
 }
 .msgbox-left{
     float: left;
+    clear: both;
     margin-left:20px;
     background:#f4ffec;
 }
 .msgbox-info{
-    float: right;
+    float: left;
+    clear: both;
     max-width: 200px;
     margin-left:5px;
     background:#e4e5e9;
