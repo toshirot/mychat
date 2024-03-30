@@ -27,15 +27,21 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_10';
+const VERSION = '0.1.030_01';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
 const HTTP_PLOTOCOL = 'http://'
 // ホストまたはIP
-const HOST = '74.226.208.203'
+const HOST = 'mychat.jp' // '74.226.208.203'
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
+// TLS for HTTPS
+const KEYS_PATH = '/etc/letsencrypt/live/'
+const KEYS = {
+    cert: Bun.file(KEYS_PATH+HOST+'/cert.pem'),
+    key:  Bun.file(KEYS_PATH+HOST+'/privkey.pem')
+}
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
 
@@ -107,7 +113,7 @@ const app = new Elysia()
         // console.log('sms-code:',new Date(),req.body)
 
         const seqCode=!!(''.padStart)?
-            (''+parseInt(Math.random()*10000,10)).padStart(4, "0"):
+            (''+parseInt(Math.random()*10000,10)).padStart(4, '0'):
             (''+parseInt(Math.random()*10000,10))//ieはpadStartが無いので4桁までの数字
         let num=''//'下記リンククリックで電話番号確認が完了します。 '
                 +''
@@ -198,7 +204,7 @@ const sanitize_recive = (str) => {
     str=str.replace(/-r-n%n-r-/g, '<br />')
     return DOMPurify.sanitize(str)
 }
-// socket = createWebSocket('ws://'+location.host+'/ws')
+// socket = createWebSocket('wss://'+location.host+'/ws')
 const createWebSocket = (url) =>{
     let wss = new WebSocket(url);
     wss.onopen = socket.onopen
@@ -235,10 +241,10 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
 
             <div id=nav>
                 <a href="${HOME_URL}" alt=home>
-                    <img src="/public/img/icon-home.svg" style="width:30px;height:30px;position:absolute;left:8px;top:8px;">
+                    <div title=Home style="width:30px;height:30px;position:absolute;left:8px;top:8px;margin-top:2px;color:#000;">Mychat</div>
                 </a>
                 <a href="https://github.com/toshirot/mychat" alt=github>
-                    <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;left:38px;top:8px;">
+                    <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;left:60px;top:8px;">
                 </a>
             </div>
 
@@ -275,7 +281,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             </script>
             <script>
                 // ws接続
-                let socket = new WebSocket('ws://'+location.host+'/ws');
+                let socket = new WebSocket('wss://'+location.host+'/ws');
                 // 再接続カウンター
                 window.wss={'count':0}
                 // 接続時イベント
@@ -363,7 +369,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                     if(window.wss['count']<10){
                         // 再接続は10回まで
                         setTimeout(function(){
-                            socket = createWebSocket('ws://'+location.host+'/ws')
+                            socket = createWebSocket('wss://'+location.host+'/ws')
                             window.wss['count']++
                         }, 100)
                     }
@@ -495,13 +501,46 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             } else {}
         }
     })
-    .listen(PORT, (token: any) => {
+    .listen({
+        port: PORT,
+        tls: KEYS
+      }, (token: any) => {
         if (token) {
             console.log(`Listening to port ${PORT}`);
         } else {
             console.error(`Failed to listen to port ${PORT}`);
         }
     });
+
+    /*
+APIを動かすのにWebサーバーを使いSSL証明書へアクセスするのでsudoで行う
+
+$ which bun
+/home/tato/.bun/bin/bun
+sudo ln -s /home/tato/.bun/bin/bun /usr/bin/
+
+tato@reien:~$  which node
+/home/tato/nvm/versions/node/v16.15.1/bin/node
+tato@reien:~$ which pm2
+/home/tato/nvm/versions/node/v16.15.1/bin/pm2
+
+sudo ln -s /home/tato/nvm/versions/node/v16.15.1/bin/node /usr/bin/node
+sudo ln -s /home/tato/nvm/versions/node/v16.15.1/bin/pm2 /usr/bin/pm2
+
+こうなる
+tato@reien:~$ sudo which node
+/usr/bin/node
+tato@reien:~$ sudo which pm2
+/usr/bin/pm2
+    */
+    /*
+    .listen(PORT, (token: any) => {
+        if (token) {
+            console.log(`Listening to port ${PORT}`);
+        } else {
+            console.error(`Failed to listen to port ${PORT}`);
+        }
+    });*/
 
 //------------------------------------------------------------
 // sendSMS
