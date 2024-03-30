@@ -15,6 +15,9 @@ for Linux: Bun をインストールするにはunzipパッケージが必要で
 sudo apt install unzip 
 ```
 v0.1.030から https で行うため sudu権限で bun 実行できるようにします
+letsencryptなどの証明書は各自ご用意ください。
+
+※httpバージョンは、v0.1.026になります
 ```
 #bunのパスを調べる
 $ which bun
