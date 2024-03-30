@@ -1,10 +1,11 @@
-# mychat v0.1.026 with Elysia/Bun
+# mychat v0.1.030 with Elysia/Bun
 
 <a href="http://74.226.208.203:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/b809beaa-0e64-4e57-a288-09572c2d4aae) </a>
 
 ## Demo/ 動作サンプル
 
-http://74.226.208.203:9013/
+v0.1.030からhttpsになりました
+[http://74.226.208.203:9013/](https://mychat.jp:9013/)
 
 # MacOS と Linux 用の Bun インストール
 
@@ -92,7 +93,7 @@ Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 
-## Tree at v0.1.026
+## Tree at v0.1.030
 
 ```
 .mychat/
