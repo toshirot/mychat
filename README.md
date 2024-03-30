@@ -14,6 +14,18 @@ for Linux: Bun をインストールするにはunzipパッケージが必要で
 ```
 sudo apt install unzip 
 ```
+v0.1.030から https で行うため sudu権限で bun 実行できるようにします
+```
+#bunのパスを調べる
+$ which bun
+/home/＜ユーザー名＞/.bun/bin/bun
+#ルートへリンクする
+sudo ln -s /home/tato/.bun/bin/bun /usr/bin/bun
+# /usr/bin/bunがリンクされてることを確認 これで sudu bun が動作します
+$ sudo ls -l /usr/bin/bun
+lrwxrwxrwx 1 root root 23  3月 31 00:22 /usr/bin/bun -> /home/tato/.bun/bin/bun
+```
+
 ## Bun install/ Bunインストール
 ```
 curl -fsSL https://bun.sh/install | bash
@@ -40,6 +52,11 @@ bun init
 ```
 ## Execution at port 9012/ ポート9012で実行する
 ※v0.1.023から「.tsx」ファイルを起動しています
+
+```
+
+```
+
 ```
 bun dev
 
@@ -131,13 +148,15 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 #### 注意※2023/1/7　 "elysia": "0.7.30",　が "elysia": "0.8.00" だとエラーがでた
 
+* v0.1.030からdevは sudo で実行しています
+
 ```
 {
   "name": "mychat",
-  "version": "0.1.026",
+  "version": "0.1.030",
   "scripts": {
     "test": "bun test",
-    "dev": "bun run --hot src/index-9012.tsx"
+    "dev": "sudo bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
