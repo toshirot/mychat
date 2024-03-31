@@ -1,6 +1,7 @@
 # mychat v0.1.030 with Elysia/Bun
 
-<a href="http://74.226.208.203:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/b809beaa-0e64-4e57-a288-09572c2d4aae) </a>
+<a href="http://74.226.208.203:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/a3308562-78b1-4af7-8d7e-1efed616da50)
+</a>
 
 ## Demo/ 動作サンプル
 
