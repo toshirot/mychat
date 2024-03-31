@@ -22,7 +22,7 @@ v0.1.030からは httpではなく https で起動します。
 もし既に、ドメイン持ってるサイト内に構築するならsrc/index-9012.tsx などに証明書のパスを書くだけで良いですが、
 証明書が無い場合は、ドメインとletsencryptなどの証明書を各自ご用意ください。
 
-また、suduでの権限で bun 実行権限も必要なので、
+また、sudoでの権限で bun 実行権限も必要なので、
 下記のように sudo bun が実行できることが必要かもしれません。
 
 ※httpバージョンは、v0.1.026までになります
@@ -33,7 +33,7 @@ $ which bun
 /home/＜ユーザー名＞/.bun/bin/bun
 #ルートへリンクする
 sudo ln -s /home/tato/.bun/bin/bun /usr/bin/bun
-# /usr/bin/bunがリンクされてることを確認 これで sudu bun が動作します
+# /usr/bin/bunがリンクされてることを確認 これで sudo bun が動作します
 $ sudo ls -l /usr/bin/bun
 lrwxrwxrwx 1 root root 23  3月 31 00:22 /usr/bin/bun -> /home/tato/.bun/bin/bun
 ```
