@@ -334,7 +334,11 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
             <img id="config" src="/public/img/config-icon.png" 
             alt="config" width="40" height="40" 
             onclick="window.contact.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}')" />
-            <h2><a id=input_box_title_link href=http://`+location.host+`>${CHAT_NAME}<div id=mychat_version>v${VERSION}</div></a></h2>
+            <h1>
+            <a id=input_box_title_link href=http://`+location.host+`>${CHAT_NAME}
+            <span id=mychat_version>v${VERSION}</span>
+            </a>
+            </h1>
         </div>
         <div class="name_title">
         名前
