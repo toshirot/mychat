@@ -27,11 +27,11 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.026_10';
+const VERSION = '0.1.030_01';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
-const HTTP_PLOTOCOL = 'http://'
+const HTTP_PLOTOCOL = 'https://'
 // ホストまたはIP
 const HOST = '74.226.208.203'
 // ポート HTTP と WebSocket 共通
@@ -235,7 +235,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
 
             <div id=nav>
                 <a href="${HOME_URL}" alt=home>
-                    <div title=Home style="width:30px;height:30px;position:absolute;left:8px;top:8px;margin-top:2px;color:#000;">Mychat</div>
+                    <div title=Home style="width:30px;height:30px;position:absolute;left:8px;top:8px;margin-top:2px;color:#000;">myChat</div>
                 </a>
                 <a href="https://github.com/toshirot/mychat" alt=github>
                     <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;left:60px;top:8px;">
