@@ -10,10 +10,14 @@ v0.1.030からhttpsになりました
 # MacOS と Linux 用の Bun インストール
 
 ## Advance preparations/ 事前準備
+
+#### unzipインストールして準備する
 for Linux: Bun をインストールするにはunzipパッケージが必要です。入っていなければ入れておきます。
 ```
 sudo apt install unzip 
 ```
+
+#### v0.1.030からの https 化を準備する
 v0.1.030から https で行うため sudu権限で bun 実行できるようにします
 letsencryptなどの証明書は各自ご用意ください。
 
