@@ -13,7 +13,7 @@ bun i passport-google-oauth2
 
 const app = new Elysia();
 app.use(expressSession({
-    secret: 'secret_key',
+    secret: 'envで secret_key',
     resave: false,
     saveUninitialized: false
 }));
