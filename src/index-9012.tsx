@@ -13,10 +13,7 @@ import {
     urlWrap2Img, 
     urlWrap2Link,
     inputBox,
-    regBox_1,
-    regBox_2,
-    regBox_3,
-    isSendingAllowed
+    regBox_1
 } from "./utils";
 const crypto = require('crypto');
 import 'dotenv/config';
@@ -27,7 +24,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.030_01';
+const VERSION = '0.1.030_02';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
@@ -94,47 +91,6 @@ const app = new Elysia()
     .use(html())
     .use(staticPlugin()) //ここでstaticプラグインを適用する
 
-    //------------------------------------------------------------
-    // SMS送信  ログインチェック POST
-    // セキュリティコードを送信する
-    // e.g. https://reien.top:5000/api/login-tel-sms/
-    .post('/api/sms-code/', ({body}) => {
-
-        console.log(body.tel  )
-        //console.log(req.body )
-        if(!body)return
-        if(!body.tel)return
-        // console.log('sms-code:',new Date(),req.body)
-
-        const seqCode=!!(''.padStart)?
-            (''+parseInt(Math.random()*10000,10)).padStart(4, "0"):
-            (''+parseInt(Math.random()*10000,10))//ieはpadStartが無いので4桁までの数字
-        let num=''//'下記リンククリックで電話番号確認が完了します。 '
-                +''
-                +'このセキュリティコードをブラウザに入力してください'
-                +' '
-                +seqCode
-        //telへセキュリティコードSMSを送る
-        // sendSMS(body,  req.body.tel)
-        isSendingAllowed(body.tel)
-            .then((result) => {
-                if (result) {
-                    console.log('/api/sms-code/ send to sms', num)
-                    sendSMS(num,  body.tel)
-                } else {
-                    console.log("Sending is not allowed.");
-                }
-            })
-            .catch((error) => {
-                console.error("An error occurred:", error);
-            });
-        
-        //ブラウザへレスポンス
-        return JSON.stringify(seqCode)
-        //app.send(JSON.stringify(seqCode))
-
-    })
-
     .get('/', ({ cookie: { name, uid } }) => { 
         const DEFAULT_NAME = '通りすがりさん';
         
@@ -168,8 +124,6 @@ ${adjustHours}
 // for input box
 ${inputBox}
 ${regBox_1}
-${regBox_2}
-${regBox_3}
 // for cookie
 ${getCookie}
 ${setCookie}
@@ -242,10 +196,16 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 </a>
             </div>
 
-            <div id=contact></div>
+            <div id=contact>
+                <form>
+                    <div id="input_box">
+                    </div>
+                </form>
+                <ul safe id=msgs></ul>
+            </div>
             <script>
             // 初期ボックス
-            window.contact.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
+            window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
             </script>
             <script>
             const fileInput = document.getElementById('file-input');
@@ -505,38 +465,6 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             console.error(`Failed to listen to port ${PORT}`);
         }
     });
-
-//------------------------------------------------------------
-// sendSMS
-// @body {string} body text
-// @to {string} tel //e.g. '09046213611'
-// @return {object}
-// e.g. .SMS_の付く定数は環境変数へ登録しておく
-//
-const util = require('util');
-const childProcess = require('child_process');
-const exec = util.promisify(childProcess.exec);
-const INPUT_LEN_TEL=11
-const SMS_TOTEL=process.env.SMS_TOTEL
-const SMS_API_TOKEN= process.env.SMS_API_TOKEN
-const SMS_NOTIFICATION_EMAILS=process.env.SMS_NOTIFICATION_EMAILS
-const endpoint='https://api.smslink.jp/'
-
-async function sendSMS(body, to){
-    if(to.length!==INPUT_LEN_TEL)return
-    console.log("sendSMSLink:===========================\n")
-
-    let curl =`
-    curl "`+endpoint+`api/v1/delivery" \
-    -X POST \
-    -d '{"contacts":[{"phone_number":"`+to+`"}],"text_message":"`+body+`","reserved_at":"","click_count":true,"notification_emails":["`+SMS_NOTIFICATION_EMAILS+`"]}' \
-    -H "Accept:       application/json" \
-    -H "token:        `+process.env.SMS_API_TOKEN+`" \
-    -H "Content-Type: application/json"`
-
-    const res = await exec(curl)
-    return res
-}
 
 //===========================================
 // uid を作成する関数

@@ -1,6 +1,6 @@
 /* 入力用ボックス */
 
-.input_box,.reg_box {
+#input_box,.reg_box {
     max-width:90%;
     margin:0 auto;
     margin-top:40px;
@@ -114,7 +114,15 @@ input, textarea, .textarea  {
     margin-bottom: 12px;
     background-color: #eee;
 }
+#file-input {
+    display: none; /* ファイル選択ボタンを非表示にする */
+}
 
+#custom-icon {
+    width: 50px; /* アイコンの幅を指定 */
+    height: 50px; /* アイコンの高さを指定 */
+    cursor: pointer; /* カーソルをポインターに変更 */
+}
 .img-icon{
     width: 20px;
     height: 20px;
@@ -167,7 +175,7 @@ button:hover, .button:hover {
     max-width: 200px;
     max-height: 30px;
 }
-.input_box #btn_send{
+#input_box #btn_send{
     width: 120px;
 }
 .info {
