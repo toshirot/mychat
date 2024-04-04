@@ -73,7 +73,7 @@ bun init
 ```
 bun dev
 
-e.g. "dev": "bun run --hot src/index-9012.tsx"
+e.g. "dev": "sudo bun run --hot src/index-9012.tsx"
 ```
 if you want to change the port, change "const PORT = 9012;".
 Here, the default is "PORT = 9012", so if you want to use it as is, you will need to open that port.
