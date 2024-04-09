@@ -86,8 +86,8 @@ let user_uid = ''; // ユーザーID
 let user_name = ''; // ユーザー名
 let user_msg = ''; // 固定のメッセージ
 
-const saltText = 'salt-test'; // ランダムな整数を生成するためのsalt
-// 注意: あらかじめ環境変数に設定しておく
+const saltText = 'salt-test'; // encryptを生成するためのsalt
+// 注意: PASS_PHRASEはあらかじめ環境変数に設定しておく
 // $ export PASS_PHRASE="mypassphrase"
 const PASS_PHRASE = process.env.PASS_PHRASE
 // 暗号を生成する関数
