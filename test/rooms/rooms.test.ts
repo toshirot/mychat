@@ -1,5 +1,6 @@
 import { Database } from 'bun:sqlite';
 import { describe, expect, it } from 'bun:test'
+import crypto from 'crypto';
 
 //============================================
 // Chat用データベースの作成
@@ -76,13 +77,6 @@ await deleteAllChatMessages()
 //============================================
 // サンプル
 //============================================
-// ランダムな整数を生成する関数
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-const randm_num = getRandomInt(1, 100); // 1から100のランダムな整数
 
 // 各テーブルにデータを挿入するサンプルを実行する
 let room_name = ''; // チャットルーム名
@@ -90,12 +84,19 @@ let user_uid = ''; // ユーザーID
 let user_name = ''; // ユーザー名
 let user_msg = ''; // 固定のメッセージ
 
-async function runSampleInserts(randm_num) {
-    let room_id = randm_num
-    room_name = 'Hoge_'+randm_num; // チャットルーム名
-    user_uid = 'user_'+randm_num; // ユーザーID
-    user_name = 'John Doe_'+randm_num; // ユーザー名
-    user_msg = 'Random Message '+randm_num; // 固定のメッセージ
+const saltText = 'salt-test'; // ランダムな整数を生成するためのsalt
+// 注意: あらかじめ環境変数に設定しておく
+// $ export PASS_PHRASE="mypassphrase"
+const PASS_PHRASE = process.env.PASS_PHRASE
+// 暗号を生成する関数
+const salt = encrypt(saltText, password)
+
+async function runSampleInserts(salt) {
+    let room_id = salt
+    room_name = 'Hoge_'+salt; // チャットルーム名
+    user_uid = 'user_'+salt; // ユーザーID
+    user_name = 'John Doe_'+salt; // ユーザー名
+    user_msg = 'Random Message '+salt; // 固定のメッセージ
     try {
         await insertChatRoom(room_name);// チャットルームを挿入
         await insertChatUser(user_uid, user_name);// ユーザーを挿入
@@ -112,7 +113,7 @@ async function runSampleInserts(randm_num) {
 
 
 // サンプルを実行する
-runSampleInserts(randm_num+1);
+runSampleInserts(salt+1);
 
 describe('DB動作の確認。チャットルーム、ユーザー、メッセージ', () => {
     it('作ったチャットルームの名前を取得する', async () => {
@@ -134,9 +135,9 @@ describe('DB動作の確認。チャットルーム、ユーザー、メッセ�
 
 /*
 // サンプルを実行する
-runSampleInserts(randm_num+1);
-runSampleInserts(randm_num+2);
-runSampleInserts(randm_num+3);
+runSampleInserts(salt+1);
+runSampleInserts(salt+2);
+runSampleInserts(salt+3);
 
 // 出力
 console.log(await getAllChatRooms())// get all chat rooms
@@ -147,6 +148,19 @@ console.log(await getAllChatMessages())// get all chat messages
 //============================================
 // 関数
 //============================================
+
+// AESによる暗号化 by crypto
+function encrypt(text: string, password: string) {
+    const cipher = crypto.createCipher('aes-256-cbc', password)
+    const crypted = cipher.update(text, 'utf-8', 'hex')
+    return crypted + cipher.final('hex')
+}
+// AESによる復号化 by crypto
+function decrypt(text: string, password: string) {
+    const decipher = crypto.createDecipher('aes-256-cbc', password)
+    const decrypted = decipher.update(text, 'hex', 'utf-8')
+    return decrypted + decipher.final('utf-8')
+}
 
 //--------------------------------------------
 // INSERT
