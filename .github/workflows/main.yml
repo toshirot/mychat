@@ -12,5 +12,6 @@ jobs:
       # run any `bun` or `bunx` command
       - run: bun install
       - run: sudo ln -s /home/tato/.bun/bin/bun /usr/bin/bun
+      - run: ls -l /usr/bin/bun
       - run: sudo bun run --hot src/index-9012.tsx
       - run: bun run build
