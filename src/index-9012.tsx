@@ -40,8 +40,8 @@ const PORT = 9012;
 const KEYS = {
    // cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
    // key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
-    cert: ${{ MYCHAT_JP_CERT_PEM }},
-    key: ${{ MYCHAT_JP_PRIVEKEY_PEM }}
+    cert: ${{ github.MYCHAT_JP_CERT_PEM }},
+    key: ${{ github.MYCHAT_JP_PRIVEKEY_PEM }}
 }
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
