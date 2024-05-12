@@ -1,4 +1,6 @@
 name: mychat-workflow
+on:
+  push:
 jobs:
   mychat:
     name: mychat
