@@ -67,10 +67,6 @@ bun init
 ※v0.1.023から「.tsx」ファイルを起動しています
 
 ```
-
-```
-
-```
 bun dev
 
 e.g. "dev": "sudo bun run --hot src/index-9012.tsx"
@@ -78,8 +74,17 @@ e.g. "dev": "sudo bun run --hot src/index-9012.tsx"
 if you want to change the port, change "const PORT = 9012;".
 Here, the default is "PORT = 9012", so if you want to use it as is, you will need to open that port.
 
-ポートを変更したい場合は「const PORT = 9012;」を変更してください。
-ここでは、デフォルトで「PORT = 9012」としているので、もしそのまま使うならそのポートを開いておく必要があります。
+ポートなどを変更したい場合は「const PORT = 9012;」等で変更してください。
+ここでは、デフォルトで「PORT = 9012」としていますが、そのポートを開いておく必要があります。
+
+```
+// 修正箇所
+
+// ホストまたはIP
+const HOST = '74.226.208.203' //←ここを自分の使うHOSTへ変更する
+// ポート HTTP と WebSocket 共通
+const PORT = 9012; //←ここを自分の使うPORTへ変更する
+```
 
 ## Test/ テスト
 
