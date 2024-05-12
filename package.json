@@ -4,7 +4,7 @@
   "scripts": {
     "test": "bun test",
     "dev": "sudo bun run --hot src/index-9012.tsx",
-    "action":  "bun run src/index-9012.tsx;await Bun.sleep(1000);process.exit();"
+    "action":  "bun run src/index-9012.tsx;await Bun.sleep(10000);process.exit();"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
