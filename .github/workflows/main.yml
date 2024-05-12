@@ -13,7 +13,7 @@ jobs:
       - run: sudo su
       - run: sudo apt install unzip 
       - run: curl -fsSL https://bun.sh/install | bash
-      - run: git clone https://github.com/toshirot/mychat.git
+      - run: git clone https://github.com/toshirot/mychat.git 
       - run: ls -l
       - run: ls -l /home/
       - run: ls -l /home/linuxbrew
