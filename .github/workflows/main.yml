@@ -11,5 +11,5 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       # run any `bun` or `bunx` command
       - run: bun install
-      - run: bun dev
+      - run: sudo bun run --hot src/index-9012.tsx
       - run: bun run build
