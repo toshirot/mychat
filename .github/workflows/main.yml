@@ -24,7 +24,7 @@ jobs:
      #  - run: source /home/runner/.bashrc
      # - run: cd mychat
       - run: bun init
-      - run: cat package.json
+      - run: cat package.json 
       - run: bun dev
       - run: ls -l /home/
       - run: ls -l /home/runner/
