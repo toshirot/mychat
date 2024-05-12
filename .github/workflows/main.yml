@@ -16,7 +16,6 @@ jobs:
       - run: git clone https://github.com/toshirot/mychat.git
       - run: ls -l /home/
       - run: ls -l /home/linuxbrew
-      - run: ls -l /home/runneradmin
       - run: ls -l /home/runner/
       - run: ls -l /home/runner/runners/
       - run: ls -l /home/runner/runners/work/
