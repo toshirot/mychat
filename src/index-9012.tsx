@@ -30,7 +30,7 @@ const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
 const HTTP_PLOTOCOL = 'https://'
 // ホストまたはIP
-const HOST = '74.226.208.203'
+const HOST = 'mychat.jp'
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
 const KEYS = {
@@ -94,7 +94,16 @@ let clients: WebSocket[] = [];
 const app = new Elysia()
     .use(html())
     .use(staticPlugin()) //ここでstaticプラグインを適用する
-
+    .listen({
+        port: PORT,
+        tls: KEYS
+    },  (token: any) => {
+        if (token) {
+            console.log(`Listening to port ${PORT}`);
+        } else {
+            console.error(`Failed to listen to port ${PORT}`);
+        }
+    })
     .get('/', ({ cookie: { name, uid } }) => { 
         const DEFAULT_NAME = '通りすがりさん';
         
@@ -462,16 +471,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             } else {}
         }
     })
-    .listen({
-        port: PORT,
-        tls: KEYS
-    },  (token: any) => {
-        if (token) {
-            console.log(`Listening to port ${PORT}`);
-        } else {
-            console.error(`Failed to listen to port ${PORT}`);
-        }
-    })
+
 
 //===========================================
 // uid を作成する関数
