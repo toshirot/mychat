@@ -1,6 +1,6 @@
 {
   "name": "mychat",
-  "version": "0.1.030",
+  "version": "0.1.031",
   "scripts": {
     "test": "bun test",
     "dev": "sudo bun run --hot src/index-9012.tsx"
