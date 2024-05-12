@@ -11,7 +11,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       # run any `bun` or `bunx` command
       - run: sudo su
-      - run: apt install unzip 
+      - run: sudo apt install unzip 
       - run: curl -fsSL https://bun.sh/install | bash
       - run: source /home/tato/.bashrc
       - run: cd mychat
