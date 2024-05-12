@@ -10,6 +10,8 @@
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
     "@types/crypto-js": "^4.2.1",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.12.11",
     "cookie-parser": "^1.4.6",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
