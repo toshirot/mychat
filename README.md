@@ -33,10 +33,10 @@ v0.1.030からは httpではなく https で起動します。
 $ which bun
 /home/＜ユーザー名＞/.bun/bin/bun
 #ルートへリンクする
-sudo ln -s /home/tato/.bun/bin/bun /usr/bin/bun
+sudo ln -s /home/＜ユーザー名＞/.bun/bin/bun /usr/bin/bun
 # /usr/bin/bunがリンクされてることを確認 これで sudo bun が動作します
 $ sudo ls -l /usr/bin/bun
-lrwxrwxrwx 1 root root 23  3月 31 00:22 /usr/bin/bun -> /home/tato/.bun/bin/bun
+lrwxrwxrwx 1 root root 23  3月 31 00:22 /usr/bin/bun -> /home/＜ユーザー名＞/.bun/bin/bun
 ```
 
 ## Bun install/ Bunインストール
@@ -50,10 +50,10 @@ curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.25"
 ## Clone mychat/ クローンで mychat をダウンロードする
 ```
 git clone https://github.com/toshirot/mychat.git
-source /home/tato/.bashrc
+source /home/＜ユーザー名＞/.bashrc
 or
 git clone git@github.com:toshirot/mychat.git
-source /home/tato/.bashrc
+source /home/＜ユーザー名＞/.bashrc
 ```
 
 ## Bun initialization/ Bunを初期化する
