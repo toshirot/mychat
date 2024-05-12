@@ -174,7 +174,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   "version": "0.1.031",
   "scripts": {
     "test": "bun test",
-    "dev": "bun run --hot src/index-9012.tsx"
+    "dev": "sudo bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
