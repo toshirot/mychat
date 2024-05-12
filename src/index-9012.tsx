@@ -6,9 +6,13 @@ import { Database } from 'bun:sqlite';
 import { 
     adjustHours, 
     getCookie, 
-    setCookie, 
+    setCookie,
+    getLocalStorage,
+    setLocalStorage,
     getDataImageByDrop,
+    hasVideo,
     hasDataImg,
+    resizeImageToInputMsg,
     dataImgWrap2Img,
     urlWrap2Img, 
     urlWrap2Link,
@@ -34,8 +38,8 @@ const HOST = 'mychat.jp'
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
 const KEYS = {
-    cert: Bun.file("/etc/letsencrypt/live/mychat.jp/cert.pem"),
-    key: Bun.file("/etc/letsencrypt/live/mychat.jp/privkey.pem")
+    cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
+    key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
 }
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
@@ -140,13 +144,18 @@ ${regBox_1}
 // for cookie
 ${getCookie}
 ${setCookie}
+// for LocalStorage
+${getLocalStorage}
+${setLocalStorage}
 // for image and links
 ${getDataImageByDrop}
 document.addEventListener('DOMContentLoaded', function() {
     getDataImageByDrop(document, 'input_msg', 'drop_area')
     getDataImageByDrop(document, 'input_msg', 'input_msg')
 })
+${resizeImageToInputMsg}
 ${dataImgWrap2Img}
+${hasVideo}
 ${hasDataImg}
 ${urlWrap2Img}
 ${urlWrap2Link}
@@ -158,10 +167,16 @@ const setLS = (key, val) => {
 const decrypt_js = (str, salt) => CryptoJS.AES.decrypt(str,  salt).toString(CryptoJS.enc.Utf8)
 const encrypt_js = (str, salt) => CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(str), salt).toString()
 const sanitize_send = (str) => {
+    if(str.indexOf('<a')!==-1)return str;
+    if(str.indexOf('<img')!==-1)return str;
+    if(str.indexOf('<video')!==-1)return str;
     str=(str+'').replace(/\\n/g, '-r-n%n-r-')
     return DOMPurify.sanitize(str)
 }
 const sanitize_recive = (str) => {
+    if(str.indexOf('<a')!==-1)return str;
+    if(str.indexOf('<img')!==-1)return str;
+    if(str.indexOf('<video')!==-1)return str;
     str=str.replace(/-r-n%n-r-/g, '<br />')
     return DOMPurify.sanitize(str)
 }
@@ -222,6 +237,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             </script>
             <script>
             const fileInput = document.getElementById('file-input');
+            const fileInputVideo = document.getElementById('file-input-video');
             const inputMsg = document.getElementById('input_msg');
         
             fileInput.addEventListener('change', function(event) {
@@ -229,22 +245,67 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             
                 if (file) {
                     const reader = new FileReader();
-            
                     reader.onload = function(e) {
-                        const imgElement = document.createElement('img');
-                        imgElement.src = e.target.result;
-                        imgElement.alt = 'Thumbnail';
-                        imgElement.style.maxWidth = '50%';
-                        imgElement.style.maxHeight = '50%';
-                        inputMsg.innerHTML = ''; // Clear previous content
-                        inputMsg.appendChild(imgElement);
+                        // 画像をリサイズする
+                        resizeImageToInputMsg(e)
                     };
-            
                     reader.readAsDataURL(file);
                 } else {
                     inputMsg.textContent = 'No file selected';
                 }
             });
+
+            // videoはやめとくかな
+            fileInputVideo.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+            
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // 画像をリサイズする
+                        //resizeImageToInputMsg(e)
+                        createThumbnail(file, e.target.result)
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    inputMsg.textContent = 'No file selected';
+                }
+            });
+
+            function createThumbnail(file, videoUrl) {
+                let video = document.createElement('video');
+                const fileURL = URL.createObjectURL(file); // ファイルのURLを生成
+                video.src = fileURL; // 動画を表示
+
+               // video.src = videoUrl;
+
+                video.onloadedmetadata = function() {
+
+                    let width = video.videoWidth;
+                    let height = video.videoHeight;
+            
+                    // 画像のサイズを変更する条件をチェック
+                    if (width > 500 || height > 500) {
+                        let aspectRatio = width / height;
+                        if (width > height) {
+                            width = 500;
+                            height = width / aspectRatio;
+                        } else {
+                            height = 500;
+                            width = height * aspectRatio;
+                        }
+                    }
+                    
+                    video.width=width;
+                    video.width=height;
+                    video.controls = true;
+                    video.loop=true; 
+
+                    inputMsg.innerHTML = '<div style="font-size:11px">(w:'+width+' h:'+height+')</div>';
+                    inputMsg.appendChild(video);
+
+                };
+            }
             </script>
             <script>
                 // ws接続
@@ -319,6 +380,8 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                 } else if(i===msgLastNum && msg_class==='msgbox-right'){
                                     msg_class=msg_class + " msgbox-right-first"
                                 }
+
+                                console.log('受信後 無い', decrypt_js(msgLine[2], "123"))
                                 // msgbox を作る
                                 writeMsg(
                                     msgs,
@@ -376,12 +439,18 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         let input_msg_val = input_msg.innerHTML;
                         if(!!input_name_val && !!input_msg_val) {
                             console.log('click', input_msg_val)
-                            // urlをlink Element に変換する
-                            input_msg_val=urlWrap2Link(input_msg_val)
-                            // 画像urlを img 要素に変換する
-                            input_msg_val=urlWrap2Img(input_msg_val)
-                            // 画像data スキームを img 要素に変換する
-                            input_msg_val=dataImgWrap2Img(input_msg_val)
+                            
+                            //if(hasVideo(input_msg_val)){
+                                // 
+                            //} else {
+                                // urlをlink Element に変換する
+                                input_msg_val=urlWrap2Link(input_msg_val)
+                                // 画像urlを img 要素に変換する
+                                input_msg_val=urlWrap2Img(input_msg_val)
+                                // 画像data スキームを img 要素に変換する
+                                input_msg_val=dataImgWrap2Img(input_msg_val)
+                            //}
+                            
                             // 名前をcookieに保存する
                             setCookie('name', input_name_val||input_name);
                             // uid cookieを保存する

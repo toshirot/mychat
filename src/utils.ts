@@ -35,19 +35,13 @@ export function regBox_1(CHAT_NAME: string, VERSION: string, uid: string): strin
             </div>
             <input type="text" id="input_my_pass" class="input_pass" placeholder="" />
             <br />
-            <button id="btn_my_pass_send" type="button" 
+            <button id="btn_my_pass_save" type="button" 
               onclick=" event.preventDefault();
-              input_my_pass.value = input_my_pass.value||getCookie('mypass')||'';
-              setCookie('mypass', input_my_pass.value);
+              input_my_pass.value = input_my_pass.value||getLocalStorage('mypass')||'';
+              setLocalStorage('mypass', input_my_pass.value);
               console.log(input_my_pass.value)
-              const response = fetch('http://'+location.host+'/api/sms-code/', {
-                method: 'POST',
-                body: JSON.stringify({ pass: input_my_pass.value }),
-                headers: { 'Content-Type': 'application/json' },
-              })
-              .then((response) =>  {
-                  window.input_box.innerHTML=regBox('${CHAT_NAME}', '${VERSION}', '${uid}');
-              });" 
+              window.input_box.innerHTML=regBox('${CHAT_NAME}', '${VERSION}', '${uid}');
+              " 
                />
             デバイスだけに登録
             </button>
@@ -79,11 +73,18 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         <div id="input_msg" class="textarea" contenteditable placeholder="メッセージを入力してください"></div>
         <div id="drop_area">
           <label for="file-input">
-          <img src="/public/img/img-icon.svg?" alt="画像選択アイコン" class="img-icon">
-            </label>
+            <img src="/public/img/img-icon.svg?" alt="画像選択アイコン" class="img-icon">
+          </label>
             
-            <!-- ファイル選択ボタン -->
-            <input type="file" id="file-input" accept="image/*">
+              <!-- imageファイル選択ボタン -->
+              <input type="file" id="file-input" accept="image/*">
+
+          <label for="file-input-video">
+            <img src="/public/img/video-icon.svg?" alt="画像選択アイコン" class="video-icon">
+          </label>
+              
+              <!-- videoファイル選択ボタン -->
+              <input type="file" id="file-input-video" accept="video/*">
         </div>
         <div class="message">送信</div>
         <button id="btn_send" type="submit">
@@ -91,6 +92,22 @@ export function inputBox(CHAT_NAME: string, VERSION: string, uid: string): strin
         </button>
     `
 
+}
+
+//===========================================
+// LocalStorageから値を取得する関数
+// @param {String} key - キー文字列
+// @returns {String|null} - LocalStorageの値文字列。見つからない場合はnullを返す。
+export function getLocalStorage(key) {
+    return localStorage.getItem(key);
+}
+
+//===========================================
+// LocalStorageに値を設定する関数
+// @param {String} key - キー文字列
+// @param {String} value - value
+export function setLocalStorage(key, value) {
+    localStorage.setItem(key, value);
 }
 
 //===========================================
@@ -109,6 +126,20 @@ export function getCookie(key: string) {
 //  有効期限やドメインなどをどうするかはあとで検討
 export function setCookie(key: string, value: string):string{
     return document.cookie=key+'='+encodeURIComponent(value)+''
+}
+
+//===========================================
+// video要素の有無
+// 
+export function hasVideo(wkmsg: string): boolean{
+    let htmlRegEx =  /<video.*?<\/video>/gis
+    let reg=wkmsg.match(htmlRegEx)
+    //alert('test',reg)
+    if (reg){
+        return true
+    } else {
+        return false
+    }
 }
 
 //===========================================
@@ -166,14 +197,15 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
           // FileReaderを使用して画像のdata URIを取得
           let reader = new FileReader();
           reader.onload = function(event) {
+            console.log('reader.onload ')
             let dataUri = event.target.result;
             console.log('getDataImageByDrop', dataUri)
             if(dataUri.indexOf('<a')!==-1)return dataUri;
             if(dataUri.indexOf('<img')!==-1)return dataUri;
-             
-            let imgElm = "<img src='"+dataUri+"' />"
-            // textAreaにdata URIを貼り付け
-            textArea.innerHTML = imgElm;
+
+            // 画像をリサイズしてinputMsgへ表示する
+            resizeImageToInputMsg(event)
+
           };
       
           // ファイルを読み込む
@@ -183,12 +215,60 @@ export function getDataImageByDrop(document, msgboxId, dropElmentId): boolean{
 }
 
 //===========================================
+// 画像をリサイズしてinputMsgへ表示する
+// 
+export function resizeImageToInputMsg(e: Event): void{
+    const inputMsg = document.getElementById('input_msg');
+    const img = new Image();
+    img.src = e.target.result;
+    img.onload = function() {
+        let width = img.width;
+        let height = img.height;
+
+        //cssを一旦解除
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+
+        // 画像のサイズを変更する条件をチェック
+        if (width > 500 || height > 500) {
+            let aspectRatio = width / height;
+            if (width > height) {
+                width = 500;
+                height = width / aspectRatio;
+            } else {
+                height = 500;
+                width = height * aspectRatio;
+            }
+        }
+
+        // Canvas要素を作成
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = width;
+        canvas.height = height;
+
+        // Canvasに画像を描画
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Canvasの画像をDataURLに変換
+        const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
+
+        // 変換されたDataURLを表示
+        const newImgElement = document.createElement('img');
+        newImgElement.src = dataURL;
+        inputMsg.innerHTML = '<div style="font-size:11px">(w:'+width+' h:'+height+')</div>'; // Clear previous content
+        inputMsg.appendChild(newImgElement);
+    }
+}
+
+//===========================================
 // 画像dataを img 要素
 // 
 export function dataImgWrap2Img(wkmsg: string): string {
     console.log('dataImgWrap2Img', wkmsg)
     if(wkmsg.indexOf('<a')!==-1)return wkmsg;
     if(wkmsg.indexOf('<img')!==-1)return wkmsg;
+    if(wkmsg.indexOf('<video')!==-1)return wkmsg;
     // 画像data抽出用正規表現 
     //data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAABWCAYAAACHKqnqAAADLElEQVR4Ae3cQU7bQBgF4Jw23CCnLHcgKa7oBhaRotBFXBlpIjCTEbOJn6UPKXI8Y4nX759HYNPN6GtVAqfTaTwcfo/7/cFrQYPNqk6NsB8C7
     let urlRegEx = /^(.*)(data:image\/[a-z]+;base64,.*)/i
@@ -209,6 +289,7 @@ export function urlWrap2Img(wkmsg: string): string {
     console.log('urlWrap2Img', wkmsg)
     if(wkmsg.indexOf('<a')!==-1)return wkmsg;
     if(wkmsg.indexOf('<img')!==-1)return wkmsg;
+    if(wkmsg.indexOf('<video')!==-1)return wkmsg;
     // 画像文字列抽出用正規表現 gで複数にマッチする
     let urlRegEx = /^(.*)(https.*\.(jpg|jpeg|gif|png|bmp|webp|ai|eps))(.*)$/i,
     //tolink = "$1<a target='_blank' href='$2'><img src='$2' style=max-width:20%;></a>$4<div style=font-size:0.7rem>$2</div>" 
@@ -231,6 +312,7 @@ export function urlWrap2Link(wkmsg: string): string {
     console.log('urlWrap2Link', wkmsg)
     if(wkmsg.indexOf('<a')!==-1)return wkmsg;
     if(wkmsg.indexOf('<img')!==-1)return wkmsg;
+    if(wkmsg.indexOf('<video')!==-1)return wkmsg;
     let lists=[]
     let mobile=('touchstart' in window);
     let target='_blank';
