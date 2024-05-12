@@ -19,7 +19,7 @@ jobs:
       - run: ls -l /home/runner/
       - run: ls -l /home/runner/runners/
       - run: ls -l /home/runner/work/
-      - run: ls -l /home/runner/factory
+      - run: pwd
      #  - run: source /home/runner/.bashrc
       - run: cd mychat
       - run: bun init
