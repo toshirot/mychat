@@ -25,7 +25,7 @@ jobs:
      # - run: cd mychat
       - run: bun init
       - run: cat package.json 
-      - run: bun dev
+      - run: sudo bun run --hot src/index-9012.tsx
       - run: ls -l /home/
       - run: ls -l /home/runner/
       - run: ls -l /home/runner/runners/
