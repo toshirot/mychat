@@ -117,7 +117,9 @@ input, textarea, .textarea  {
 #file-input {
     display: none; /* ファイル選択ボタンを非表示にする */
 }
-
+#file-input-video {
+    display: none; /* ファイル選択ボタンを非表示にする */
+}
 #custom-icon {
     width: 50px; /* アイコンの幅を指定 */
     height: 50px; /* アイコンの高さを指定 */
@@ -130,11 +132,18 @@ input, textarea, .textarea  {
     background-color: #eee;
 }
 .img-icon:hover{
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
     background-color: #fff;
 }
+.video-icon{
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    background-color: #eee;
+}
+.video-icon:hover{
+    background-color: #fff;
+}
+
 .input_tel, #input_pass{
     max-width: 180px;
     max-height: 30px;

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画像のドラッグアンドドロップ</title>
+</head>
+<body>
+
+<textarea id="input_msg" style="
+    float: left;
+    margin-top: 20px;
+    margin-top: 5px;
+    padding: 15px 10px 10px;
+
+    border-radius: 12px;
+    box-sizing: border-box;
+    height: 100px;
+    background-clip: padding-box;
+
+    color: #000;
+
+    background: #ddd;
+    width: 70%;
+    max-width: 400px;
+    border: 1px solid #cecece;
+"></textarea>
+<div id="drop_area" style="
+    float: left;
+    margin-top: 20px;
+    margin-top: 5px;
+    padding: 15px 10px 10px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    height: 100px;
+    background-clip: padding-box;
+    color: #000;
+
+    font-size: 12px;
+    
+    max-width: 100px;
+    border: 2px dashed #ccc; 
+">
+  画像はここへドラッグアンドドロップしてください
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var dropArea = document.getElementById('drop_area');
+  var textarea = document.getElementById('input_msg');
+
+  // ドラッグオーバー時の処理
+  dropArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropArea.style.border = '2px dashed #66ccff';
+  });
+
+  // ドラッグアウト時の処理
+  dropArea.addEventListener('dragleave', function() {
+    dropArea.style.border = '2px dashed #ccc';
+  });
+
+  // ドロップ時の処理
+  dropArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropArea.style.border = '2px dashed #ccc';
+
+    // ドロップされたファイルを取得
+    var file = e.dataTransfer.files[0];
+
+    // FileReaderを使用して画像のdata URIを取得
+    var reader = new FileReader();
+    reader.onload = function(event) {
+      var dataUri = event.target.result;
+
+      // textareaにdata URIを貼り付け
+      textarea.value = dataUri;
+    };
+
+    // ファイルを読み込む
+    reader.readAsDataURL(file);
+  });
+});
+</script>
+
+</body>
+</html>

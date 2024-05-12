@@ -1,6 +1,4 @@
 import { Database } from 'bun:sqlite';
-import { describe, expect, it } from 'bun:test'
-import crypto from 'crypto';
 
 //============================================
 // Chat用データベースの作成
@@ -8,16 +6,15 @@ import crypto from 'crypto';
 // チャット名
 const CHAT_NAME = 'myChat';
 // データベースファイルの名前を指定
-const DB_FILE_NAME = __dirname + '/_DB_'+CHAT_NAME+'.sqlite';
+const DB_FILE_NAME = __dirname + '/_test_'+CHAT_NAME+'.sqlite';
 
 //============================================
 // テーブル生成
 //============================================
 // テーブルの名前を指定
+const TABLE_MSGS = 'chat_msgs';
 const TABLE_ROOMS = 'chat_rooms';
 const TABLE_USERS = 'chat_users';
-const TABLE_MSGS = 'chat_msgs';
-
 // 新しいデータベースインスタンスを作成し、ファイルが存在しない場合はデータベースファイルを作成
 const db = new Database(DB_FILE_NAME, { create: true });
 // 同時書き込みが行われる状況でパフォーマンスを大幅に向上させる先行書き込みログ モード(WAL) 
@@ -26,25 +23,24 @@ db.exec('PRAGMA journal_mode = WAL;');
 // テーブルが存在しない場合はテーブルを作成
 // 型は互換性考慮のため、VARCHAR と TIMESTAMP にしている <これは正しい型ではない>
 
-// テーブル作成 ルームデータ
+// テーブル作成 メッセージデータ
 const sql_table_rooms_create =
     `CREATE TABLE IF NOT EXISTS ${TABLE_ROOMS} (
-            room_id VARCHAR(128) PRIMARY KEY,
+            room_id INTEGER PRIMARY KEY,
+            room_name VARCHAR(255),
             created_at TIMESTAMP
         );`
-// テーブル作成 ユーザーデータ
 const sql_table_users_create =
     `CREATE TABLE IF NOT EXISTS ${TABLE_USERS} (
             user_uid VARCHAR(128) PRIMARY KEY,
             user_name VARCHAR(255),
             created_at TIMESTAMP
         );`
-// テーブル作成 メッセージデータ
 const sql_table_msg_create =
     `CREATE TABLE IF NOT EXISTS 
         ${TABLE_MSGS}
         (
-            room_id VARCHAR(128),
+            room_id INTEGER,
             user_uid VARCHAR(128),
             user_name VARCHAR(255), 
             user_msg VARCHAR(200000),
@@ -64,42 +60,35 @@ doQuery(db, sql_table_msg_create);
 //============================================
 // データ初期化
 //============================================
-delAll()
-// データベースを初期化する
-async function delAll(){
-    // 全てのチャットルームを削除するAPI
-    await deleteAllChatRooms()
-    // 全てのユーザーを削除するAPI
-    await deleteAllChatUsers()
-    // 全てのメッセージを削除するAPI
-    await deleteAllChatMessages()
-}
+
+// 全てのチャットルームを削除するAPI
+await deleteAllChatRooms()
+// 全てのユーザーを削除するAPI
+await deleteAllChatUsers()
+// 全てのメッセージを削除するAPI
+await deleteAllChatMessages()
 
 
 //============================================
 // サンプル
 //============================================
+// ランダムな整数を生成する関数
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+const randm_num = getRandomInt(1, 100); // 1から100のランダムな整数
 
 // 各テーブルにデータを挿入するサンプルを実行する
-let room_id = ''; // チャットルームID
-let user_uid = ''; // ユーザーID
-let user_name = ''; // ユーザー名
-let user_msg = ''; // 固定のメッセージ
-
-const saltText = 'salt-test'; // encryptを生成するためのsalt
-// 注意: PASS_PHRASEはあらかじめ環境変数に設定しておく
-// $ export PASS_PHRASE="mypassphrase"
-const PASS_PHRASE = process.env.PASS_PHRASE
-// 暗号を生成する関数
-const salt = encrypt(saltText, PASS_PHRASE)
-
-async function runSampleInserts(salt) {
-    room_id = salt
-    user_uid = 'user_'+salt; // ユーザーID
-    user_name = 'John Doe_'+salt; // ユーザー名
-    user_msg = 'Random Message '+salt; // 固定のメッセージ
+async function runSampleInserts(randm_num) {
+    const room_name = 'Hoge_'+randm_num; // チャットルーム名
+    const room_id = randm_num
+    const user_uid = 'user_'+randm_num; // ユーザーID
+    const user_name = 'John Doe_'+randm_num; // ユーザー名
+    const user_msg = 'Random Message '+randm_num; // 固定のメッセージ
     try {
-        await insertChatRoom(room_id);// チャットルームを挿入
+        await insertChatRoom(room_name);// チャットルームを挿入
         await insertChatUser(user_uid, user_name);// ユーザーを挿入
         await insertChatMessage(room_id, user_uid, user_name, user_msg);// Chatメッセージを挿入
         console.log('Sample inserts completed successfully.');
@@ -108,37 +97,17 @@ async function runSampleInserts(salt) {
     }
 }
 
-//============================================
-// テスト
-//============================================
-
-
-// サンプルを実行する
-runSampleInserts(salt+1);
-
-describe('DB動作の確認', () => {
-    it('作ったチャットルームのIDを取得する', async () => {
-        // DBから user_msg を取得する
-        const geted_user_msg=(await getAllChatMessages())[0].user_msg// get all chat messages
-		expect(geted_user_msg).toEqual(user_msg)
-	})
-    it('作ったユーザー名を取得する', async () => {
-        // DBから user_name を取得する
-        const geted_user_name=(await getAllChatUsers())[0].user_name // get all chat users
-		expect(geted_user_name).toEqual(user_name)
-	})
-	it('作ったメッセージを取得する', async () => {
-        // DBから room_id を取得する
-        const geted_room_id=(await getAllChatRooms())[0].room_id// get all chat rooms
-		expect(geted_room_id).toEqual(room_id)
-	})
-})
-
+runSampleInserts(randm_num+1);
+ 
+// 出力
+console.log((await getAllChatRooms())[0].room_name)// get all chat rooms
+console.log((await getAllChatUsers())[0].user_name) // get all chat users
+console.log((await getAllChatMessages())[0].user_msg)// get all chat messages
 /*
 // サンプルを実行する
-runSampleInserts(salt+1);
-runSampleInserts(salt+2);
-runSampleInserts(salt+3);
+runSampleInserts(randm_num+1);
+runSampleInserts(randm_num+2);
+runSampleInserts(randm_num+3);
 
 // 出力
 console.log(await getAllChatRooms())// get all chat rooms
@@ -150,31 +119,18 @@ console.log(await getAllChatMessages())// get all chat messages
 // 関数
 //============================================
 
-// AESによる暗号化 by crypto
-function encrypt(text: string, password: string) {
-    const cipher = crypto.createCipher('aes-256-cbc', password)
-    const crypted = cipher.update(text, 'utf-8', 'hex')
-    return crypted + cipher.final('hex')
-}
-// AESによる復号化 by crypto
-function decrypt(text: string, password: string) {
-    const decipher = crypto.createDecipher('aes-256-cbc', password)
-    const decrypted = decipher.update(text, 'hex', 'utf-8')
-    return decrypted + decipher.final('utf-8')
-}
-
 //--------------------------------------------
 // INSERT
 //--------------------------------------------
 
 // チャットルームを挿入するAPI
-async function insertChatRoom(room_id: string): Promise<number> {
+async function insertChatRoom(room_name: string): Promise<number> {
     const sql = `
-        INSERT INTO ${TABLE_ROOMS} (room_id, created_at)
+        INSERT INTO ${TABLE_ROOMS} (room_name, created_at)
         VALUES (?, datetime('now'))`;
 
-        //console.log(room_id)
-   await db.run(sql, [room_id]);
+        console.log(room_name)
+   await db.run(sql, [room_name]);
 }
 
 // ユーザーを挿入するAPI
@@ -183,7 +139,7 @@ async function insertChatUser(user_uid: string, user_name: string): Promise<void
         INSERT INTO ${TABLE_USERS} (user_uid, user_name, created_at)
         VALUES (?, ?, datetime('now'))`;
 
-        //console.log(user_uid, user_name)
+        console.log(user_uid, user_name)
     await db.run(sql, [user_uid, user_name]);
 }
 
@@ -193,7 +149,7 @@ async function insertChatMessage(room_id: number, user_uid: string, user_name: s
         INSERT INTO ${TABLE_MSGS} (room_id, user_uid, user_name, user_msg, created_at)
         VALUES (?, ?, ?, ?, datetime('now'))`;
 
-        //console.log(room_id, user_uid, user_name, user_msg)
+        console.log(room_id, user_uid, user_name, user_msg)
     await db.run(sql, [room_id, user_uid, user_name, user_msg]);
 }
 

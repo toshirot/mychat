@@ -11,7 +11,8 @@ const setLS = (key:any, val:any):any => {
 
 describe('ブラウザDOM/ LocalStorage', () => {
     test('LocalStorageにセットしてからデータを取り出す', () => {
-        const Passphrase = process.env.PASS_PHRASE;
+        // 実際には thisismyPass を平文むき出しにしない
+        const Passphrase = "thisismyPass";
         // ローカルストレージにセットする
         /*
         About step1 for https://github.com/toshirot/mychat/security/code-scanning/10
@@ -23,7 +24,8 @@ describe('ブラウザDOM/ LocalStorage', () => {
     })
 
     test('input要素からLocalStorageにセットしてデータを取り出す', () => {
-        const Passphrase = process.env.PASS_PHRASE;
+        // 実際には thisismyPass を平文むき出しにしない
+        const Passphrase = "thisismyPass";
         document.body.innerHTML = `
             <input type="password" id="pass" name="pass" value="${Passphrase}">
             <script>

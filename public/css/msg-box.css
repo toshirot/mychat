@@ -20,7 +20,7 @@
     overflow-wrap: break-word;
 }
 .msg img{
-    max-width: 30% !important;
+    max-width: 100% !important;
 }
 .msgbox-right{
     float: right;

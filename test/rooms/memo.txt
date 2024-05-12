@@ -1,0 +1,48 @@
+
+
+v0.1.030現在の単一ルーム制を複数ルーム制に変更する #12
+https://github.com/toshirot/mychat/issues/12
+
+
+手順
+
+アリス：ブラウザで mychat へアクセスする
+ブラウザ: set|get uid to cookie uid|uid=crypto.createHash('sha512').update(str).digest('hex')
+アリス：＜設定/ログイン を選ぶ＞
+ブラウザ： nameがcookieに無ければ→「名前を入力してください」→入力→set to cookie
+ブラウザ：「相手と共有する秘密のフレーズを(覚えやすい日本語で)入力してください」
+アリス：秘密のPASS_PHRASEを入力する
+アリス：「デバイスだけに登録」ボタンを押す（※PASS_PHRASはサーバーには送りません）
+ブラウザ：const NAME=名前; room_id = encrypt(NAME)
+ブラウザ：const PHRASE=覚えやすい日本語; PASS_PHRASE = encrypt(PHRASE)
+
+※名前＋PASS_PHRASEの同じroomは無いから「名前＋PASS_PHRASE」からhashを作りroom_idとする。
+  名前はプライマリユーザー。ここではアリス。
+
+ブラウザ：LocalStorageへ PASS_PHRASE を保存する( ※サーバーからはcookie と違い読めない 検証： #2 (comment) )
+ブラウザ：システムへ送信 (room_id, uid, user_name)
+システム：rooms 、users 、msgs 各テーブルを無ければ生成する #12
+システム：  各テーブルがあればデータをブラウザへ返す
+ブラウザ：  データが届けば表示する
+ブラウザ：room_id で生成した url をアリスへ伝える
+アリス：urlをクリックしてルームへ入る
+アリス：直接相手へ口頭あるいはemailなど当該chatとは別の手段で秘密のフレーズを伝える
+
+※ 秘密のフレーズは長いと覚えられないので、メモしておくこと
+
+ボブ： ブラウザで mychat へアクセスする
+ボブ：room_idと秘密のPASS_PHRASEを入力
+ブラウザ：LocalStorageへPASS_PHRASEを保存する (検証： #2 (comment))
+ブラウザ：room_id で生成した url ボブへ伝える
+ボブ：urlをクリックしてルームへ入る
+システム：rooms 、users 、room_users テーブルを生成・追記する #12
+
+・uid で認証しなければ chat url には入れない
+・認証すれば、入ってチャットできる。
+・秘密のフレーズが違えば読めない
+・貴方と相手の「秘密のフレーズは必ずチャット以外の手段で共有する」
+
+・チャットはエンドツーエンドで暗号化され途中はシステム・サーバー側では読めない
+・暗号化の秘密のフレーズは、ローカルストレージに保存する ( ※サーバーからはcookie と違い読めない 検証： #2 (comment) )
+
+シンプルになった＾＾
