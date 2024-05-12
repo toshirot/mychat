@@ -78,7 +78,7 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 ここでは、デフォルトで「PORT = 9012」としていますが、そのポートを開いておく必要があります。
 
 ```
-// 修正箇所
+// 修正箇所 src/index-9012.tsx
 
 // ホストまたはIP
 const HOST = '74.226.208.203' //←ここを自分の使うHOSTへ変更する
@@ -128,7 +128,7 @@ Simple Documentation for v0.1.017
 https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 
 
-## Tree at v0.1.030
+## Tree at v0.1.031
 
 ```
 .mychat/
@@ -171,10 +171,10 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 {
   "name": "mychat",
-  "version": "0.1.030",
+  "version": "0.1.031",
   "scripts": {
     "test": "bun test",
-    "dev": "sudo bun run --hot src/index-9012.tsx"
+    "dev": "bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
