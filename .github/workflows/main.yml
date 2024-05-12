@@ -10,8 +10,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       # run any `bun` or `bunx` command
-      - run: bun install
       - run: sudo su
+      - run: apt install unzip 
+      - run: curl -fsSL https://bun.sh/install | bash
+      - run: source /home/tato/.bashrc
+      - run: cd mychat
+      - run: bun init
+      - run: bun dev
+      - run: ls -l /home/
       - run: ls -l /home/runner/
       - run: ls -l /home/runner/runners/
       - run: bun run --hot ~/bun/elysia/mychat/src/index-9012.tsx
