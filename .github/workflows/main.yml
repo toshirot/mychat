@@ -32,5 +32,5 @@ jobs:
       - run: ls -l /home/
       - run: ls -l /home/runner/
       - run: ls -l /home/runner/runners/
-      - run: bun run --hot ~/bun/elysia/mychat/src/index-9012.tsx
+      - run: bun action
       - run: bun run build
