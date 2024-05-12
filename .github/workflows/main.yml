@@ -5,6 +5,9 @@ jobs:
   mychat:
     name: mychat
     runs-on: ubuntu-latest
+    env: 
+      MYCHAT_CERT: ${{ secrets.MYCHAT_CERT }}
+      MYCHAT_PRIV: ${{ secrets.MYCHAT_PRIV }}
     steps:
       # ...
       - uses: actions/checkout@v4
