@@ -3,7 +3,7 @@
   "version": "0.1.031",
   "scripts": {
     "test": "bun test",
-    "dev": "sudo bun run --hot src/index-9012.tsx"
+    "dev": "bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
@@ -28,7 +28,7 @@
     "@types/bun": "^1.0.0",
     "bun-types": "latest"
   },
-  "module": "src/index.js",
+  "module": "src/index-9012.tsx",
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0"
