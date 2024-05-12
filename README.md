@@ -169,17 +169,25 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   "version": "0.1.030",
   "scripts": {
     "test": "bun test",
-    "dev": "sudo bun run --hot src/index-9012.tsx"
+    "dev": "bun run --hot src/index-9012.tsx"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
     "@elysiajs/html": "^0.7.3",
     "@elysiajs/static": "^0.8.1",
     "@types/crypto-js": "^4.2.1",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.12.11",
+    "cookie-parser": "^1.4.6",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "elysia": "0.7.30",
-    "sanitize-filename": "^1.6.3"
+    "express-session": "^1.18.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth2": "^0.2.0",
+    "qrcode": "^1.5.3",
+    "sanitize-filename": "^1.6.3",
+    "speakeasy": "^2.0.0"
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^12.10.3",
