@@ -38,8 +38,8 @@ const HOST = 'mychat.jp'
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
 const KEYS = {
-      cert: secrets.MYCHAT_CERT,
-      key: secrets.MYCHAT_PRIV
+      cert: env.MYCHAT_CERT,
+      key: env.MYCHAT_PRIV
      /*
    cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
    key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
