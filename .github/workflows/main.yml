@@ -12,5 +12,7 @@ jobs:
       # run any `bun` or `bunx` command
       - run: bun install
       - run: sudo su
+      - run: console.log('~/bun/')
+      - run: console.log('~/bun/elysia')
       - run: bun run --hot ~/bun/elysia/mychat/src/index-9012.tsx
       - run: bun run build
