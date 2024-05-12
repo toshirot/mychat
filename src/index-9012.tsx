@@ -33,6 +33,10 @@ const HTTP_PLOTOCOL = 'https://'
 const HOST = '74.226.208.203'
 // ポート HTTP と WebSocket 共通
 const PORT = 9012;
+const KEYS = {
+    cert: Bun.file("/etc/letsencrypt/live/mychat.jp/cert.pem"),
+    key: Bun.file("/etc/letsencrypt/live/mychat.jp/privkey.pem")
+}
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
 
@@ -458,13 +462,16 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             } else {}
         }
     })
-    .listen(PORT, (token: any) => {
+    .listen({
+        port: PORT,
+        tls: KEYS
+    },  (token: any) => {
         if (token) {
             console.log(`Listening to port ${PORT}`);
         } else {
             console.error(`Failed to listen to port ${PORT}`);
         }
-    });
+    })
 
 //===========================================
 // uid を作成する関数
