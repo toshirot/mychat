@@ -1,3 +1,7 @@
+//===========================================
+// 参考：PM2 で起動するコマンド
+// sudo /usr/bin/pm2 start "sudo bun run --hot src/index-9013.tsx"
+
 import { Elysia } from 'elysia';
 import type { WS } from '@types/bun';
 import { html } from '@elysiajs/html';
@@ -34,14 +38,13 @@ const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
 const HTTP_PLOTOCOL = 'https://'
 // ホストまたはIP
-const HOST = 'mychat.jp'
+const HOST = 'mychat.jp' // HOSTは自身のドメインやIPに変えてください
 // ポート HTTP と WebSocket 共通
-const PORT = 9012;
+const PORT = 9012; // PORTは自身のドメインやIPに変えてください
+// SSL証明書は、ここでは Let's Encrypt で取得したものですが、自身の証明書に変更してください
 const KEYS = {
-   cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
-   key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
-   /* cert: ${{ secrets.MYCHAT_JP_CERT_PEM }},
-    key: ${{ secrets.MYCHAT_JP_PRIVEKEY_PEM }}*/
+    cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
+    key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
 }
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
@@ -190,7 +193,6 @@ const createWebSocket = (url) =>{
     wss.onclose = socket.onclose
     return wss
 }
-// writeMsg(msgs, msgLine[0] , msgLine[1], "123"), decrypt_js(msgLine[2], "123"), msgLine[3], adjustHours(msgLine[4], +9))
 const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
     // msgbox を作る
     let msgbox='<div class="msgbox '+msg_class+'" style="">\
@@ -321,7 +323,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         head:{type: 'info'},
                         body:{
                             name: 'system',
-                            msg: encrypt_js('誰かがサーバーへ接続しました。', "123").toString(),
+                            msg: encrypt_js('誰かがサーバーへ接続しました。', getLocalStorage('mypass')).toString(),
                             uid: '${uid.value}'
                         }
                     }))
@@ -383,14 +385,14 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                                     msg_class=msg_class + " msgbox-right-first"
                                 }
 
-                                console.log('受信後 無い', decrypt_js(msgLine[2], "123"))
+                                // console.log('受信後 無い', decrypt_js(msgLine[2], getLocalStorage('mypass')))
                                 // msgbox を作る
                                 writeMsg(
                                     msgs,
                                     msg_class,
                                     msgLine[0], 
-                                    decrypt_js(msgLine[1], "123"), 
-                                    sanitize_recive(decrypt_js(msgLine[2], "123")), 
+                                    decrypt_js(msgLine[1], getLocalStorage('mypass')), 
+                                    sanitize_recive(decrypt_js(msgLine[2], getLocalStorage('mypass'))), 
                                     msgLine[3], 
                                     adjustHours(msgLine[4], +9)
                                 )
@@ -411,6 +413,10 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 };
                 // DOM構築時イベント
                 document.addEventListener('DOMContentLoaded', function () {
+                    checkName()
+                });
+                // 名前チェック
+                function checkName() {
                     if(!window.input_name)return
                     if(!!document.cookie){
                         // 名前をcookieから取得し表示する
@@ -423,7 +429,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         // uid cookieを保存する
                         setCookie('uid', '${uid.value}');
                     }
-                });
+                }
                 // 名前入力時イベント
                 if(window.input_name){
                     input_name.addEventListener('keyup', function () {
@@ -461,8 +467,8 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                             socket.send(JSON.stringify({
                                 head:{type: 'msg'},
                                 body:{
-                                    name: encrypt_js(sanitize_send(input_name_val), "123").toString(),
-                                    msg: encrypt_js(sanitize_send(input_msg_val), "123").toString(),
+                                    name: encrypt_js(sanitize_send(input_name_val), getLocalStorage('mypass')).toString(),
+                                    msg: encrypt_js(sanitize_send(input_msg_val), getLocalStorage('mypass')).toString(),
                                     uid: '${uid.value}'
                                 }
                             }));
