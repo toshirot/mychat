@@ -22,9 +22,9 @@ jobs:
       - run: ls -l /home/runner/work/
       - run: pwd
      #  - run: source /home/runner/.bashrc
-     # - run: cd mychat
+      - run: cd mychat
       - run: bun init
-      - run: cat package.json 
+     # - run: cat package.json 
         env: 
           MYCHAT_CERT: ${{ secrets.MYCHAT_CERT }}
           MYCHAT_PRIV: ${{ secrets.MYCHAT_PRIV }}
