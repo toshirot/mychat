@@ -32,6 +32,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
               </div>
               <div class="my_pass_title">
               相手と共有する<br />秘密のフレーズを入力してください
+              <div style="font-size:12px;color:#000">※現在「test」を共通フレーズにしています</div>
               </div>
               <input type="text" id="input_my_pass" class="input_pass" placeholder=""
                 oninput="event.preventDefault();setLocalStorage('mypass', this.value);"
