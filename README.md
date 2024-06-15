@@ -105,7 +105,7 @@ bun test
 
 @see https://github.com/toshirot/mychat/issues/2
 
-v0.1.024現在まだパスフレーズをハードコードしてますが、今後修正します。
+v0.1.040でパスフレーズを実装しました。
 現況データは次のようにAESで暗号化されて送受信されます。
 
 ![image](https://github.com/toshirot/mychat/assets/154680/94d387f5-856f-4ab5-bd9a-6eae2b4ce1eb)
@@ -171,10 +171,11 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 {
   "name": "mychat",
-  "version": "0.1.031",
+  "version": "0.1.040",
   "scripts": {
     "test": "bun test",
-    "dev": "sudo bun run --hot src/index-9012.tsx"
+    "dev": "sudo bun run --hot src/index-9012.tsx",
+    "action": "sudo bun run src/index-9012.tsx;process.exit();"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
@@ -199,10 +200,11 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
     "@types/bun": "^1.0.0",
     "bun-types": "latest"
   },
-  "module": "src/index.js",
+  "module": "src/index-9012.tsx",
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0"
   }
 }
+
 ```
