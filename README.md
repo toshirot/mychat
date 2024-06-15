@@ -131,6 +131,9 @@ v0.1.040でパスフレーズを実装しました。
 <li>urlをlink 要素 に変換する
 <br>※画像urlの判定は現状拡張子のみ
 
+## Discussions/ ディスカッション
+[https://github.com/toshirot/mychat/discussions/13](https://github.com/toshirot/mychat/discussions)
+
 ## @see Qiita
 Simple Documentation for v0.1.017
 ただし、Qiitaでは、v0.1.017までの解説をしています。
