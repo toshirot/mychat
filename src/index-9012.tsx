@@ -42,8 +42,9 @@ const HOST = 'mychat.jp' // HOSTは自身のドメインやIPに変えてくだ�
 // ポート HTTP と WebSocket 共通
 const PORT = 9012; // PORTは自身のドメインやIPに変えてください
 // SSL証明書は、ここでは Let's Encrypt で取得したものですが、自身の証明書に変更してください
+//  keysはGithubの都合上envに入れてるが下記のコメントアウトしてるpem 指定でも良い
 const KEYS = {
-    cert:　process.env.MYCHAT_CERT,
+    cert:　process.env.MYCHAT_CERT, 
     key:  process.env.MYCHAT_PRIV
    // cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
    // key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
