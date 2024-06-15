@@ -88,7 +88,7 @@ const randm_num = getRandomInt(1, 100); // 1から100のランダムな整数
 async function runSampleInserts(randm_num) {
     const room_name = 'Hoge_'+randm_num; // チャットルーム名
     const room_id = randm_num
-    const user_uid = 'user_'+randm_num; // ユーザーID
+    const user_uid = env.USER_SAFFIX +randm_num//'user_'+randm_num; // ユーザーID
     const user_name = 'John Doe_'+randm_num; // ユーザー名
     const user_msg = 'Random Message '+randm_num; // 固定のメッセージ
     try {
