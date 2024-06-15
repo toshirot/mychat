@@ -69,6 +69,16 @@ v0.1.030からは httpではなく https で起動します。
 もし既に、ドメイン持ってるサイト内に構築するならsrc/index-9012.tsx などに証明書のパスを書くだけで良いですが、
 証明書が無い場合は、ドメインとletsencryptなどの証明書を各自ご用意ください。
 
+コード上は以下のように 環境変数envを使っています。各envに証明書を登録するか、コメントアウトしているpemファイルへのパスの方を使うかはご自由に選択されてください。
+```
+const KEYS = {
+    cert: process.env.MYCHAT_CERT, 
+    key:  process.env.MYCHAT_PRIV
+   // cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
+   // key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
+}
+```
+
 また、sudoでの権限で bun 実行権限も必要なので、
 下記のように sudo bun が実行できることが必要かもしれません。
 
