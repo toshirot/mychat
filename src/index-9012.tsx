@@ -237,7 +237,11 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             </div>
             <script>
             // 初期ボックス
-            window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
+            if(getLocalStorage('mypass')===null||getLocalStorage('mypass')===''){
+                window.input_box.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}', '${uid.value}')
+            } else {
+                window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
+            }
             </script>
             <script>
             const fileInput = document.getElementById('file-input');
@@ -260,6 +264,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             });
 
             // videoはやめとくかな
+            /*
             fileInputVideo.addEventListener('change', function(event) {
                 const file = event.target.files[0];
             
@@ -309,7 +314,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                     inputMsg.appendChild(video);
 
                 };
-            }
+            }*/
             </script>
             <script>
                 // ws接続

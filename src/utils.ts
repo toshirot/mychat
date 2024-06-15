@@ -27,7 +27,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
                   alt="config" width="40" height="40" 
                   onclick="window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}')" />
                   <h1 style="float:none;color:#696565;font-size:2.2rem;">
-                  秘密のフレーズ
+                  ${CHAT_NAME} 秘密のフレーズ
                   </h1>
               </div>
               <div class="my_pass_title">
@@ -42,6 +42,8 @@ export function adjustHours(date: Date, adjustHour: number): string {
                 input_my_pass.value = input_my_pass.value||getLocalStorage('mypass')||'';
                 setLocalStorage('mypass', input_my_pass.value);
                 location.href=location.href
+                //window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}');
+                //setTimeout(window.checkName(),500);
                 " 
                  />
               デバイスだけに登録
