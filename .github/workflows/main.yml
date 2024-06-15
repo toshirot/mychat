@@ -4,6 +4,7 @@ on:
 jobs:
   mychat:
     name: mychat
+    timeout-minutes: 3
     runs-on: ubuntu-latest
     steps:
       # ...
