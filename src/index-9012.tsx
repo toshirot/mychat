@@ -43,8 +43,10 @@ const HOST = 'mychat.jp' // HOSTは自身のドメインやIPに変えてくだ�
 const PORT = 9012; // PORTは自身のドメインやIPに変えてください
 // SSL証明書は、ここでは Let's Encrypt で取得したものですが、自身の証明書に変更してください
 const KEYS = {
-    cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
-    key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
+    cert: env.MYCHAT_CERT,
+    key: env.MYCHAT_PRIV
+   // cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
+   // key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
 }
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
