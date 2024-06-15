@@ -42,8 +42,6 @@ export function adjustHours(date: Date, adjustHour: number): string {
                 input_my_pass.value = input_my_pass.value||getLocalStorage('mypass')||'';
                 setLocalStorage('mypass', input_my_pass.value);
                 location.href=location.href
-                //window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}');
-                //setTimeout(window.checkName(),500);
                 " 
                  />
               デバイスだけに登録

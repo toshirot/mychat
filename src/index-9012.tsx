@@ -244,7 +244,15 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 window.input_box.innerHTML=regBox_1('${CHAT_NAME}', '${VERSION}', '${uid.value}')
             } else {
                 window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid.value}')
-                setTimeout(window.checkName(),500);
+                // 読込のタイミングを調整して、名前を表示する
+                var intv = setInterval(function(){
+                    if(document.getElementsByClassName("img-icon").length > 0){
+                      clearInterval(intv);
+                      //alert('テスト:'+getCookie('name')+'さんこんにちは' )
+                      setTimeout(window.checkName(),500);
+                    }
+                }, 100);
+                
             }
             </script>
             <script>
