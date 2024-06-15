@@ -18,27 +18,6 @@ for Linux: Bun をインストールするにはunzipパッケージが必要で
 sudo apt install unzip 
 ```
 
-#### v0.1.030からの https 化を準備する
-v0.1.030からは httpではなく https で起動します。
-もし既に、ドメイン持ってるサイト内に構築するならsrc/index-9012.tsx などに証明書のパスを書くだけで良いですが、
-証明書が無い場合は、ドメインとletsencryptなどの証明書を各自ご用意ください。
-
-また、sudoでの権限で bun 実行権限も必要なので、
-下記のように sudo bun が実行できることが必要かもしれません。
-
-※httpバージョンは、v0.1.026までになります
-```
-#sudo bun が実行できるようにする
-#bunのパスを調べる
-$ which bun
-/home/＜ユーザー名＞/.bun/bin/bun
-#ルートへリンクする
-sudo ln -s /home/＜ユーザー名＞/.bun/bin/bun /usr/bin/bun
-# /usr/bin/bunがリンクされてることを確認 これで sudo bun が動作します
-$ sudo ls -l /usr/bin/bun
-lrwxrwxrwx 1 root root 23  3月 31 00:22 /usr/bin/bun -> /home/＜ユーザー名＞/.bun/bin/bun
-```
-
 ## Bun install/ Bunインストール
 ```
 curl -fsSL https://bun.sh/install | bash
@@ -84,6 +63,26 @@ Here, the default is "PORT = 9012", so if you want to use it as is, you will nee
 const HOST = '74.226.208.203' //←ここを自分の使うHOSTへ変更する
 // ポート HTTP と WebSocket 共通
 const PORT = 9012; //←ここを自分の使うPORTへ変更する
+```
+#### v0.1.030からの https 化を準備する
+v0.1.030からは httpではなく https で起動します。
+もし既に、ドメイン持ってるサイト内に構築するならsrc/index-9012.tsx などに証明書のパスを書くだけで良いですが、
+証明書が無い場合は、ドメインとletsencryptなどの証明書を各自ご用意ください。
+
+また、sudoでの権限で bun 実行権限も必要なので、
+下記のように sudo bun が実行できることが必要かもしれません。
+
+※httpバージョンは、v0.1.026までになります
+```
+#sudo bun が実行できるようにする
+#bunのパスを調べる
+$ which bun
+/home/＜ユーザー名＞/.bun/bin/bun
+#ルートへリンクする
+sudo ln -s /home/＜ユーザー名＞/.bun/bin/bun /usr/bin/bun
+# /usr/bin/bunがリンクされてることを確認 これで sudo bun が動作します
+$ sudo ls -l /usr/bin/bun
+lrwxrwxrwx 1 root root 23  3月 31 00:22 /usr/bin/bun -> /home/＜ユーザー名＞/.bun/bin/bun
 ```
 
 ## Test/ テスト
