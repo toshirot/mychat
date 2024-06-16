@@ -150,6 +150,7 @@ ${adjustHours}
 ${inputBox}
 ${regBox_1}
 // for cookie
+const COOKIE_AFTER_DAYS = 90 // クッキー期限 日数
 ${getCookie}
 ${setCookie}
 // for LocalStorage
