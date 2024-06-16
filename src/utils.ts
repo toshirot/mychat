@@ -43,6 +43,8 @@ export function adjustHours(date: Date, adjustHour: number): string {
                 input_my_pass.value = input_my_pass.value||getLocalStorage('mypass')||'';
                 setLocalStorage('mypass', input_my_pass.value);
                 location.href=location.href
+                //window.input_box.innerHTML=inputBox('${CHAT_NAME}', '${VERSION}', '${uid}');
+                //setTimeout(window.checkName(),500);
                 " 
                  />
               デバイスだけに登録
@@ -120,14 +122,25 @@ export function adjustHours(date: Date, adjustHour: number): string {
       let regex = new RegExp('(?:^|;)\\s*' + key + '=([^;]+)');
       return decodeURIComponent(document.cookie.match(regex)?.[1] || '');
   }
+
   //===========================================
   // cookieをセットする関数
   //  @param {String} key - キー文字列
   //  @param {String} value - value
+  //  @afterNdays {Number} - 有効期限日数
   //  @returns {String} - セットした cookie の key value 文字列
   //  有効期限やドメインなどをどうするかはあとで検討
-  export function setCookie(key: string, value: string):string{
-      return document.cookie=key+'='+encodeURIComponent(value)+''
+  export function setCookie(key: string, value: string, afterNdays: number):string{
+      let today=new Date().getTime()
+      let nDaysLaterInMillis = ''
+      let count =''
+      if(afterNdays){
+        // n 日後のミリ秒を計算
+        nDaysLaterInMillis = ';expires='+new Date(today + afterNdays * 24 * 60 * 60 * 1000).toUTCString();; // 1日 = 24時間, 1時間 = 60分, 1分 = 60秒, 1秒 = 1000ミリ秒
+      } else {
+        nDaysLaterInMillis=''
+      }
+      return document.cookie=key+'='+encodeURIComponent(value)+''+nDaysLaterInMillis
   }
   
   //===========================================

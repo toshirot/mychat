@@ -442,16 +442,16 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         // クッキーに名前が見つからない場合のデフォルト処理を追加
                         input_name.value = '${DEFAULT_NAME}';
                         // 名前をcookieに保存する
-                        setCookie('name', '${DEFAULT_NAME}');
+                        setCookie('name', '${DEFAULT_NAME}', COOKIE_AFTER_DAYS);
                         // uid cookieを保存する
-                        setCookie('uid', '${uid.value}');
+                        setCookie('uid', '${uid.value}', COOKIE_AFTER_DAYS);
                     }
                 }
                 // 名前入力時イベント
                 if(window.input_name){
                     input_name.addEventListener('keyup', function () {
                         // 名前をcookieに保存する
-                        setCookie('name', input_name.value||input_name);
+                        setCookie('name', input_name.value||input_name, COOKIE_AFTER_DAYS);
                     });
                 }
 
@@ -477,9 +477,9 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                             //}
                             
                             // 名前をcookieに保存する
-                            setCookie('name', input_name_val||input_name);
+                            setCookie('name', input_name_val||input_name, COOKIE_AFTER_DAYS);
                             // uid cookieを保存する
-                            setCookie('uid', '${uid.value}');
+                            setCookie('uid', '${uid.value}', COOKIE_AFTER_DAYS);
                             // 送信する
                             socket.send(JSON.stringify({
                                 head:{type: 'msg'},
