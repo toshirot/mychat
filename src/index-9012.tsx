@@ -44,10 +44,11 @@ const PORT = 9012; // PORTは自身のドメインやIPに変えてください
 // SSL証明書は、ここでは Let's Encrypt で取得したものですが、自身の証明書に変更してください
 //  keysはGithubの都合上envに入れてるが下記のコメントアウトしてるpem 指定でも良い
 const KEYS = {
-    cert: process.env.MYCHAT_CERT, 
-    key:  process.env.MYCHAT_PRIV
-   // cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
-   // key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
+   cert: process.env.MYCHAT_CERT, 
+   key:  process.env.MYCHAT_PRIV
+   // envを使わずletsencryptのpemを指定する場合は上記のcert,keyではなく下記のようにする
+   //cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
+   //key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
 }
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
@@ -219,7 +220,6 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             <link rel="stylesheet" href="/public/css/base.css">
             <link rel="stylesheet" href="/public/css/input-box.css">
             <link rel="stylesheet" href="/public/css/msg-box.css">
-
         </head>
         <body>
 
@@ -230,7 +230,14 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 <a href="https://github.com/toshirot/mychat" alt=github>
                     <img src="/public/img/github-mark.svg" style="width:24px;height:24px;position:absolute;left:60px;top:8px;">
                 </a>
+                <a href="javascript:void(0)" alt=myconf>
+                    <img id="myconf" src="/public/img/mycnf-icon.svg" style="width:24px;height:24px;position:absolute;right:10px;top:10px;">
+                </a>
             </div>
+            <div id=myconf-view style="width:24px;height:24px;position:absolute;right:18px;top:18px;">
+                <div id="myconf_box">
+                </div>
+            </div> 
 
             <div id=contact>
                 <form>
@@ -249,16 +256,15 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 var intv = setInterval(function(){
                     if(document.getElementsByClassName("img-icon").length > 0){
                       clearInterval(intv);
-                      //alert('テスト:'+getCookie('name')+'さんこんにちは' )
+                      // alert('テスト:'+getCookie('name')+'さんこんにちは' )
                       setTimeout(window.checkName(),500);
                     }
                 }, 100);
-                
             }
             </script>
             <script>
             const fileInput = document.getElementById('file-input');
-            const fileInputVideo = document.getElementById('file-input-video');
+            // const fileInputVideo = document.getElementById('file-input-video');
             const inputMsg = document.getElementById('input_msg');
         
             fileInput.addEventListener('change', function(event) {
@@ -276,58 +282,6 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 }
             });
 
-            // videoはやめとくかな
-            /*
-            fileInputVideo.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-            
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        // 画像をリサイズする
-                        //resizeImageToInputMsg(e)
-                        createThumbnail(file, e.target.result)
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    inputMsg.textContent = 'No file selected';
-                }
-            });
-
-            function createThumbnail(file, videoUrl) {
-                let video = document.createElement('video');
-                const fileURL = URL.createObjectURL(file); // ファイルのURLを生成
-                video.src = fileURL; // 動画を表示
-
-               // video.src = videoUrl;
-
-                video.onloadedmetadata = function() {
-
-                    let width = video.videoWidth;
-                    let height = video.videoHeight;
-            
-                    // 画像のサイズを変更する条件をチェック
-                    if (width > 500 || height > 500) {
-                        let aspectRatio = width / height;
-                        if (width > height) {
-                            width = 500;
-                            height = width / aspectRatio;
-                        } else {
-                            height = 500;
-                            width = height * aspectRatio;
-                        }
-                    }
-                    
-                    video.width=width;
-                    video.width=height;
-                    video.controls = true;
-                    video.loop=true; 
-
-                    inputMsg.innerHTML = '<div style="font-size:11px">(w:'+width+' h:'+height+')</div>';
-                    inputMsg.appendChild(video);
-
-                };
-            }*/
             </script>
             <script>
                 // ws接続
@@ -495,6 +449,10 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                         }
                     });
                 }
+
+                myconf.addEventListener('click', function(){
+                    window.myconf_box.innerHTML='--'
+                })
             </script>
         </body>
     </html>

@@ -103,6 +103,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
   // @param {String} key - キー文字列
   // @returns {String|null} - LocalStorageの値文字列。見つからない場合はnullを返す。
   export function getLocalStorage(key) {
+      key=location.host+location.pathname+'_'+key
       return localStorage.getItem(key);
   }
   
@@ -111,6 +112,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
   // @param {String} key - キー文字列
   // @param {String} value - value
   export function setLocalStorage(key, value) {
+      key=location.host+location.pathname+'_'+key
       localStorage.setItem(key, value);
   }
   
@@ -119,6 +121,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
   //  @param {String} key - キー文字列
   //  @returns {String} - cookieの値文字列
   export function getCookie(key: string) {
+      key=location.host+location.pathname+'_'+key
       let regex = new RegExp('(?:^|;)\\s*' + key + '=([^;]+)');
       return decodeURIComponent(document.cookie.match(regex)?.[1] || '');
   }
@@ -134,6 +137,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
       let today=new Date().getTime()
       let nDaysLaterInMillis = ''
       let count =''
+      key=location.host+location.pathname+'_'+key
       if(afterNdays){
         // n 日後のミリ秒を計算
         nDaysLaterInMillis = ';expires='+new Date(today + afterNdays * 24 * 60 * 60 * 1000).toUTCString();; // 1日 = 24時間, 1時間 = 60分, 1分 = 60秒, 1秒 = 1000ミリ秒
@@ -266,8 +270,14 @@ export function adjustHours(date: Date, adjustHour: number): string {
           ctx.drawImage(img, 0, 0, width, height);
   
           // Canvasの画像をDataURLに変換
-          const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
-  
+          //const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
+
+   // Convert the image data to a Base64-encoded string
+   const base64Image = Buffer.from(ctx).toString('base64');
+
+   // Format the Data URI string
+   const dataURL = `data:image/jpeg;base64,${base64Image}`;
+
           // 変換されたDataURLを表示
           const newImgElement = document.createElement('img');
           newImgElement.src = dataURL;
