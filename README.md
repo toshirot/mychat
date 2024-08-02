@@ -183,7 +183,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 {
   "name": "mychat",
-  "version": "0.1.040",
+  "version": "0.1.042",
   "scripts": {
     "test": "bun test",
     "dev": "sudo bun run --hot src/index-9012.tsx",
