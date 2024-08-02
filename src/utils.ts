@@ -270,13 +270,13 @@ export function adjustHours(date: Date, adjustHour: number): string {
           ctx.drawImage(img, 0, 0, width, height);
   
           // Canvasの画像をDataURLに変換
-          //const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
+          const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
 
    // Convert the image data to a Base64-encoded string
-   const base64Image = Buffer.from(ctx).toString('base64');
+   //const base64Image = Buffer.from(ctx).toString('base64');
 
    // Format the Data URI string
-   const dataURL = `data:image/jpeg;base64,${base64Image}`;
+   //const dataURL = `data:image/jpeg;base64,${base64Image}`;
 
           // 変換されたDataURLを表示
           const newImgElement = document.createElement('img');
