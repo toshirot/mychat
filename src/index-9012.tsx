@@ -32,7 +32,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.041';
+const VERSION = '0.1.043';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
@@ -406,7 +406,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 if(window.input_name){
                     input_name.addEventListener('keyup', function () {
                         // 名前をcookieに保存する
-                        setCookie('name', input_name.value||input_name, COOKIE_AFTER_DAYS);
+                        setCookie('name', input_name.value, COOKIE_AFTER_DAYS);
                     });
                 }
 

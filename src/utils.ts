@@ -236,6 +236,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
   //===========================================
   // 画像をリサイズしてinputMsgへ表示する
   // 
+
   export function resizeImageToInputMsg(e: Event): void{
       const inputMsg = document.getElementById('input_msg');
       const img = new Image();
@@ -248,17 +249,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
           img.style.maxWidth = '100%';
           img.style.maxHeight = '100%';
   
-          // 画像のサイズを変更する条件をチェック
-          if (width > 500 || height > 500) {
-              let aspectRatio = width / height;
-              if (width > height) {
-                  width = 500;
-                  height = width / aspectRatio;
-              } else {
-                  height = 500;
-                  width = height * aspectRatio;
-              }
-          }
+          [width, height ]= resizeImage(width, height) 
   
           // Canvas要素を作成
           const canvas = document.createElement('canvas');
@@ -272,6 +263,42 @@ export function adjustHours(date: Date, adjustHour: number): string {
           // Canvasの画像をDataURLに変換
           const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
 
+        // 新しい画像要素を作成してDataURLを設定
+          const newImgElement = document.createElement('img');
+          newImgElement.src = dataURL;
+          
+          // 画像サイズ情報を表示する要素を作成
+          const sizeInfo = document.createElement('div');
+          sizeInfo.style.fontSize = '11px';
+          sizeInfo.textContent = `(w:${width} h:${height})`;
+
+          // 画像とサイズ情報を追加する
+          const container = document.createElement('div');
+          container.appendChild(sizeInfo);
+          container.appendChild(newImgElement);
+
+          // <br>を追加して次の画像の間に改行を挿入
+          inputMsg.appendChild(container);
+          inputMsg.appendChild(document.createElement('br'));
+
+              // 画像サイズを最大 400 にリサイズする関数
+    function resizeImage(width, height) {
+        // 画像のサイズを変更する条件をチェック
+        if (width > 400 || height > 400) {
+            let aspectRatio = width / height;
+
+            if (aspectRatio > 1) { // 幅が高さより大きい場合
+                width = 400;
+                height = 400 / aspectRatio;
+            } else { // 高さが幅より大きい、または同じ場合
+                height = 400;
+                width = 400 * aspectRatio;
+            }
+        }
+
+        return [width, height ];
+    }
+          /*
    // Convert the image data to a Base64-encoded string
    //const base64Image = Buffer.from(ctx).toString('base64');
 
@@ -283,6 +310,7 @@ export function adjustHours(date: Date, adjustHour: number): string {
           newImgElement.src = dataURL;
           inputMsg.innerHTML = '<div style="font-size:11px">(w:'+width+' h:'+height+')</div>'; // Clear previous content
           inputMsg.appendChild(newImgElement);
+          */
       }
   }
   
