@@ -32,7 +32,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.043';
+const VERSION = '0.1.044';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
@@ -44,11 +44,11 @@ const PORT = 9012; // PORTは自身のドメインやIPに変えてください
 // SSL証明書は、ここでは Let's Encrypt で取得したものですが、自身の証明書に変更してください
 //  keysはGithubの都合上envに入れてるが下記のコメントアウトしてるpem 指定でも良い
 const KEYS = {
-   cert: process.env.MYCHAT_CERT, 
-   key:  process.env.MYCHAT_PRIV
+   //cert: process.env.MYCHAT_CERT, 
+   //key:  process.env.MYCHAT_PRIV
    // envを使わずletsencryptのpemを指定する場合は上記のcert,keyではなく下記のようにする
-   //cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
-   //key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
+   cert: Bun.file("/etc/letsencrypt/live/"+HOST+"/cert.pem"),
+   key: Bun.file("/etc/letsencrypt/live/"+HOST+"/privkey.pem")
 }
 // ホームURL
 const HOME_URL = HTTP_PLOTOCOL+HOST+':'+PORT+'/';
@@ -233,6 +233,14 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
                 <a href="javascript:void(0)" alt=myconf>
                     <img id="myconf" src="/public/img/mycnf-icon.svg" style="width:24px;height:24px;position:absolute;right:10px;top:10px;">
                 </a>
+                <div style="
+                    margin-top: 55px;
+                    position: absolute;
+                    top: -50px;
+                    left: 100px;
+                    color: #000;">mychat is an end-to-end encrypted chat.<br>It cannot be viewed on the server side.
+                </div>
+            </div>
             </div>
             <div id=myconf-view style="width:24px;height:24px;position:absolute;right:18px;top:18px;">
                 <div id="myconf_box">
