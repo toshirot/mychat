@@ -1,5 +1,9 @@
 # mychat v0.1.04x with Elysia/Bun
 
+mychat is an end-to-end encrypted chat. It cannot be viewed on the server side.
+<br>mychatはエンドツーエンドの暗号化チャットです。サーバー側では閲覧できません。
+
+
 <a href="http://74.226.208.203:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/a3308562-78b1-4af7-8d7e-1efed616da50)
 </a>
 
