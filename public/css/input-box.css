@@ -5,10 +5,9 @@
     margin:0 auto;
     margin-top:40px;
     padding-bottom: 18px;
-   /* text-align:center;*/
+    text-align:center;
     border-radius:15px;
-    color: #333;
-    background-color:#ccc;
+    background-color:#fff;
     box-shadow: 5px 10px 15px #b6b6b6;
 }
 .head {
@@ -89,7 +88,7 @@ input, textarea, .textarea  {
     width: 80%;
     max-width: 600px;
     background-clip: padding-box;
-    background: #fff;
+    background: #ddd;
     color:#000;
 }
 
@@ -102,8 +101,8 @@ input, textarea, .textarea  {
     padding: 4px 10px;
     padding-left: 18px;
     padding-top: 3px;
-    border-top-right-radius: 12px;
-    border-top-left-radius: 12px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
     height: 30px;
@@ -211,10 +210,10 @@ button:hover, .button:hover {
 /* media queries */
 @media only screen and (max-width: 799px) {
     h2 {
-        font-size: 2.2rem;
+        font-size: 2.8rem;
     }
     input, textarea{
-        font-size: 2.2rem;
+        font-size: 1.8rem;
     }
     button{
         font-size: 1.4rem
@@ -222,10 +221,10 @@ button:hover, .button:hover {
 }
 @media only screen and (min-width: 800px) {
     h2 {
-        font-size: 2.2rem;
+        font-size: 2.8rem;
     }
     input, textarea{
-        font-size: 2.2rem;
+        font-size: 2.8rem;
     }
     button{
         font-size: 1.8rem
@@ -233,10 +232,10 @@ button:hover, .button:hover {
 }
 @media only screen and (min-width: 1000px) {
     h2 {
-        font-size: 2.2rem;
+        font-size: 2.4rem;
     }
     input, textarea, button {
-        font-size: 1.8rem;
+        font-size: 2.4rem;
     }
     button{
         font-size: 1.6rem
