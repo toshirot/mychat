@@ -10,6 +10,8 @@ mychat is an end-to-end encrypted chat. It cannot be viewed on the server side.
 ## Demo/ 動作サンプル
 
 v0.1.030からhttpsになりました
+
+2024/12/1 Demoはクラウド移転のメンテナンス中
 [https://mychat.jp:9013/](https://mychat.jp:9013/)
 
 # MacOS と Linux 用の Bun インストール
