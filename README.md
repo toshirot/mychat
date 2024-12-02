@@ -48,31 +48,31 @@ cd mychat
 ```
 bun init
 ```
-## Execution at port 9012/ ポート9012で実行する
+## Execution at port 9013/ ポート9013で実行する
 ※v0.1.023から「.tsx」ファイルを起動しています
 
 ```
 bun dev
 
-e.g. "dev": "sudo bun run --hot src/index-9012.tsx"
+e.g. "dev": "sudo bun run --hot src/index-9013.tsx"
 ```
-if you want to change the port, change "const PORT = 9012;".
-Here, the default is "PORT = 9012", so if you want to use it as is, you will need to open that port.
+if you want to change the port, change "const PORT = 9013;".
+Here, the default is "PORT = 9013", so if you want to use it as is, you will need to open that port.
 
-ポートなどを変更したい場合は「const PORT = 9012;」等で変更してください。
-ここでは、デフォルトで「PORT = 9012」としていますが、そのポートを開いておく必要があります。
+ポートなどを変更したい場合は「const PORT = 9013;」等で変更してください。
+ここでは、デフォルトで「PORT = 9013」としていますが、そのポートを開いておく必要があります。
 
 ```
-// 修正箇所 src/index-9012.tsx
+// 修正箇所 src/index-9013.tsx
 
 // ホストまたはIP
 const HOST = '74.226.208.203' //←ここを自分の使うHOSTへ変更する
 // ポート HTTP と WebSocket 共通
-const PORT = 9012; //←ここを自分の使うPORTへ変更する
+const PORT = 9013; //←ここを自分の使うPORTへ変更する
 ```
 #### v0.1.030からの https 化を準備する
 v0.1.030からは httpではなく https で起動します。
-もし既に、ドメイン持ってるサイト内に構築するならsrc/index-9012.tsx などに証明書のパスを書くだけで良いですが、
+もし既に、ドメイン持ってるサイト内に構築するならsrc/index-9013.tsx などに証明書のパスを書くだけで良いですが、
 証明書が無い場合は、ドメインとletsencryptなどの証明書を各自ご用意ください。
 
 コード上は以下のように 環境変数envを使っています。各envに証明書を登録するか、コメントアウトしているpemファイルへのパスの方を使うかはご自由に選択されてください。
@@ -151,7 +151,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
 ```
 .mychat/
   ├─ src/
-  │    ├─ index-9012.tsx    // bun dev で起動するファイル
+  │    ├─ index-9013.tsx    // bun dev で起動するファイル
   │    └─ utiles.ts         // 各種関数
   ├─ public/                // static ディレクトリ
   │    ├─ css/              // static CSS
@@ -192,8 +192,8 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
   "version": "0.1.042",
   "scripts": {
     "test": "bun test",
-    "dev": "sudo bun run --hot src/index-9012.tsx",
-    "action": "sudo bun run src/index-9012.tsx;process.exit();"
+    "dev": "sudo bun run --hot src/index-9013.tsx",
+    "action": "sudo bun run src/index-9013.tsx;process.exit();"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
@@ -218,7 +218,7 @@ https://qiita.com/toshirot/items/d4664e7fdcdde468f501
     "@types/bun": "^1.0.0",
     "bun-types": "latest"
   },
-  "module": "src/index-9012.tsx",
+  "module": "src/index-9013.tsx",
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0"
