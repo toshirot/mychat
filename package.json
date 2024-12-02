@@ -3,8 +3,8 @@
   "version": "0.1.045",
   "scripts": {
     "test": "bun test",
-    "dev": "sudo bun run --hot src/index-9012.tsx",
-    "action": "bun run src/index-9012.tsx;"
+    "dev": "sudo bun run --hot src/index-9013.tsx",
+    "action": "bun run src/index-9013.tsx;"
   },
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
@@ -29,7 +29,7 @@
     "@types/bun": "^1.0.0",
     "bun-types": "latest"
   },
-  "module": "src/index-9012.tsx",
+  "module": "src/index-9013.tsx",
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0"
