@@ -4,11 +4,11 @@ mychat is an end-to-end encrypted chat. It cannot be viewed on the server side.
 <br>mychatはエンドツーエンドの暗号化チャットです。サーバー側では閲覧できません。
 
 
-<a href="http://74.226.208.203:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/a3308562-78b1-4af7-8d7e-1efed616da50)
+<a href="http://mychat.jp:9013/"> ![image](https://github.com/toshirot/mychat/assets/154680/a3308562-78b1-4af7-8d7e-1efed616da50)
 </a>
 
 ## Demo/ 動作サンプル
-
+mychat
 v0.1.030からhttpsになりました
 
 2024/12/1 Demoはクラウド移転のメンテナンス中
@@ -66,7 +66,7 @@ Here, the default is "PORT = 9013", so if you want to use it as is, you will nee
 // 修正箇所 src/index-9013.tsx
 
 // ホストまたはIP
-const HOST = '74.226.208.203' //←ここを自分の使うHOSTへ変更する
+const HOST = 'example.com' //←ここを自分の使うHOSTへ変更する
 // ポート HTTP と WebSocket 共通
 const PORT = 9013; //←ここを自分の使うPORTへ変更する
 ```
