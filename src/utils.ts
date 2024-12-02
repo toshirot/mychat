@@ -261,8 +261,8 @@ export function adjustHours(date: Date, adjustHour: number): string {
           ctx.drawImage(img, 0, 0, width, height);
   
           // Canvasの画像をDataURLに変換
-          //const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'  
-          const dataURL = canvas.toDataURL('image/webp', 0.8);
+          const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'  
+          //const dataURL = canvas.toDataURL('image/webp', 0.8);//data:image/pngになってしまう
 
         // 新しい画像要素を作成してDataURLを設定
           const newImgElement = document.createElement('img');
