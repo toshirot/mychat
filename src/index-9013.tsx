@@ -32,7 +32,7 @@ import 'dotenv/config';
 // チャット名
 const CHAT_NAME = 'myChat';
 // バージョン
-const VERSION = '0.1.044';
+const VERSION = '0.1.045';
 // 出力するメッセ―ジ数
 const LIMIT = 20;
 // HTTPプロトコル （テストでは http:// 本番ではhttps:// にする）
