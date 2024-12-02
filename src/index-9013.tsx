@@ -507,7 +507,7 @@ const writeMsg = (msgs, msg_class, num, dec_name, dec_msg, uid, date) => {
             if(msgoj.head.type==='msg'){
                 console.log('msg',msgoj.body)
                 msgoj.body.name = msgoj.body.name.slice(0, 300);
-                msgoj.body.msg = msgoj.body.msg.slice(0, 200000);
+                msgoj.body.msg = msgoj.body.msg.slice(0, 500000);
                 let sql_ins = 
                         'INSERT OR IGNORE INTO ' 
                         + TABLE_NAME 

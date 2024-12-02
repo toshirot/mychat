@@ -261,9 +261,19 @@ export function adjustHours(date: Date, adjustHour: number): string {
           ctx.drawImage(img, 0, 0, width, height);
   
           // Canvasの画像をDataURLに変換
-          const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'  
-          const dataURL = canvas.toDataURL('image/jpeg', 0.8);
-          //const dataURL = canvas.toDataURL('image/webp', 0.8);//data:image/pngになってしまう
+          // 画像形式を自動で確認し、変換
+          let dataURL;
+
+          if (img.src.includes('image/jpeg')) {
+              // JPEG形式の場合
+              dataURL = canvas.toDataURL('image/jpeg', 0.8); // JPEGで保存
+          } else if (img.src.includes('image/png')) {
+              // PNG形式の場合
+              dataURL = canvas.toDataURL('image/webp', 0.8); // WebPで保存
+          } else {
+              // 他の形式の場合、WebPに変換
+              dataURL = canvas.toDataURL('image/webp', 0.8); // WebPで保存
+          }
 
         // 新しい画像要素を作成してDataURLを設定
           const newImgElement = document.createElement('img');
@@ -279,26 +289,29 @@ export function adjustHours(date: Date, adjustHour: number): string {
           container.appendChild(sizeInfo);
           container.appendChild(newImgElement);
 
-          // <br>を追加して次の画像の間に改行を挿入
+          // 画像を挿入
           inputMsg.appendChild(container);
-          inputMsg.appendChild(document.createElement('br'));
+          //inputMsg.appendChild(document.createElement('br'));
 
-              // 画像サイズを最大 400 にリサイズする関数
+            // 画像サイズを最大400pxにリサイズする関数
             function resizeImage(width, height) {
-                // 画像のサイズを変更する条件をチェック
-                if (width > 400 || height > 400) {
+                // 最大サイズを設定
+                const maxSize = 300;
+
+                // 幅または高さが最大サイズを超えている場合
+                if (width > maxSize || height > maxSize) {
                     let aspectRatio = width / height;
 
                     if (aspectRatio > 1) { // 幅が高さより大きい場合
-                        width = 400;
-                        height = 400 / aspectRatio;
+                        width = maxSize;
+                        height = maxSize / aspectRatio;
                     } else { // 高さが幅より大きい、または同じ場合
-                        height = 400;
-                        width = 400 * aspectRatio;
+                        height = maxSize;
+                        width = maxSize * aspectRatio;
                     }
                 }
 
-                return [width, height ];
+                return [width, height];
             }
       }
   }
