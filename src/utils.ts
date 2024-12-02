@@ -261,7 +261,8 @@ export function adjustHours(date: Date, adjustHour: number): string {
           ctx.drawImage(img, 0, 0, width, height);
   
           // Canvasの画像をDataURLに変換
-          const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
+          //const dataURL = canvas.toDataURL('image/jpeg'); // もしくは 'image/png'
+          const dataURL = canvas.toDataURL('image/webp', 0.8);
 
         // 新しい画像要素を作成してDataURLを設定
           const newImgElement = document.createElement('img');
@@ -282,35 +283,22 @@ export function adjustHours(date: Date, adjustHour: number): string {
           inputMsg.appendChild(document.createElement('br'));
 
               // 画像サイズを最大 400 にリサイズする関数
-    function resizeImage(width, height) {
-        // 画像のサイズを変更する条件をチェック
-        if (width > 400 || height > 400) {
-            let aspectRatio = width / height;
+            function resizeImage(width, height) {
+                // 画像のサイズを変更する条件をチェック
+                if (width > 400 || height > 400) {
+                    let aspectRatio = width / height;
 
-            if (aspectRatio > 1) { // 幅が高さより大きい場合
-                width = 400;
-                height = 400 / aspectRatio;
-            } else { // 高さが幅より大きい、または同じ場合
-                height = 400;
-                width = 400 * aspectRatio;
+                    if (aspectRatio > 1) { // 幅が高さより大きい場合
+                        width = 400;
+                        height = 400 / aspectRatio;
+                    } else { // 高さが幅より大きい、または同じ場合
+                        height = 400;
+                        width = 400 * aspectRatio;
+                    }
+                }
+
+                return [width, height ];
             }
-        }
-
-        return [width, height ];
-    }
-          /*
-   // Convert the image data to a Base64-encoded string
-   //const base64Image = Buffer.from(ctx).toString('base64');
-
-   // Format the Data URI string
-   //const dataURL = `data:image/jpeg;base64,${base64Image}`;
-
-          // 変換されたDataURLを表示
-          const newImgElement = document.createElement('img');
-          newImgElement.src = dataURL;
-          inputMsg.innerHTML = '<div style="font-size:11px">(w:'+width+' h:'+height+')</div>'; // Clear previous content
-          inputMsg.appendChild(newImgElement);
-          */
       }
   }
   
